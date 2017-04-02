@@ -10,6 +10,6 @@
 ''' </remarks>
 Public Class CFG
     Public Sub New()
-
+        'Adding new comment
     End Sub
 End Class
