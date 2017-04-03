@@ -1,29 +1,231 @@
-﻿''' <summary>
-''' Data structure for context free grammar (CFG) objects.
-''' </summary>
-''' <remarks>
-''' A context free grammar is a 4-tuple, (V, Σ, R, S), consisting of:
-'''  - Finite set of variables [ V ]
-'''  - Finite set of terminals disjoint from V [ Σ ] 
-'''  - Rules of the grammar (a.k.a productions) [ R: V → (V ∪ Σ)*]
-'''  - Start variable [ S ∈ V]
-''' </remarks>
-Public Class CFG
-
+﻿Namespace Languages.ContextFree
     ''' <summary>
-    ''' Gets/sets the name of the CFG.
+    ''' Data structure for creating context free grammar (CFG) objects.
     ''' </summary>
-    ''' <returns></returns>
-    Public Property Name As String
+    ''' <remarks>
+    ''' A context free grammar is a 4-tuple, (V, Σ, R, S), consisting of:
+    '''  - Finite set of variables [ V ]
+    '''  - Finite set of terminals disjoint from V [ Σ ] 
+    '''  - Rules of the grammar (a.k.a productions) [ R: V → (V ∪ Σ)* ]
+    '''  - Start variable [ S ∈ V ]
+    ''' </remarks>
+    Public Class CFG
+        Implements ICloneable
 
-#Region "Constructors"
-    Public Sub New()
-        'TODO: Constructor for an empty CFG
-    End Sub
+        Private _variables As List(Of String)
+        Private _terminals As List(Of String)
+        Private _grammarRules As List(Of GrammarRule)
 
-    Public Sub New(ByVal cfg As CFG)
-        'TODO: CFG copy constructor
-    End Sub
+#Region "Properties"
+        ''' <summary>
+        ''' Returns a string array of variables.
+        ''' </summary>
+        ''' <returns></returns>
+        Public ReadOnly Property Variables As String()
+            Get
+                Return _variables.ToArray()
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' Returns a string array of terminals.
+        ''' </summary>
+        ''' <returns></returns>
+        Public ReadOnly Property Terminals As String()
+            Get
+                Return _terminals.ToArray()
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' Returns an array of grammar rules.
+        ''' </summary>
+        ''' <returns></returns>
+        Public ReadOnly Property GrammarRules As GrammarRule()
+            Get
+                Return _grammarRules.ToArray()
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' Gets/sets the start variable.
+        ''' </summary>
+        Public Property StartVariable As String
+
+        ''' <summary>
+        ''' Gets/sets the name of the CFG.
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property Name As String
 #End Region
 
-End Class
+#Region "Constructors"
+        ''' <summary>
+        ''' Initializes an empty CFG.
+        ''' </summary>
+        Public Sub New()
+            _variables = Nothing
+            _terminals = Nothing
+            _grammarRules = Nothing
+            _StartVariable = Nothing
+            _Name = String.Empty
+        End Sub
+
+        ''' <summary>
+        ''' Initializes a CFG with the specified parameters.
+        ''' </summary>
+        ''' <param name="V">String array of variables.</param>
+        ''' <param name="sigma">String array of terminals.</param>
+        ''' <param name="R">Array of grammar rules.</param>
+        ''' <param name="S">Start variable.</param>
+        ''' <param name="name">Name identifying the CFG.</param>
+        Public Sub New(ByVal V As String(), ByVal sigma As String(), ByVal R As GrammarRule(), ByVal S As String, Optional ByVal name As String = "")
+            _variables = V.ToList()
+            _terminals = sigma.ToList()
+            _grammarRules = R.ToList()
+            _StartVariable = S
+            _Name = name
+        End Sub
+
+        ''' <summary>
+        ''' Initializes a CFG from an existing CFG object.
+        ''' </summary>
+        ''' <param name="cfg"></param>
+        Public Sub New(ByVal cfg As CFG)
+            _variables = cfg.Variables.ToList()
+            _terminals = cfg.Terminals.ToList()
+            _grammarRules = cfg.GrammarRules.ToList()
+            _StartVariable = cfg.StartVariable
+            _Name = cfg.Name
+        End Sub
+#End Region
+
+#Region "Core functions"
+        ''' <summary>
+        ''' Checks whether:
+        '''    1) V, Σ, and R are not null.
+        '''    2) Start variable is a member of V
+        ''' </summary>
+        ''' <returns></returns>
+        Public Overridable ReadOnly Property IsValid() As Boolean
+            Get
+                If IsEmptySet(_variables) OrElse IsEmptyStringSet(_variables) Then Return False
+                If IsEmptySet(_terminals) OrElse IsEmptyStringSet(_terminals) Then Return False
+                If IsNothing(_grammarRules) OrElse IsNothing(_grammarRules) Then Return False
+                If Not _variables.Contains(_StartVariable) Then Return False
+                Return True
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' Adds a new variable to the set of variables.
+        ''' </summary>
+        ''' <param name="s">The new variable to be added.</param>
+        Public Sub AddVariables(ByVal s As String)
+            If _variables.Contains(s) Then
+                Throw New ArgumentException($"The set of variables already contains '{s}'.")
+            Else
+                _variables.Add(s)
+            End If
+        End Sub
+
+        ''' <summary>
+        ''' Adds new variables to the set of variables.
+        ''' </summary>
+        ''' <param name="sArray">String array of the new variables to be added.</param>
+        Public Sub AddVariables(ByVal sArray() As String)
+            For Each s In sArray
+                AddVariables(s)
+            Next
+        End Sub
+
+        ''' <summary>
+        ''' Adds a new terminal to the set of terminals.
+        ''' </summary>
+        ''' <param name="s">The new terminal to be added.</param>
+        Public Sub AddTerminals(ByVal s As String)
+            If _terminals.Contains(s) Then
+                Throw New ArgumentException($"The set of terminals already contains '{s}'.")
+            Else
+                _terminals.Add(s)
+            End If
+        End Sub
+
+        ''' <summary>
+        ''' Adds new terminals to the set of terminals.
+        ''' </summary>
+        ''' <param name="sArray">String array of the new terminals to be added.</param>
+        Public Sub AddTerminals(ByVal sArray() As String)
+            For Each s In sArray
+                AddTerminals(s)
+            Next
+        End Sub
+
+        ''' <summary>
+        ''' Adds a new grammar rule to the set of grammar rules.
+        ''' </summary>
+        ''' <param name="gr">The new GrammarRule object to be added.</param>
+        Public Sub AddGrammarRules(ByVal gr As GrammarRule)
+            For Each g In _grammarRules
+                If g.Variable = gr.Variable Then
+                    Throw New ArgumentException($"The grammar rules already contain the rule for variable {gr.Variable}.")
+                End If
+            Next
+            _grammarRules.Add(gr)
+        End Sub
+
+        ''' <summary>
+        ''' Adds new grammar rules to the set of grammar rules.
+        ''' </summary>
+        ''' <param name="grArray">Array of new GrammarRule objects to be added.</param>
+        Public Sub AddGrammarRules(ByVal grArray() As GrammarRule)
+            For Each gr In grArray
+                AddGrammarRules(gr)
+            Next
+        End Sub
+#End Region
+
+#Region "Object helper functions"
+        Public Overrides Function ToString() As String
+            Return $"CFG Name: {_Name}" & vbCrLf &
+               $"    V = {{{String.Join(", ", _variables)}}}" & vbCrLf &
+               $"    Σ = {{{String.Join(", ", _terminals)}}}" & vbCrLf &
+               $"    S = {_StartVariable}" & vbCrLf &
+               "    R:" & vbCrLf & vbTab & String.Join(vbCrLf & vbTab, _grammarRules)
+        End Function
+
+        Public Function Clone() As Object Implements ICloneable.Clone
+            Return New CFG(Variables, Terminals, GrammarRules, _StartVariable, _Name)
+        End Function
+#End Region
+    End Class
+
+    ''' <summary>
+    ''' Data structure for creating grammar rules.
+    ''' </summary>
+    Public Class GrammarRule
+        Implements ICloneable
+
+        Public Property Variable As String
+        Public Property Substitutions As String()
+
+        Public Sub New()
+            _Variable = Nothing
+            _Substitutions = Nothing
+        End Sub
+
+        Public Sub New(ByVal V As String, ByVal sList As String())
+            _Variable = V
+            _Substitutions = sList
+        End Sub
+
+        Public Overrides Function ToString() As String
+            Return $"{_Variable} → {String.Join(" | ", _Substitutions)}"
+        End Function
+
+        Public Function Clone() As Object Implements ICloneable.Clone
+            Return New GrammarRule(_Variable, _Substitutions)
+        End Function
+    End Class
+
+End Namespace
