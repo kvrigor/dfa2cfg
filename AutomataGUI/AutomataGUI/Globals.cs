@@ -9,8 +9,6 @@ namespace AutomataGUI
 {
     public static class Globals
     {
-        public static Point TargetZero;
-
 
         public static MouseCondition MouseStatus;
 
@@ -22,7 +20,8 @@ namespace AutomataGUI
             DeleteState,
             MoveState,
             ConnectZero,
-            ConnectOne
+            ConnectOne,
+            Selected
         }
     }
 }

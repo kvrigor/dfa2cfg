@@ -31,6 +31,8 @@ namespace AutomataGUI
             StateName = _name;
             ImageLocation = new Point(centerPoint.X - radius, centerPoint.Y - radius);
             CenterLocation = centerPoint;
+            
+            
         }
 
         private void Item_Select(object sender, EventArgs e)

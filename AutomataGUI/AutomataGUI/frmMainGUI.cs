@@ -54,11 +54,6 @@ namespace AutomataGUI
 
         private void ts_btnAddState_Click(object sender, EventArgs e)
         {
-            AddingState();
-        }
-
-        private void AddingState()
-        {
             Globals.MouseStatus = Globals.MouseCondition.AddState;
         }
 
@@ -73,7 +68,21 @@ namespace AutomataGUI
 
         private void DiagramArea_MouseMove(object sender, MouseEventArgs e)
         {
-            lblMouseStatus.Text = Globals.MouseStatus.ToString();
+            switch (Globals.MouseStatus)
+            {
+                case Globals.MouseCondition.AddState:
+                    DiagramArea.Refresh();
+                    Point pointedAt = new Point(e.Location.X - 25, e.Location.Y - 25);
+                    Graphics myCircle;
+                    Pen myPen = new Pen(Color.Black);
+                    Brush myBrush = Brushes.DarkBlue;
+                    myCircle = DiagramArea.CreateGraphics();
+                    myCircle.FillEllipse(myBrush, new Rectangle(pointedAt, new Size(50, 50)));
+                    myCircle.DrawEllipse(myPen, new Rectangle(pointedAt, new Size(50, 50)));
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void ts_btnDeleteState_Click(object sender, EventArgs e)
@@ -89,6 +98,11 @@ namespace AutomataGUI
         private void ts_btnConnect0_Click(object sender, EventArgs e)
         {
             Globals.MouseStatus = Globals.MouseCondition.ConnectZero;
+        }
+
+        private void frmMainGUI_MouseMove(object sender, MouseEventArgs e)
+        {
+            lblMouseStatus.Text = Globals.MouseStatus.ToString();
         }
     }
 }
