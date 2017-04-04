@@ -1,4 +1,7 @@
-﻿Namespace Languages.ContextFree
+﻿Imports Codecs.Utils.LanguageHelpers
+Imports System.Xml.Serialization
+
+Namespace Languages.ContextFree
     ''' <summary>
     ''' Data structure for creating context free grammar (CFG) objects.
     ''' </summary>
@@ -9,6 +12,7 @@
     '''  - Rules of the grammar (a.k.a productions) [ R: V → (V ∪ Σ)* ]
     '''  - Start variable [ S ∈ V ]
     ''' </remarks>
+    <Serializable()>
     Public Class CFG
         Implements ICloneable
 
@@ -18,45 +22,60 @@
 
 #Region "Properties"
         ''' <summary>
+        ''' Gets/sets the name of the CFG.
+        ''' </summary>
+        ''' <returns></returns>
+        <XmlAttribute()>
+        Public Property Name As String
+
+        ''' <summary>
         ''' Returns a string array of variables.
         ''' </summary>
         ''' <returns></returns>
-        Public ReadOnly Property Variables As String()
+        <XmlArrayItem(ElementName:="var", IsNullable:=True)>
+        Public Property Variables As String()
             Get
                 Return _variables.ToArray()
             End Get
+            Set(value As String())
+                _variables = value.ToList()
+            End Set
         End Property
+
+        ''' <summary>
+        ''' Gets/sets the start variable.
+        ''' </summary>
+        <XmlElement(IsNullable:=True)>
+        Public Property StartVariable As String
 
         ''' <summary>
         ''' Returns a string array of terminals.
         ''' </summary>
         ''' <returns></returns>
-        Public ReadOnly Property Terminals As String()
+        <XmlArrayItem(ElementName:="symbol", IsNullable:=True)>
+        Public Property Terminals As String()
             Get
                 Return _terminals.ToArray()
             End Get
+            Set(value As String())
+                _terminals = value.ToList()
+            End Set
         End Property
 
         ''' <summary>
         ''' Returns an array of grammar rules.
         ''' </summary>
         ''' <returns></returns>
-        Public ReadOnly Property GrammarRules As GrammarRule()
+        <XmlArrayItem(ElementName:="rule", IsNullable:=True)>
+        Public Property GrammarRules As GrammarRule()
             Get
                 Return _grammarRules.ToArray()
             End Get
+            Set(value As GrammarRule())
+                _grammarRules = value.ToList()
+            End Set
         End Property
 
-        ''' <summary>
-        ''' Gets/sets the start variable.
-        ''' </summary>
-        Public Property StartVariable As String
-
-        ''' <summary>
-        ''' Gets/sets the name of the CFG.
-        ''' </summary>
-        ''' <returns></returns>
-        Public Property Name As String
 #End Region
 
 #Region "Constructors"
@@ -203,10 +222,13 @@
     ''' <summary>
     ''' Data structure for creating grammar rules.
     ''' </summary>
+    <Serializable()>
     Public Class GrammarRule
         Implements ICloneable
 
+        <XmlAttribute()>
         Public Property Variable As String
+        <XmlElement(ElementName:="sub")>
         Public Property Substitutions As String()
 
         Public Sub New()

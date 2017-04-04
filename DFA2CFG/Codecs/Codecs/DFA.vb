@@ -1,4 +1,7 @@
-﻿Namespace Languages.Regular
+﻿Imports Codecs.Utils.LanguageHelpers
+Imports System.Xml.Serialization
+
+Namespace Languages.Regular
     ''' <summary>
     ''' Data structure for creating deterministic finite automaton (DFA) objects.
     ''' </summary>
@@ -10,6 +13,7 @@
     '''  - Start state [ q0 ∈ Q ]
     '''  - Set of accept states [ F ⊆ Q ]
     ''' </remarks>
+    <Serializable()>
     Public Class DFA
         Implements ICloneable
 
@@ -20,55 +24,73 @@
 
 #Region "Properties"
         ''' <summary>
+        ''' Gets/sets the name of the DFA.
+        ''' </summary>
+        ''' <returns></returns>
+        <XmlAttribute()>
+        Public Property Name As String
+
+        ''' <summary>
         ''' Returns a string array containing all states of the DFA.
         ''' </summary>
         ''' <returns></returns>
-        Public ReadOnly Property States As String()
+        <XmlArrayItem(ElementName:="state", IsNullable:=True)>
+        Public Property States As String()
             Get
                 Return _states.ToArray()
             End Get
+            Set(value As String())
+                _states = value.ToList()
+            End Set
         End Property
 
         ''' <summary>
         ''' Returns a string array of input symbols.
         ''' </summary>
         ''' <returns></returns>
-        Public ReadOnly Property InputSymbols As String()
+        <XmlArrayItem(ElementName:="symbol", IsNullable:=True)>
+        Public Property InputSymbols As String()
             Get
                 Return _inputSymbols.ToArray()
             End Get
+            Set(value As String())
+                _inputSymbols = value.ToList()
+            End Set
+        End Property
+
+        ''' <summary>
+        ''' Gets/sets the start state.
+        ''' </summary>
+        <XmlElement(IsNullable:=True)>
+        Public Property StartState As String
+
+        ''' <summary>
+        ''' Returns a string array of accept states.
+        ''' </summary>
+        ''' <returns></returns>
+        <XmlArrayItem(ElementName:="state", IsNullable:=True)>
+        Public Property AcceptStates As String()
+            Get
+                Return _acceptStates.ToArray()
+            End Get
+            Set(value As String())
+                _acceptStates = value.ToList()
+            End Set
         End Property
 
         ''' <summary>
         ''' Returns an array containing all transition functions.
         ''' </summary>
         ''' <returns></returns>
-        Public ReadOnly Property Transitions As TransFunc()
+        <XmlArray(IsNullable:=True)>
+        Public Property Transitions As TransFunc()
             Get
                 Return _transitions.ToArray()
             End Get
+            Set(value As TransFunc())
+                _transitions = value.ToList()
+            End Set
         End Property
-
-        ''' <summary>
-        ''' Returns a string array of accept states.
-        ''' </summary>
-        ''' <returns></returns>
-        Public ReadOnly Property AcceptStates As String()
-            Get
-                Return _acceptStates.ToArray()
-            End Get
-        End Property
-
-        ''' <summary>
-        ''' Gets/sets the start state.
-        ''' </summary>
-        Public Property StartState As String
-
-        ''' <summary>
-        ''' Gets/sets the name of the DFA.
-        ''' </summary>
-        ''' <returns></returns>
-        Public Property Name As String
 #End Region
 
 #Region "Constructors"
@@ -258,11 +280,17 @@
     ''' <summary>
     '''  Data structure for creating transition functions.
     ''' </summary>
+    <Serializable()>
     Public Class TransFunc
         Implements ICloneable
 
+        <XmlAttribute()>
         Public Property PrevState As String
+
+        <XmlAttribute()>
         Public Property Input As String
+
+        <XmlAttribute()>
         Public Property NextState As String
 
         Public Sub New()
