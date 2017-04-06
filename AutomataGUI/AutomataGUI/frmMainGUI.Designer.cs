@@ -28,32 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.DiagramArea = new System.Windows.Forms.Panel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.lblMouseStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblStateCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.ts_btnAddState = new System.Windows.Forms.ToolStripButton();
             this.ts_btnDeleteState = new System.Windows.Forms.ToolStripButton();
             this.ts_btnConnect1 = new System.Windows.Forms.ToolStripButton();
             this.ts_btnConnect0 = new System.Windows.Forms.ToolStripButton();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.lblMouseStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblStateCount = new System.Windows.Forms.ToolStripStatusLabel();
+            this.DiagramArea = new AutomataGUI.MyPanel();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // DiagramArea
-            // 
-            this.DiagramArea.BackColor = System.Drawing.Color.White;
-            this.DiagramArea.Location = new System.Drawing.Point(25, 71);
-            this.DiagramArea.Name = "DiagramArea";
-            this.DiagramArea.Size = new System.Drawing.Size(638, 320);
-            this.DiagramArea.TabIndex = 0;
-            this.DiagramArea.Paint += new System.Windows.Forms.PaintEventHandler(this.DiagramArea_Paint);
-            this.DiagramArea.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DiagramArea_MouseClick);
-            this.DiagramArea.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DiagramArea_MouseMove);
             // 
             // menuStrip1
             // 
@@ -85,31 +74,6 @@
             this.toolStrip1.Size = new System.Drawing.Size(696, 27);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblMouseStatus,
-            this.lblStateCount});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 420);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(696, 25);
-            this.statusStrip1.TabIndex = 3;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // lblMouseStatus
-            // 
-            this.lblMouseStatus.AutoSize = false;
-            this.lblMouseStatus.Name = "lblMouseStatus";
-            this.lblMouseStatus.Size = new System.Drawing.Size(100, 20);
-            this.lblMouseStatus.Text = "Default";
-            // 
-            // lblStateCount
-            // 
-            this.lblStateCount.Name = "lblStateCount";
-            this.lblStateCount.Size = new System.Drawing.Size(17, 20);
-            this.lblStateCount.Text = "0";
             // 
             // ts_btnAddState
             // 
@@ -151,6 +115,41 @@
             this.ts_btnConnect0.Text = "Connect 0";
             this.ts_btnConnect0.Click += new System.EventHandler(this.ts_btnConnect0_Click);
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblMouseStatus,
+            this.lblStateCount});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 420);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(696, 25);
+            this.statusStrip1.TabIndex = 3;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // lblMouseStatus
+            // 
+            this.lblMouseStatus.AutoSize = false;
+            this.lblMouseStatus.Name = "lblMouseStatus";
+            this.lblMouseStatus.Size = new System.Drawing.Size(100, 20);
+            this.lblMouseStatus.Text = "Default";
+            // 
+            // lblStateCount
+            // 
+            this.lblStateCount.Name = "lblStateCount";
+            this.lblStateCount.Size = new System.Drawing.Size(17, 20);
+            this.lblStateCount.Text = "0";
+            // 
+            // DiagramArea
+            // 
+            this.DiagramArea.BackColor = System.Drawing.Color.White;
+            this.DiagramArea.Location = new System.Drawing.Point(0, 58);
+            this.DiagramArea.Name = "DiagramArea";
+            this.DiagramArea.Size = new System.Drawing.Size(684, 359);
+            this.DiagramArea.TabIndex = 0;
+            this.DiagramArea.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DiagramArea_MouseClick);
+            this.DiagramArea.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DiagramArea_MouseMove);
+            // 
             // frmMainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -177,8 +176,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Panel DiagramArea;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStrip toolStrip1;
@@ -189,6 +186,7 @@
         private System.Windows.Forms.ToolStripButton ts_btnConnect1;
         private System.Windows.Forms.ToolStripButton ts_btnConnect0;
         private System.Windows.Forms.ToolStripStatusLabel lblStateCount;
+        private MyPanel DiagramArea;
     }
 }
 
