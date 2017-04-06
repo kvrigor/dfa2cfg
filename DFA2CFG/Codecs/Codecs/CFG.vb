@@ -226,19 +226,58 @@ Namespace Languages.ContextFree
     Public Class GrammarRule
         Implements ICloneable
 
+        Private _substitutions As List(Of String)
+
         <XmlAttribute()>
         Public Property Variable As String
         <XmlElement(ElementName:="sub")>
         Public Property Substitutions As String()
+            Get
+                Return _substitutions.ToArray()
+            End Get
+            Set(value As String())
+                _substitutions = value.ToList()
+            End Set
+        End Property
 
+        ''' <summary>
+        ''' Creates an empty GrammarRule object.
+        ''' </summary>
         Public Sub New()
             _Variable = Nothing
             _Substitutions = Nothing
         End Sub
 
+        ''' <summary>
+        ''' Creates a GrammarRule object with the specified parameters.
+        ''' </summary>
+        ''' <param name="V">Variable.</param>
+        ''' <param name="sList">Array of substitution rules.</param>
         Public Sub New(ByVal V As String, ByVal sList As String())
             _Variable = V
-            _Substitutions = sList
+            _substitutions = sList.ToList()
+        End Sub
+
+        ''' <summary>
+        ''' Adds a substitution rule.
+        ''' </summary>
+        ''' <param name="s"></param>
+        Public Sub AddSubstitutions(ByVal s As String)
+            If _substitutions.Contains(s) Then
+                Throw New ArgumentException($"Variable '{_Variable}' already contains the substitution '{s}'.")
+            Else
+                _substitutions.Add(s)
+            End If
+        End Sub
+
+        ''' <summary>
+        ''' Adds an array of substitution rules.
+        ''' </summary>
+        ''' <param name="sArray"></param>
+        Public Sub AddSubstitutions(ByVal sArray() As String)
+            For Each s In sArray
+                AddSubstitutions(s)
+            Next
         End Sub
 
         Public Overrides Function ToString() As String
@@ -246,7 +285,7 @@ Namespace Languages.ContextFree
         End Function
 
         Public Function Clone() As Object Implements ICloneable.Clone
-            Return New GrammarRule(_Variable, _Substitutions)
+            Return New GrammarRule(_Variable, _substitutions.ToArray())
         End Function
     End Class
 
