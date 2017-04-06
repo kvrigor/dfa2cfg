@@ -1,13 +1,26 @@
 ﻿Imports Codecs.Languages.Regular
 Imports Codecs.Languages.ContextFree
-Imports Codecs.Utils.SerDes
+Imports Codecs.Utils
 
 Module ConsoleApp
     Sub Main()
-        'SerializeDFAExample()
-        'DeserializeDFAExample()
+        'SerDesExamples()
+        DFAToCFGExample()
+    End Sub
+
+    Private Sub SerDesExamples()
+        SerializeDFAExample()
+        DeserializeDFAExample()
         SerializeCFGExample()
         DeserializeCFGExample()
+    End Sub
+
+    Private Sub DFAToCFGExample()
+        Dim dfa1 As DFA = CreateSampleDFA()
+        Console.WriteLine(dfa1.ToString())
+        Dim cfg1 As CFG = dfa1.ToCFG("DFA_TO_CFG")
+        Console.WriteLine(cfg1.ToString())
+        Console.ReadKey()
     End Sub
 
     Private Sub SerializeDFAExample()
