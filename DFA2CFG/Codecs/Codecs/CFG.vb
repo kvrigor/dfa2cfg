@@ -35,6 +35,7 @@ Namespace Languages.ContextFree
         <XmlArrayItem(ElementName:="var", IsNullable:=True)>
         Public Property Variables As String()
             Get
+                _variables.Sort()
                 Return _variables.ToArray()
             End Get
             Set(value As String())
@@ -55,6 +56,7 @@ Namespace Languages.ContextFree
         <XmlArrayItem(ElementName:="symbol", IsNullable:=True)>
         Public Property Terminals As String()
             Get
+                _terminals.Sort()
                 Return _terminals.ToArray()
             End Get
             Set(value As String())
@@ -69,6 +71,7 @@ Namespace Languages.ContextFree
         <XmlArrayItem(ElementName:="rule", IsNullable:=True)>
         Public Property GrammarRules As GrammarRule()
             Get
+                SortGrammarRules()
                 Return _grammarRules.ToArray()
             End Get
             Set(value As GrammarRule())
@@ -207,15 +210,30 @@ Namespace Languages.ContextFree
 #Region "Object helper functions"
         Public Overrides Function ToString() As String
             Return $"CFG Name: {_Name}" & vbCrLf &
-               $"    V = {{{String.Join(", ", _variables)}}}" & vbCrLf &
-               $"    Σ = {{{String.Join(", ", _terminals)}}}" & vbCrLf &
+               $"    V = {{{String.Join(", ", Variables)}}}" & vbCrLf &
+               $"    Σ = {{{String.Join(", ", Terminals)}}}" & vbCrLf &
                $"    S = {_StartVariable}" & vbCrLf &
-               "    R:" & vbCrLf & vbTab & String.Join(vbCrLf & vbTab, _grammarRules)
+               "    R:" & vbCrLf & vbTab & String.Join(Of GrammarRule)(vbCrLf & vbTab, GrammarRules)
         End Function
 
         Public Function Clone() As Object Implements ICloneable.Clone
             Return New CFG(Variables, Terminals, GrammarRules, _StartVariable, _Name)
         End Function
+#End Region
+
+#Region "Private helper functions"
+        ''' <summary>
+        ''' Ensures start variable is located at the first element, 
+        ''' then the rest are sorted alphabetically.
+        ''' </summary>
+        Private Sub SortGrammarRules()
+            _grammarRules.Sort()
+            Dim startRule As GrammarRule = _grammarRules.SingleOrDefault(Function(ByVal gr As GrammarRule) gr.Variable = _StartVariable)
+            If startRule IsNot Nothing Then
+                _grammarRules.Remove(startRule)
+                _grammarRules.Insert(0, startRule)
+            End If
+        End Sub
 #End Region
     End Class
 
@@ -225,6 +243,7 @@ Namespace Languages.ContextFree
     <Serializable()>
     Public Class GrammarRule
         Implements ICloneable
+        Implements IComparable(Of GrammarRule)
 
         Private _substitutions As List(Of String)
 
@@ -245,7 +264,7 @@ Namespace Languages.ContextFree
         ''' </summary>
         Public Sub New()
             _Variable = Nothing
-            _Substitutions = Nothing
+            _substitutions = Nothing
         End Sub
 
         ''' <summary>
@@ -281,11 +300,19 @@ Namespace Languages.ContextFree
         End Sub
 
         Public Overrides Function ToString() As String
-            Return $"{_Variable} → {String.Join(" | ", _Substitutions)}"
+            Return $"{_Variable} → {String.Join(" | ", _substitutions)}"
         End Function
 
         Public Function Clone() As Object Implements ICloneable.Clone
             Return New GrammarRule(_Variable, _substitutions.ToArray())
+        End Function
+
+        Public Function CompareTo(other As GrammarRule) As Integer Implements IComparable(Of GrammarRule).CompareTo
+            If other Is Nothing Then
+                Return 1
+            Else
+                Return Me.Variable.CompareTo(other.Variable)
+            End If
         End Function
     End Class
 
