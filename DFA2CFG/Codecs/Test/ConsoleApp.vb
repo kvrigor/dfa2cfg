@@ -1,13 +1,27 @@
 ﻿Imports Codecs.Languages.Regular
 Imports Codecs.Languages.ContextFree
-Imports Codecs.Utils.SerDes
+Imports Codecs.Utils
 
 Module ConsoleApp
     Sub Main()
-        'SerializeDFAExample()
-        'DeserializeDFAExample()
+        Console.OutputEncoding = System.Text.Encoding.UTF8
+        'SerDesExamples()
+        DFAToCFGExample()
+    End Sub
+
+    Private Sub SerDesExamples()
+        SerializeDFAExample()
+        DeserializeDFAExample()
         SerializeCFGExample()
         DeserializeCFGExample()
+    End Sub
+
+    Private Sub DFAToCFGExample()
+        Dim dfa1 As DFA = CreateSampleDFA()
+        Console.WriteLine(dfa1.ToString())
+        Dim cfg1 As CFG = dfa1.ToCFG("DFA_TO_CFG")
+        Console.WriteLine(cfg1.ToString())
+        Console.ReadKey()
     End Sub
 
     Private Sub SerializeDFAExample()
@@ -47,15 +61,15 @@ Module ConsoleApp
     End Sub
 
     Private Function CreateSampleDFA() As DFA
-        Dim states() As String = {"q1", "q2", "q3"}
-        Dim symbols() As String = {"0", "1"}
+        Dim states() As String = {"q3", "q1", "q2"}
+        Dim symbols() As String = {"1", "0"}
         Dim transTable As New List(Of TransFunc)
-        transTable.Add(New TransFunc("q1", "0", "q1"))
-        transTable.Add(New TransFunc("q1", "1", "q2"))
-        transTable.Add(New TransFunc("q2", "0", "q3"))
-        transTable.Add(New TransFunc("q2", "1", "q2"))
         transTable.Add(New TransFunc("q3", "0", "q2"))
+        transTable.Add(New TransFunc("q1", "0", "q1"))
+        transTable.Add(New TransFunc("q2", "0", "q3"))
+        transTable.Add(New TransFunc("q1", "1", "q2"))
         transTable.Add(New TransFunc("q3", "1", "q2"))
+        transTable.Add(New TransFunc("q2", "1", "q2"))
         Return New DFA(states, symbols, transTable.ToArray(), "q1", {"q2"}, "DFA_Test")
     End Function
 
