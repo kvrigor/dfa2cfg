@@ -19,8 +19,26 @@ namespace AutomataGUI
         private State m_TargetZero;
         private DateTime timepressed;
 
+        //For MoveState
+        private Rectangle _moveState = new Rectangle();
+        private bool _blnMoveSet = false;
+
+
         private static State StateHovered;
         public static Dictionary<string, State> StateCollection = new Dictionary<string, State>();
+        public static void DrawAllStates(Panel panelArea, State exception = null)
+        {
+            foreach (KeyValuePair<string, State> item in State.StateCollection)
+            {
+                if (exception != null)
+                {
+                    if (exception.StateName != item.Value.StateName)
+                        item.Value.DrawIn(panelArea);
+                }
+                else
+                    item.Value.DrawIn(panelArea);
+            }
+        }
 
         private string StateName;
         private Point ImageLocation { get; set; }
@@ -35,23 +53,6 @@ namespace AutomataGUI
             
         }
 
-        private void Item_Select(object sender, EventArgs e)
-        {
-            var menuA = sender as MenuItem;
-            switch (menuA.Text)
-            {
-                case "Connect 0 to":
-                    Globals.MouseStatus = Globals.MouseCondition.ConnectZero;
-                    break;
-                case "Connect 1 to":
-                    break;
-                case "Delete":
-                    break;
-                default:
-                    break;
-            }
-        }
-
         public void DrawIn(Panel panelArea)
         {
             drawingBoard = panelArea;
@@ -61,12 +62,7 @@ namespace AutomataGUI
             myCircle = panelArea.CreateGraphics();
             myCircle.FillEllipse(myBrush, new Rectangle(ImageLocation, circleSize));
             myCircle.DrawEllipse(myPen, new Rectangle(ImageLocation, circleSize));
-
-            if (m_TargetOne != null)
-            {
-                Graphics oneline = panelArea.CreateGraphics();
-                oneline.DrawLine(Pens.Red, m_TargetOne.CenterLocation, this.CenterLocation);
-            }
+            
         }
 
         public bool IsInRange(Point xy)
@@ -91,19 +87,6 @@ namespace AutomataGUI
             var panelArea = sender as Panel;
             switch (Globals.MouseStatus)
             {
-                case Globals.MouseCondition.Hovered:
-                    if (!IsInRange(pointer.Location) && StateHovered == this)
-                    {
-                        Graphics myCircle;
-                        Pen myPen = new Pen(Color.Black);
-                        Brush myBrush = Brushes.DarkBlue;
-                        myCircle = panelArea.CreateGraphics();
-                        myCircle.FillEllipse(myBrush, new Rectangle(ImageLocation, circleSize));
-                        myCircle.DrawEllipse(myPen, new Rectangle(ImageLocation, circleSize));
-                        StateHovered = null;
-                        Globals.MouseStatus = Globals.MouseCondition.Default;
-                    }
-                    break;
                 case Globals.MouseCondition.Default:
                     if (IsInRange(pointer.Location) && StateHovered != this)
                     {
@@ -127,31 +110,8 @@ namespace AutomataGUI
                         StateHovered = null;
                     }
                     break;
-                case Globals.MouseCondition.MoveState:
-                    if (StateHovered == this)
-                    {
-                        ImageLocation = new Point(pointer.Location.X - radius, pointer.Location.Y - radius);
-                        CenterLocation = pointer.Location;
-                        Graphics myCircle;
-                        Pen myPen = new Pen(Color.Black);
-                        Brush myBrush = Brushes.LightBlue;
-                        myCircle = panelArea.CreateGraphics();
-                        myCircle.FillEllipse(myBrush, new Rectangle(ImageLocation, circleSize));
-                        myCircle.DrawEllipse(myPen, new Rectangle(ImageLocation, circleSize));
-                        //panelArea.Refresh();
-                    }
-                    break;
-                default:
-                    if (IsInRange(pointer.Location))
-                    {
-                        Graphics myCircle;
-                        Pen myPen = new Pen(Color.Black);
-                        Brush myBrush = Brushes.Blue;
-                        myCircle = panelArea.CreateGraphics();
-                        myCircle.FillEllipse(myBrush, new Rectangle(ImageLocation, circleSize));
-                        myCircle.DrawEllipse(myPen, new Rectangle(ImageLocation, circleSize));
-                    }
-                    else if (!IsInRange(pointer.Location))
+                case Globals.MouseCondition.Hovered:
+                    if (!IsInRange(pointer.Location) && StateHovered == this)
                     {
                         Graphics myCircle;
                         Pen myPen = new Pen(Color.Black);
@@ -159,7 +119,53 @@ namespace AutomataGUI
                         myCircle = panelArea.CreateGraphics();
                         myCircle.FillEllipse(myBrush, new Rectangle(ImageLocation, circleSize));
                         myCircle.DrawEllipse(myPen, new Rectangle(ImageLocation, circleSize));
+                        StateHovered = null;
+                        Globals.MouseStatus = Globals.MouseCondition.Default;
                     }
+                    break;
+                case Globals.MouseCondition.MoveState:
+                    if (StateHovered == this)
+                    {
+
+                        if (!_blnMoveSet)
+                        {
+                            Graphics tempG = panelArea.CreateGraphics();
+                            Brush tempB = Brushes.White;
+                            Pen tempP = Pens.White;
+                            tempG.FillEllipse(tempB, _moveState);
+                            tempG.DrawEllipse(tempP, _moveState);
+                        }
+                        // draw existing states
+                        State.DrawAllStates(panelArea, this);
+
+                        _moveState.Location = new Point(e.Location.X - 25, e.Location.Y - 25);
+                        _moveState.Size = circleSize;
+                        Graphics g = panelArea.CreateGraphics();
+                        Brush b = Brushes.LightBlue;
+                        Pen p = Pens.Black;
+                        g.FillEllipse(b, _moveState);
+                        g.DrawEllipse(p, _moveState);
+                    }
+                    break;
+                default:
+                    //if (IsInRange(pointer.Location))
+                    //{
+                    //    Graphics myCircle;
+                    //    Pen myPen = new Pen(Color.Black);
+                    //    Brush myBrush = Brushes.Blue;
+                    //    myCircle = panelArea.CreateGraphics();
+                    //    myCircle.FillEllipse(myBrush, new Rectangle(ImageLocation, circleSize));
+                    //    myCircle.DrawEllipse(myPen, new Rectangle(ImageLocation, circleSize));
+                    //}
+                    //else if (!IsInRange(pointer.Location))
+                    //{
+                    //    Graphics myCircle;
+                    //    Pen myPen = new Pen(Color.Black);
+                    //    Brush myBrush = Brushes.DarkBlue;
+                    //    myCircle = panelArea.CreateGraphics();
+                    //    myCircle.FillEllipse(myBrush, new Rectangle(ImageLocation, circleSize));
+                    //    myCircle.DrawEllipse(myPen, new Rectangle(ImageLocation, circleSize));
+                    //}
                     break;
             }
         }
@@ -172,7 +178,7 @@ namespace AutomataGUI
                 {
                     switch (Globals.MouseStatus)
                     {
-                        case Globals.MouseCondition.Hovered:
+                        case Globals.MouseCondition.Selected:
                             Globals.MouseStatus = Globals.MouseCondition.MoveState;
                             Cursor.Current = Cursors.SizeAll;
                             timepressed = DateTime.Now;
@@ -205,7 +211,8 @@ namespace AutomataGUI
                             CenterLocation = pointer.Location;
                             Globals.MouseStatus = Globals.MouseCondition.Default;
                             Cursor.Current = Cursors.Default;
-                            panelArea.Refresh();
+                            StateHovered = null;
+                            _blnMoveSet = false;
                             break;
                         default:
                             break;
@@ -227,6 +234,7 @@ namespace AutomataGUI
                         case Globals.MouseCondition.Default:
                             break;
                         case Globals.MouseCondition.Hovered:
+                            Globals.MouseStatus = Globals.MouseCondition.Selected;
                             break;
                         case Globals.MouseCondition.AddState:
                             break;

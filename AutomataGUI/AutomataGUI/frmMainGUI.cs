@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,7 +13,15 @@ namespace AutomataGUI
 {
     public partial class frmMainGUI : Form
     {
-        private int cnt = 0;
+        // Add State variables
+        private Size _circleSize = new Size(50, 50);
+        private Rectangle _addNewState = new Rectangle();
+        private bool _newStateSet = false;
+
+        private const int _stateMaxCount = 5;
+
+
+
         public frmMainGUI()
         {
             InitializeComponent();
@@ -27,24 +36,16 @@ namespace AutomataGUI
                     case Globals.MouseCondition.Default:
                         break;
                     case Globals.MouseCondition.AddState:
-                        if (State.StateCollection.Count < 5)
-                        {
-                            Point pointedAt = e.Location;
-                            cnt++;
-                            string name = cnt.ToString();
-                            State.StateCollection.Add(name, new State(name, pointedAt));
-                            DiagramArea.MouseMove += State.StateCollection[name].MouseHovered;
-                            DiagramArea.MouseDown += State.StateCollection[name].MouseDowned;
-                            DiagramArea.MouseUp += State.StateCollection[name].MouseReleased;
-                            DiagramArea.MouseClick += State.StateCollection[name].MouseClicked;
-                            State.StateCollection[name].DrawIn(DiagramArea);
-                            DiagramArea.Refresh();
-                        }
-                        else
-                        {
-                            MessageBox.Show("number state is at limit.");
-                        }
+                        Point pointedAt = e.Location;
+                        string name = State.StateCollection.Count.ToString();
+                        State.StateCollection.Add(name, new State(name, pointedAt));
+                        DiagramArea.MouseMove += State.StateCollection[name].MouseHovered;
+                        DiagramArea.MouseDown += State.StateCollection[name].MouseDowned;
+                        DiagramArea.MouseUp += State.StateCollection[name].MouseReleased;
+                        DiagramArea.MouseClick += State.StateCollection[name].MouseClicked;
+                        State.StateCollection[name].DrawIn(DiagramArea);
                         Globals.MouseStatus = Globals.MouseCondition.Default;
+                        _newStateSet = false;
                         break;
                     default:
                         break;
@@ -52,37 +53,41 @@ namespace AutomataGUI
             }
         }
 
-        private void ts_btnAddState_Click(object sender, EventArgs e)
-        {
-            Globals.MouseStatus = Globals.MouseCondition.AddState;
-        }
-
-        private void DiagramArea_Paint(object sender, PaintEventArgs e)
-        {
-            foreach (KeyValuePair<string, State> item in State.StateCollection)
-            {
-                item.Value.DrawIn(DiagramArea);
-            }
-            lblStateCount.Text = State.StateCollection.Count.ToString();
-        }
-
         private void DiagramArea_MouseMove(object sender, MouseEventArgs e)
         {
             switch (Globals.MouseStatus)
             {
                 case Globals.MouseCondition.AddState:
-                    DiagramArea.Refresh();
-                    Point pointedAt = new Point(e.Location.X - 25, e.Location.Y - 25);
-                    Graphics myCircle;
-                    Pen myPen = new Pen(Color.Black);
-                    Brush myBrush = Brushes.DarkBlue;
-                    myCircle = DiagramArea.CreateGraphics();
-                    myCircle.FillEllipse(myBrush, new Rectangle(pointedAt, new Size(50, 50)));
-                    myCircle.DrawEllipse(myPen, new Rectangle(pointedAt, new Size(50, 50)));
+                    if (!_newStateSet)
+                    {
+                        Graphics tempG = DiagramArea.CreateGraphics();
+                        Brush tempB = Brushes.White;
+                        Pen tempP = Pens.White;
+                        tempG.FillEllipse(tempB, _addNewState);
+                        tempG.DrawEllipse(tempP, _addNewState);
+                    }
+                    // draw existing states
+                    State.DrawAllStates(DiagramArea);
+
+                    _addNewState.Location = new Point(e.Location.X - 25, e.Location.Y - 25);
+                    _addNewState.Size = _circleSize;
+                    Graphics g = DiagramArea.CreateGraphics();
+                    Brush b = Brushes.LightBlue;
+                    Pen p = Pens.Black;
+                    g.FillEllipse(b, _addNewState);
+                    g.DrawEllipse(p, _addNewState);
                     break;
                 default:
                     break;
             }
+        }
+
+        private void ts_btnAddState_Click(object sender, EventArgs e)
+        {
+            if (State.StateCollection.Count >= _stateMaxCount)
+                MessageBox.Show("You already achieved the maximum number of states which is " + _stateMaxCount.ToString(), "Maximum number of states is achieved.");
+            else
+                Globals.MouseStatus = Globals.MouseCondition.AddState;
         }
 
         private void ts_btnDeleteState_Click(object sender, EventArgs e)
