@@ -12,7 +12,7 @@ namespace AutomataGUI
     {
         private const int radius = 25;
         private Size circleSize = new Size(2 * radius, 2 * radius);
-        private Panel drawingBoard;
+        private PictureBox drawingBoard;
 
         private Point m_CenterLocation;
         private State m_TargetOne;
@@ -23,10 +23,13 @@ namespace AutomataGUI
         private Rectangle _moveState = new Rectangle();
         private bool _blnMoveSet = false;
 
+        //Connect
+        private Point _oldConn1s;
+        private Point _oldConn1d;
 
         private static State StateHovered;
         public static Dictionary<string, State> StateCollection = new Dictionary<string, State>();
-        public static void DrawAllStates(Panel panelArea, State exception = null)
+        public static void DrawAllStates(PictureBox panelArea, State exception = null)
         {
             foreach (KeyValuePair<string, State> item in State.StateCollection)
             {
@@ -44,25 +47,17 @@ namespace AutomataGUI
         private Point ImageLocation { get; set; }
         public Point CenterLocation { get { return m_CenterLocation; } set { m_CenterLocation = value; } }
 
-        public State(string _name, Point centerPoint)
+        public State(string _name, Point centerPoint, PictureBox source)
         {
             StateName = _name;
             ImageLocation = new Point(centerPoint.X - radius, centerPoint.Y - radius);
             CenterLocation = centerPoint;
-            
-            
+            drawingBoard = source;
         }
 
-        public void DrawIn(Panel panelArea)
+        public void DrawIn(PictureBox panelArea)
         {
-            drawingBoard = panelArea;
-            Graphics myCircle;
-            Pen myPen = new Pen(Color.Black);
-            Brush myBrush = Brushes.DarkBlue;
-            myCircle = panelArea.CreateGraphics();
-            myCircle.FillEllipse(myBrush, new Rectangle(ImageLocation, circleSize));
-            myCircle.DrawEllipse(myPen, new Rectangle(ImageLocation, circleSize));
-            
+            Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black);
         }
 
         public bool IsInRange(Point xy)
@@ -84,88 +79,100 @@ namespace AutomataGUI
         public void MouseHovered(object sender, MouseEventArgs e)
         {
             var pointer = e as MouseEventArgs;
-            var panelArea = sender as Panel;
-            switch (Globals.MouseStatus)
+            var panelArea = sender as PictureBox;
+            switch (Registry.MouseStatus)
             {
-                case Globals.MouseCondition.Default:
+                case Registry.MouseCondition.Default:
                     if (IsInRange(pointer.Location) && StateHovered != this)
                     {
-                        Graphics myCircle;
-                        Pen myPen = new Pen(Color.Black);
-                        Brush myBrush = Brushes.Blue;
-                        myCircle = panelArea.CreateGraphics();
-                        myCircle.FillEllipse(myBrush, new Rectangle(ImageLocation, circleSize));
-                        myCircle.DrawEllipse(myPen, new Rectangle(ImageLocation, circleSize));
+                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.Blue, Pens.Black);
                         StateHovered = this;
-                        Globals.MouseStatus = Globals.MouseCondition.Hovered;
+                        Registry.MouseStatus = Registry.MouseCondition.Hovered;
                     }
                     else if (!IsInRange(pointer.Location) && StateHovered == this)
                     {
-                        Graphics myCircle;
-                        Pen myPen = new Pen(Color.Black);
-                        Brush myBrush = Brushes.DarkBlue;
-                        myCircle = panelArea.CreateGraphics();
-                        myCircle.FillEllipse(myBrush, new Rectangle(ImageLocation, circleSize));
-                        myCircle.DrawEllipse(myPen, new Rectangle(ImageLocation, circleSize));
+                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black);
                         StateHovered = null;
                     }
                     break;
-                case Globals.MouseCondition.Hovered:
+                case Registry.MouseCondition.Hovered:
                     if (!IsInRange(pointer.Location) && StateHovered == this)
                     {
-                        Graphics myCircle;
-                        Pen myPen = new Pen(Color.Black);
-                        Brush myBrush = Brushes.DarkBlue;
-                        myCircle = panelArea.CreateGraphics();
-                        myCircle.FillEllipse(myBrush, new Rectangle(ImageLocation, circleSize));
-                        myCircle.DrawEllipse(myPen, new Rectangle(ImageLocation, circleSize));
+                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black);
                         StateHovered = null;
-                        Globals.MouseStatus = Globals.MouseCondition.Default;
+                        Registry.MouseStatus = Registry.MouseCondition.Default;
                     }
                     break;
-                case Globals.MouseCondition.MoveState:
+                case Registry.MouseCondition.MoveState:
                     if (StateHovered == this)
                     {
-
                         if (!_blnMoveSet)
                         {
-                            Graphics tempG = panelArea.CreateGraphics();
-                            Brush tempB = Brushes.White;
-                            Pen tempP = Pens.White;
-                            tempG.FillEllipse(tempB, _moveState);
-                            tempG.DrawEllipse(tempP, _moveState);
+                            Utils.DrawCircle(panelArea, _moveState.Location, radius, Brushes.White, Pens.White);
                         }
                         // draw existing states
                         State.DrawAllStates(panelArea, this);
 
                         _moveState.Location = new Point(e.Location.X - 25, e.Location.Y - 25);
                         _moveState.Size = circleSize;
-                        Graphics g = panelArea.CreateGraphics();
-                        Brush b = Brushes.LightBlue;
-                        Pen p = Pens.Black;
-                        g.FillEllipse(b, _moveState);
-                        g.DrawEllipse(p, _moveState);
+                        Utils.DrawCircle(panelArea, _moveState.Location, radius, Brushes.LightBlue, Pens.Black);
+                    }
+                    break;
+                case Registry.MouseCondition.DeleteState:
+                    if (IsInRange(pointer.Location))
+                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.Blue, Pens.Black);
+                    else
+                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black);
+                    break;
+                case Registry.MouseCondition.ConnectOne:
+                    if (State.StateHovered == this)
+                    {
+                        if (IsInRange(pointer.Location))
+                        {
+                            //do nothing
+                        }
+                        else
+                        {
+                            if (_oldConn1s != null)
+                            {
+                                Utils.DrawLine(panelArea, _oldConn1s, _oldConn1d, Pens.White);
+                            }
+                            double angle;
+                            int x = 0;
+                            int y = 0;
+                            try
+                            {
+                                double numer = (double)(pointer.Y - CenterLocation.Y);
+                                double denom = (double)(pointer.X - CenterLocation.X);
+                                angle = Math.Atan(numer / denom);
+                                x = (int)Math.Round(radius * Math.Cos(angle), 0);
+                                y = (int)Math.Round(radius * Math.Sin(angle), 0);
+                                if (denom < 0)
+                                { x = x * -1; y = y * -1; }
+                            }
+                            catch (Exception ex)
+                            {
+                                if (pointer.X == CenterLocation.X)
+                                {
+                                    if (pointer.Y > CenterLocation.Y)
+                                        angle = Math.PI / 2;
+                                    else
+                                        angle = 0 - Math.PI / 2;
+                                }
+                                else
+                                {
+                                    MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+                                    throw;
+                                }
+                            }
+                            Point source = new Point(CenterLocation.X + x, CenterLocation.Y + y);
+                            Utils.DrawLine(panelArea, source, pointer.Location, Pens.Red);
+                            _oldConn1s = source;
+                            _oldConn1d = pointer.Location;
+                        }
                     }
                     break;
                 default:
-                    //if (IsInRange(pointer.Location))
-                    //{
-                    //    Graphics myCircle;
-                    //    Pen myPen = new Pen(Color.Black);
-                    //    Brush myBrush = Brushes.Blue;
-                    //    myCircle = panelArea.CreateGraphics();
-                    //    myCircle.FillEllipse(myBrush, new Rectangle(ImageLocation, circleSize));
-                    //    myCircle.DrawEllipse(myPen, new Rectangle(ImageLocation, circleSize));
-                    //}
-                    //else if (!IsInRange(pointer.Location))
-                    //{
-                    //    Graphics myCircle;
-                    //    Pen myPen = new Pen(Color.Black);
-                    //    Brush myBrush = Brushes.DarkBlue;
-                    //    myCircle = panelArea.CreateGraphics();
-                    //    myCircle.FillEllipse(myBrush, new Rectangle(ImageLocation, circleSize));
-                    //    myCircle.DrawEllipse(myPen, new Rectangle(ImageLocation, circleSize));
-                    //}
                     break;
             }
         }
@@ -176,10 +183,10 @@ namespace AutomataGUI
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    switch (Globals.MouseStatus)
+                    switch (Registry.MouseStatus)
                     {
-                        case Globals.MouseCondition.Selected:
-                            Globals.MouseStatus = Globals.MouseCondition.MoveState;
+                        case Registry.MouseCondition.Selected:
+                            Registry.MouseStatus = Registry.MouseCondition.MoveState;
                             Cursor.Current = Cursors.SizeAll;
                             timepressed = DateTime.Now;
                             break;
@@ -198,18 +205,18 @@ namespace AutomataGUI
                 var panelArea = sender as Panel;
                 if (e.Button == MouseButtons.Left)
                 {
-                    switch (Globals.MouseStatus)
+                    switch (Registry.MouseStatus)
                     {
-                        case Globals.MouseCondition.MoveState:
+                        case Registry.MouseCondition.MoveState:
                             if ((DateTime.Now - timepressed).TotalMilliseconds < 100)
                             {
-                                Globals.MouseStatus = Globals.MouseCondition.Default;
+                                Registry.MouseStatus = Registry.MouseCondition.Default;
                                 Cursor.Current = Cursors.Default;
                                 return;
                             }
                             ImageLocation = new Point(pointer.Location.X - radius, pointer.Location.Y - radius);
                             CenterLocation = pointer.Location;
-                            Globals.MouseStatus = Globals.MouseCondition.Default;
+                            Registry.MouseStatus = Registry.MouseCondition.Default;
                             Cursor.Current = Cursors.Default;
                             StateHovered = null;
                             _blnMoveSet = false;
@@ -229,38 +236,38 @@ namespace AutomataGUI
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    switch (Globals.MouseStatus)
+                    switch (Registry.MouseStatus)
                     {
-                        case Globals.MouseCondition.Default:
+                        case Registry.MouseCondition.Default:
                             break;
-                        case Globals.MouseCondition.Hovered:
-                            Globals.MouseStatus = Globals.MouseCondition.Selected;
+                        case Registry.MouseCondition.Hovered:
+                            Registry.MouseStatus = Registry.MouseCondition.Selected;
                             break;
-                        case Globals.MouseCondition.AddState:
+                        case Registry.MouseCondition.AddState:
                             break;
-                        case Globals.MouseCondition.DeleteState:
+                        case Registry.MouseCondition.DeleteState:
                             State.StateCollection[StateName].Dispose();
                             State.StateCollection.Remove(StateName);
                             panelArea.Refresh();
-                            Globals.MouseStatus = Globals.MouseCondition.Default;
+                            Registry.MouseStatus = Registry.MouseCondition.Default;
                             break;
-                        case Globals.MouseCondition.MoveState:
+                        case Registry.MouseCondition.MoveState:
                             break;
-                        case Globals.MouseCondition.ConnectOne:
+                        case Registry.MouseCondition.ConnectOne:
                             if (State.StateHovered == null)
                             {
                                 State.StateHovered = this;
                             }
                             else if (StateHovered != this)
                             {
-                                Graphics oneline = panelArea.CreateGraphics();
-                                oneline.DrawLine(Pens.Red, StateHovered.CenterLocation, this.CenterLocation);
+                                //Graphics oneline = panelArea.CreateGraphics();
+                                //oneline.DrawLine(Pens.Red, StateHovered.CenterLocation, this.CenterLocation);
                                 StateHovered.m_TargetOne = this;
-                                Globals.MouseStatus = Globals.MouseCondition.Default;
+                                Registry.MouseStatus = Registry.MouseCondition.Default;
                                 StateHovered = null;
                             }
                             break;
-                        case Globals.MouseCondition.ConnectZero:
+                        case Registry.MouseCondition.ConnectZero:
                             break;
                         default:
                             break;

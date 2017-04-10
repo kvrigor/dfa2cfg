@@ -20,31 +20,35 @@ namespace AutomataGUI
 
         private const int _stateMaxCount = 5;
 
+        private Timer _ticker = new Timer();
 
 
         public frmMainGUI()
         {
             InitializeComponent();
+            _ticker.Interval = 100;
+            _ticker.Tick += ticker_Ticked;
+            _ticker.Start();
         }
 
         private void DiagramArea_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                switch (Globals.MouseStatus)
+                switch (Registry.MouseStatus)
                 {
-                    case Globals.MouseCondition.Default:
+                    case Registry.MouseCondition.Default:
                         break;
-                    case Globals.MouseCondition.AddState:
+                    case Registry.MouseCondition.AddState:
                         Point pointedAt = e.Location;
                         string name = State.StateCollection.Count.ToString();
-                        State.StateCollection.Add(name, new State(name, pointedAt));
+                        State.StateCollection.Add(name, new State(name, pointedAt, DiagramArea));
                         DiagramArea.MouseMove += State.StateCollection[name].MouseHovered;
                         DiagramArea.MouseDown += State.StateCollection[name].MouseDowned;
                         DiagramArea.MouseUp += State.StateCollection[name].MouseReleased;
                         DiagramArea.MouseClick += State.StateCollection[name].MouseClicked;
                         State.StateCollection[name].DrawIn(DiagramArea);
-                        Globals.MouseStatus = Globals.MouseCondition.Default;
+                        Registry.MouseStatus = Registry.MouseCondition.Default;
                         _newStateSet = false;
                         break;
                     default:
@@ -55,9 +59,9 @@ namespace AutomataGUI
 
         private void DiagramArea_MouseMove(object sender, MouseEventArgs e)
         {
-            switch (Globals.MouseStatus)
+            switch (Registry.MouseStatus)
             {
-                case Globals.MouseCondition.AddState:
+                case Registry.MouseCondition.AddState:
                     if (!_newStateSet)
                     {
                         Graphics tempG = DiagramArea.CreateGraphics();
@@ -87,27 +91,28 @@ namespace AutomataGUI
             if (State.StateCollection.Count >= _stateMaxCount)
                 MessageBox.Show("You already achieved the maximum number of states which is " + _stateMaxCount.ToString(), "Maximum number of states is achieved.");
             else
-                Globals.MouseStatus = Globals.MouseCondition.AddState;
+                Registry.MouseStatus = Registry.MouseCondition.AddState;
         }
 
         private void ts_btnDeleteState_Click(object sender, EventArgs e)
         {
-            Globals.MouseStatus = Globals.MouseCondition.DeleteState;
+            Registry.MouseStatus = Registry.MouseCondition.DeleteState;
         }
 
         private void ts_btnConnect1_Click(object sender, EventArgs e)
         {
-            Globals.MouseStatus = Globals.MouseCondition.ConnectOne;
+            Registry.MouseStatus = Registry.MouseCondition.ConnectOne;
         }
 
         private void ts_btnConnect0_Click(object sender, EventArgs e)
         {
-            Globals.MouseStatus = Globals.MouseCondition.ConnectZero;
+            Registry.MouseStatus = Registry.MouseCondition.ConnectZero;
         }
 
-        private void frmMainGUI_MouseMove(object sender, MouseEventArgs e)
+        private void ticker_Ticked(object sender, EventArgs e)
         {
-            lblMouseStatus.Text = Globals.MouseStatus.ToString();
+            lblMouseStatus.Text = Registry.MouseStatus.ToString();
         }
+
     }
 }
