@@ -37,6 +37,7 @@ Namespace Languages.Regular
         <XmlArrayItem(ElementName:="state", IsNullable:=True)>
         Public Property States As String()
             Get
+                _states.Sort()
                 Return _states.ToArray()
             End Get
             Set(value As String())
@@ -51,6 +52,7 @@ Namespace Languages.Regular
         <XmlArrayItem(ElementName:="symbol", IsNullable:=True)>
         Public Property InputSymbols As String()
             Get
+                _inputSymbols.Sort()
                 Return _inputSymbols.ToArray()
             End Get
             Set(value As String())
@@ -71,6 +73,7 @@ Namespace Languages.Regular
         <XmlArrayItem(ElementName:="state", IsNullable:=True)>
         Public Property AcceptStates As String()
             Get
+                _acceptStates.Sort()
                 Return _acceptStates.ToArray()
             End Get
             Set(value As String())
@@ -85,6 +88,7 @@ Namespace Languages.Regular
         <XmlArray(IsNullable:=True)>
         Public Property Transitions As TransFunc()
             Get
+                _transitions.Sort()
                 Return _transitions.ToArray()
             End Get
             Set(value As TransFunc())
@@ -257,10 +261,10 @@ Namespace Languages.Regular
 #Region "Object helper functions"
         Public Overrides Function ToString() As String
             Return $"DFA Name: {_Name}" & vbCrLf &
-               $"    Q = {{{String.Join(", ", _states)}}}" & vbCrLf &
-               $"    Σ = {{{String.Join(", ", _inputSymbols)}}}" & vbCrLf &
+               $"    Q = {{{String.Join(", ", States)}}}" & vbCrLf &
+               $"    Σ = {{{String.Join(", ", InputSymbols)}}}" & vbCrLf &
                $"   q0 = {_StartState}" & vbCrLf &
-               $"    F = {{{String.Join(", ", _acceptStates)}}}" & vbCrLf &
+               $"    F = {{{String.Join(", ", AcceptStates)}}}" & vbCrLf &
                "    𝛿:" & vbCrLf & PrintTransitionTable()
         End Function
 
@@ -283,6 +287,7 @@ Namespace Languages.Regular
     <Serializable()>
     Public Class TransFunc
         Implements ICloneable
+        Implements IComparable(Of TransFunc)
 
         <XmlAttribute()>
         Public Property PrevState As String
@@ -320,6 +325,14 @@ Namespace Languages.Regular
 
         Public Function Clone() As Object Implements ICloneable.Clone
             Return New TransFunc(_PrevState, _Input, _NextState)
+        End Function
+
+        Public Function CompareTo(other As TransFunc) As Integer Implements IComparable(Of TransFunc).CompareTo
+            If other Is Nothing Then
+                Return 1
+            Else
+                Return Me.PrevState.CompareTo(other.PrevState)
+            End If
         End Function
     End Class
 End Namespace
