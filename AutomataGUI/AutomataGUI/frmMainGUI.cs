@@ -26,9 +26,32 @@ namespace AutomataGUI
         public frmMainGUI()
         {
             InitializeComponent();
+            DiagramArea.Image = new Bitmap(DiagramArea.Width, DiagramArea.Height);
+            Registry.FixedImage = (Image)DiagramArea.Image.Clone();
             _ticker.Interval = 100;
             _ticker.Tick += ticker_Ticked;
             _ticker.Start();
+        }
+
+        private void ts_btnAddState_Click(object sender, EventArgs e)
+        {
+            if (State.StateCollection.Count >= _stateMaxCount)
+                MessageBox.Show("You already achieved the maximum number of states which is " + _stateMaxCount.ToString(), "Maximum number of states is achieved.");
+            else
+                Registry.MouseStatus = Registry.MouseCondition.AddState;
+        }
+
+        private void DiagramArea_MouseMove(object sender, MouseEventArgs e)
+        {
+            switch (Registry.MouseStatus)
+            {
+                case Registry.MouseCondition.AddState:
+                    Utils.DrawCircle(DiagramArea, new Point(e.Location.X - 25, e.Location.Y - 25), 25, Brushes.LightBlue, Pens.Black, false);
+                    break;
+                default:
+                    break;
+            }
+            lblMousePos.Text = e.Location.X.ToString() + "," + e.Location.Y.ToString();
         }
 
         private void DiagramArea_MouseClick(object sender, MouseEventArgs e)
@@ -57,43 +80,6 @@ namespace AutomataGUI
             }
         }
 
-        private void DiagramArea_MouseMove(object sender, MouseEventArgs e)
-        {
-            switch (Registry.MouseStatus)
-            {
-                case Registry.MouseCondition.AddState:
-                    if (!_newStateSet)
-                    {
-                        Graphics tempG = DiagramArea.CreateGraphics();
-                        Brush tempB = Brushes.White;
-                        Pen tempP = Pens.White;
-                        tempG.FillEllipse(tempB, _addNewState);
-                        tempG.DrawEllipse(tempP, _addNewState);
-                    }
-                    // draw existing states
-                    State.DrawAllStates(DiagramArea);
-
-                    _addNewState.Location = new Point(e.Location.X - 25, e.Location.Y - 25);
-                    _addNewState.Size = _circleSize;
-                    Graphics g = DiagramArea.CreateGraphics();
-                    Brush b = Brushes.LightBlue;
-                    Pen p = Pens.Black;
-                    g.FillEllipse(b, _addNewState);
-                    g.DrawEllipse(p, _addNewState);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void ts_btnAddState_Click(object sender, EventArgs e)
-        {
-            if (State.StateCollection.Count >= _stateMaxCount)
-                MessageBox.Show("You already achieved the maximum number of states which is " + _stateMaxCount.ToString(), "Maximum number of states is achieved.");
-            else
-                Registry.MouseStatus = Registry.MouseCondition.AddState;
-        }
-
         private void ts_btnDeleteState_Click(object sender, EventArgs e)
         {
             Registry.MouseStatus = Registry.MouseCondition.DeleteState;
@@ -114,5 +100,9 @@ namespace AutomataGUI
             lblMouseStatus.Text = Registry.MouseStatus.ToString();
         }
 
+        private void tsbtnTest_Click(object sender, EventArgs e)
+        {
+            
+        }
     }
 }

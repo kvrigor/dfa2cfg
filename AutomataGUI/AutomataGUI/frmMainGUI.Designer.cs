@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMainGUI));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -39,6 +40,8 @@
             this.lblMouseStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblStateCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.DiagramArea = new System.Windows.Forms.PictureBox();
+            this.tsbtnTest = new System.Windows.Forms.ToolStripButton();
+            this.lblMousePos = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -69,7 +72,8 @@
             this.ts_btnAddState,
             this.ts_btnDeleteState,
             this.ts_btnConnect1,
-            this.ts_btnConnect0});
+            this.ts_btnConnect0,
+            this.tsbtnTest});
             this.toolStrip1.Location = new System.Drawing.Point(0, 28);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(696, 27);
@@ -121,7 +125,8 @@
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblMouseStatus,
-            this.lblStateCount});
+            this.lblStateCount,
+            this.lblMousePos});
             this.statusStrip1.Location = new System.Drawing.Point(0, 420);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(696, 25);
@@ -151,6 +156,23 @@
             this.DiagramArea.TabStop = false;
             this.DiagramArea.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DiagramArea_MouseClick);
             this.DiagramArea.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DiagramArea_MouseMove);
+            // 
+            // tsbtnTest
+            // 
+            this.tsbtnTest.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbtnTest.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnTest.Image")));
+            this.tsbtnTest.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbtnTest.Name = "tsbtnTest";
+            this.tsbtnTest.Size = new System.Drawing.Size(24, 24);
+            this.tsbtnTest.Text = "toolStripButton1";
+            this.tsbtnTest.Click += new System.EventHandler(this.tsbtnTest_Click);
+            // 
+            // lblMousePos
+            // 
+            this.lblMousePos.AutoSize = false;
+            this.lblMousePos.Name = "lblMousePos";
+            this.lblMousePos.Size = new System.Drawing.Size(70, 20);
+            this.lblMousePos.Text = "0,0";
             // 
             // frmMainGUI
             // 
@@ -190,6 +212,8 @@
         private System.Windows.Forms.ToolStripButton ts_btnConnect0;
         private System.Windows.Forms.ToolStripStatusLabel lblStateCount;
         private System.Windows.Forms.PictureBox DiagramArea;
+        private System.Windows.Forms.ToolStripButton tsbtnTest;
+        private System.Windows.Forms.ToolStripStatusLabel lblMousePos;
     }
 }
 

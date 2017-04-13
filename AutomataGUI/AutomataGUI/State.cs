@@ -57,7 +57,7 @@ namespace AutomataGUI
 
         public void DrawIn(PictureBox panelArea)
         {
-            Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black);
+            Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
         }
 
         public bool IsInRange(Point xy)
@@ -85,20 +85,20 @@ namespace AutomataGUI
                 case Registry.MouseCondition.Default:
                     if (IsInRange(pointer.Location) && StateHovered != this)
                     {
-                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.Blue, Pens.Black);
+                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.Blue, Pens.Black, false);
                         StateHovered = this;
                         Registry.MouseStatus = Registry.MouseCondition.Hovered;
                     }
-                    else if (!IsInRange(pointer.Location) && StateHovered == this)
-                    {
-                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black);
-                        StateHovered = null;
-                    }
+                    //else if (!IsInRange(pointer.Location) && StateHovered == this)
+                    //{
+                    //    Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
+                    //    StateHovered = null;
+                    //}
                     break;
                 case Registry.MouseCondition.Hovered:
                     if (!IsInRange(pointer.Location) && StateHovered == this)
                     {
-                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black);
+                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
                         StateHovered = null;
                         Registry.MouseStatus = Registry.MouseCondition.Default;
                     }
@@ -106,23 +106,23 @@ namespace AutomataGUI
                 case Registry.MouseCondition.MoveState:
                     if (StateHovered == this)
                     {
-                        if (!_blnMoveSet)
-                        {
-                            Utils.DrawCircle(panelArea, _moveState.Location, radius, Brushes.White, Pens.White);
-                        }
-                        // draw existing states
-                        State.DrawAllStates(panelArea, this);
+                        //if (!_blnMoveSet)
+                        //{
+                        //    Utils.DrawCircle(panelArea, _moveState.Location, radius, Brushes.White, Pens.White);
+                        //}
+                        //// draw existing states
+                        //State.DrawAllStates(panelArea, this);
 
                         _moveState.Location = new Point(e.Location.X - 25, e.Location.Y - 25);
                         _moveState.Size = circleSize;
-                        Utils.DrawCircle(panelArea, _moveState.Location, radius, Brushes.LightBlue, Pens.Black);
+                        Utils.DrawCircle(panelArea, _moveState.Location, radius, Brushes.LightBlue, Pens.Black, false);
                     }
                     break;
                 case Registry.MouseCondition.DeleteState:
                     if (IsInRange(pointer.Location))
-                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.Blue, Pens.Black);
+                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.Blue, Pens.Black, false);
                     else
-                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black);
+                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, false);
                     break;
                 case Registry.MouseCondition.ConnectOne:
                     if (State.StateHovered == this)
@@ -189,6 +189,9 @@ namespace AutomataGUI
                             Registry.MouseStatus = Registry.MouseCondition.MoveState;
                             Cursor.Current = Cursors.SizeAll;
                             timepressed = DateTime.Now;
+                            //erase
+                            Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.White, Pens.White, true);
+                            Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.LightBlue, Pens.Black, false);
                             break;
                         default:
                             break;
@@ -246,9 +249,9 @@ namespace AutomataGUI
                         case Registry.MouseCondition.AddState:
                             break;
                         case Registry.MouseCondition.DeleteState:
+                            Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.White, Pens.White, true);
                             State.StateCollection[StateName].Dispose();
                             State.StateCollection.Remove(StateName);
-                            panelArea.Refresh();
                             Registry.MouseStatus = Registry.MouseCondition.Default;
                             break;
                         case Registry.MouseCondition.MoveState:
