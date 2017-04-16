@@ -26,7 +26,7 @@ namespace AutomataGUI
         //Connect
         private Point _oldConn1s;
         private Point _oldConn1d;
-
+        
         private static State StateHovered;
         public static Dictionary<string, State> StateCollection = new Dictionary<string, State>();
         public static void DrawAllStates(PictureBox panelArea, State exception = null)
@@ -44,12 +44,52 @@ namespace AutomataGUI
         }
 
         private string StateName;
+
+        private struct MagnetPoint
+        {
+            public Point Location;
+            public bool Available;
+            public MagnetPoint(Point _point, bool _avail)
+            {
+                Location = _point;
+                Available = _avail;
+            }
+        }
+        private Dictionary<string, MagnetPoint> _AvailablePoints;
         private Point ImageLocation { get; set; }
-        public Point CenterLocation { get { return m_CenterLocation; } set { m_CenterLocation = value; } }
+        public Point CenterLocation { get { return m_CenterLocation; }
+            set
+            {
+                m_CenterLocation = value;
+                if (_AvailablePoints.Count == 0)
+                {
+                    _AvailablePoints.Add("1", new MagnetPoint(new Point(m_CenterLocation.X, m_CenterLocation.Y - radius), false));
+                    _AvailablePoints.Add("2", new MagnetPoint(new Point(m_CenterLocation.X + (int)(radius / Math.Sqrt(2)), m_CenterLocation.Y - (int)(radius / Math.Sqrt(2))), false));
+                    _AvailablePoints.Add("3", new MagnetPoint(new Point(m_CenterLocation.X + radius, m_CenterLocation.Y), false));
+                    _AvailablePoints.Add("4", new MagnetPoint(new Point(m_CenterLocation.X + (int)(radius / Math.Sqrt(2)), m_CenterLocation.Y + (int)(radius / Math.Sqrt(2))), false));
+                    _AvailablePoints.Add("5", new MagnetPoint(new Point(m_CenterLocation.X, m_CenterLocation.Y + radius), false));
+                    _AvailablePoints.Add("6", new MagnetPoint(new Point(m_CenterLocation.X - (int)(radius / Math.Sqrt(2)), m_CenterLocation.Y + (int)(radius / Math.Sqrt(2))), false));
+                    _AvailablePoints.Add("7", new MagnetPoint(new Point(m_CenterLocation.X - radius, m_CenterLocation.Y), false));
+                    _AvailablePoints.Add("8", new MagnetPoint(new Point(m_CenterLocation.X - (int)(radius / Math.Sqrt(2)), m_CenterLocation.Y - (int)(radius / Math.Sqrt(2))), false));
+                }
+                else
+                {
+                    _AvailablePoints["1"] = new MagnetPoint(new Point(m_CenterLocation.X, m_CenterLocation.Y - radius), false);
+                    _AvailablePoints["2"] = new MagnetPoint(new Point(m_CenterLocation.X + (int)(radius / Math.Sqrt(2)), m_CenterLocation.Y - (int)(radius / Math.Sqrt(2))), false);
+                    _AvailablePoints["3"] = new MagnetPoint(new Point(m_CenterLocation.X + radius, m_CenterLocation.Y), false);
+                    _AvailablePoints["4"] = new MagnetPoint(new Point(m_CenterLocation.X + (int)(radius / Math.Sqrt(2)), m_CenterLocation.Y + (int)(radius / Math.Sqrt(2))), false);
+                    _AvailablePoints["5"] = new MagnetPoint(new Point(m_CenterLocation.X, m_CenterLocation.Y + radius), false);
+                    _AvailablePoints["6"] = new MagnetPoint(new Point(m_CenterLocation.X - (int)(radius / Math.Sqrt(2)), m_CenterLocation.Y + (int)(radius / Math.Sqrt(2))), false);
+                    _AvailablePoints["7"] = new MagnetPoint(new Point(m_CenterLocation.X - radius, m_CenterLocation.Y), false);
+                    _AvailablePoints["8"] = new MagnetPoint(new Point(m_CenterLocation.X - (int)(radius / Math.Sqrt(2)), m_CenterLocation.Y - (int)(radius / Math.Sqrt(2))), false);
+                }
+            }
+        }
 
         public State(string _name, Point centerPoint, PictureBox source)
         {
             StateName = _name;
+            _AvailablePoints = new Dictionary<string, MagnetPoint>();
             ImageLocation = new Point(centerPoint.X - radius, centerPoint.Y - radius);
             CenterLocation = centerPoint;
             drawingBoard = source;
@@ -106,16 +146,34 @@ namespace AutomataGUI
                 case Registry.MouseCondition.MoveState:
                     if (StateHovered == this)
                     {
-                        //if (!_blnMoveSet)
-                        //{
-                        //    Utils.DrawCircle(panelArea, _moveState.Location, radius, Brushes.White, Pens.White);
-                        //}
-                        //// draw existing states
-                        //State.DrawAllStates(panelArea, this);
-
                         _moveState.Location = new Point(e.Location.X - 25, e.Location.Y - 25);
                         _moveState.Size = circleSize;
-                        Utils.DrawCircle(panelArea, _moveState.Location, radius, Brushes.LightBlue, Pens.Black, false);
+                        
+                        if (m_TargetOne == null)
+                        {
+                            Utils.DrawCircle(panelArea, _moveState.Location, radius, Brushes.LightBlue, Pens.Black, false);
+                        }
+                        else
+                        {
+                            Registry.CircleParam _circle = new Registry.CircleParam();
+                            _circle.ImageLocation = _moveState.Location;
+                            _circle.Radius = radius;
+                            _circle.FillColor = Brushes.LightBlue;
+                            _circle.OutlineColor = Pens.Black;
+
+                            ImageLocation = _moveState.Location;
+                            CenterLocation = e.Location;
+
+                            string source = GetNearestPointIndex(m_TargetOne.CenterLocation);
+                            Registry.LineParam _line = new Registry.LineParam();
+                            _line.Source = _AvailablePoints[source].Location;
+                            _line.Destination = m_TargetOne.GetMagnetPoint(_moveState.Location);
+                            Pen asd = new Pen(Color.Red, 3);
+                            asd.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                            _line.LineColor = asd;
+
+                            Utils.DrawLineAndCircle(panelArea, _circle, _line, false);
+                        }
                     }
                     break;
                 case Registry.MouseCondition.DeleteState:
@@ -125,7 +183,14 @@ namespace AutomataGUI
                         Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, false);
                     break;
                 case Registry.MouseCondition.ConnectOne:
-                    if (State.StateHovered == this)
+                    if (StateHovered == null)
+                    {
+                        if (IsInRange(pointer.Location))
+                            Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.Blue, Pens.Black, true);
+                        else
+                            Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
+                    }
+                    else if (State.StateHovered == this)
                     {
                         if (IsInRange(pointer.Location))
                         {
@@ -133,42 +198,14 @@ namespace AutomataGUI
                         }
                         else
                         {
-                            if (_oldConn1s != null)
-                            {
-                                Utils.DrawLine(panelArea, _oldConn1s, _oldConn1d, Pens.White);
-                            }
-                            double angle;
-                            int x = 0;
-                            int y = 0;
-                            try
-                            {
-                                double numer = (double)(pointer.Y - CenterLocation.Y);
-                                double denom = (double)(pointer.X - CenterLocation.X);
-                                angle = Math.Atan(numer / denom);
-                                x = (int)Math.Round(radius * Math.Cos(angle), 0);
-                                y = (int)Math.Round(radius * Math.Sin(angle), 0);
-                                if (denom < 0)
-                                { x = x * -1; y = y * -1; }
-                            }
-                            catch (Exception ex)
-                            {
-                                if (pointer.X == CenterLocation.X)
-                                {
-                                    if (pointer.Y > CenterLocation.Y)
-                                        angle = Math.PI / 2;
-                                    else
-                                        angle = 0 - Math.PI / 2;
-                                }
-                                else
-                                {
-                                    MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
-                                    throw;
-                                }
-                            }
-                            Point source = new Point(CenterLocation.X + x, CenterLocation.Y + y);
-                            Utils.DrawLine(panelArea, source, pointer.Location, Pens.Red);
-                            _oldConn1s = source;
-                            _oldConn1d = pointer.Location;
+                            string source = GetNearestPointIndex(pointer.Location);
+                            Registry.LineParam _line = new Registry.LineParam();
+                            _line.Source = _AvailablePoints[source].Location;
+                            _line.Destination = pointer.Location;
+                            Pen _pen = new Pen(Color.Red, 3);
+                            _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                            _line.LineColor = _pen;
+                            Utils.DrawLine(panelArea, _line, false);
                         }
                     }
                     break;
@@ -181,20 +218,31 @@ namespace AutomataGUI
         {
             if (StateHovered == this)
             {
-                if (e.Button == MouseButtons.Left)
+                if (IsInRange(e.Location))
                 {
-                    switch (Registry.MouseStatus)
+                    if (e.Button == MouseButtons.Left)
                     {
-                        case Registry.MouseCondition.Selected:
-                            Registry.MouseStatus = Registry.MouseCondition.MoveState;
-                            Cursor.Current = Cursors.SizeAll;
-                            timepressed = DateTime.Now;
-                            //erase
-                            Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.White, Pens.White, true);
-                            Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.LightBlue, Pens.Black, false);
-                            break;
-                        default:
-                            break;
+                        switch (Registry.MouseStatus)
+                        {
+                            case Registry.MouseCondition.Selected:
+                                Registry.MouseStatus = Registry.MouseCondition.MoveState;
+                                Cursor.Current = Cursors.SizeAll;
+                                timepressed = DateTime.Now;
+                                //erase
+                                Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.White, Pens.White, true);
+                                Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.LightBlue, Pens.Black, false);
+                                string myindex = GetNearestPointIndex(m_TargetOne.CenterLocation);
+                                Registry.LineParam _line = new Registry.LineParam();
+                                _line.Source = _AvailablePoints[myindex].Location; 
+                                _line.Destination = m_TargetOne.GetMagnetPoint(CenterLocation);
+                                Pen _pen = new Pen(Color.White, 3);
+                                _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                _line.LineColor = _pen;
+                                Utils.DrawLine(drawingBoard, _line, true);
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
             }
@@ -211,7 +259,7 @@ namespace AutomataGUI
                     switch (Registry.MouseStatus)
                     {
                         case Registry.MouseCondition.MoveState:
-                            if ((DateTime.Now - timepressed).TotalMilliseconds < 100)
+                            if ((DateTime.Now - timepressed).TotalMilliseconds < 200)
                             {
                                 Registry.MouseStatus = Registry.MouseCondition.Default;
                                 Cursor.Current = Cursors.Default;
@@ -223,6 +271,18 @@ namespace AutomataGUI
                             Cursor.Current = Cursors.Default;
                             StateHovered = null;
                             _blnMoveSet = false;
+
+                            if (m_TargetOne != null)
+                            {
+                                string myindex = GetNearestPointIndex(m_TargetOne.CenterLocation);
+                                Registry.LineParam _line = new Registry.LineParam();
+                                _line.Source = _AvailablePoints[myindex].Location;
+                                _line.Destination = m_TargetOne.GetMagnetPoint(CenterLocation);
+                                Pen _pen = new Pen(Color.Red, 3);
+                                _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                _line.LineColor = _pen;
+                                Utils.DrawLine(drawingBoard, _line, true);
+                            }
                             break;
                         default:
                             break;
@@ -235,13 +295,13 @@ namespace AutomataGUI
         {
             var pointer = e as MouseEventArgs;
             var panelArea = sender as Panel;
-            if (IsInRange(pointer.Location))
+            if (e.Button == MouseButtons.Left)
             {
-                if (e.Button == MouseButtons.Left)
+                if (IsInRange(pointer.Location))
                 {
                     switch (Registry.MouseStatus)
                     {
-                        case Registry.MouseCondition.Default:
+                        case Registry.MouseCondition.Selected:
                             break;
                         case Registry.MouseCondition.Hovered:
                             Registry.MouseStatus = Registry.MouseCondition.Selected;
@@ -263,14 +323,36 @@ namespace AutomataGUI
                             }
                             else if (StateHovered != this)
                             {
-                                //Graphics oneline = panelArea.CreateGraphics();
-                                //oneline.DrawLine(Pens.Red, StateHovered.CenterLocation, this.CenterLocation);
                                 StateHovered.m_TargetOne = this;
+                                string myindex = GetNearestPointIndex(StateHovered.CenterLocation);
+                                Registry.LineParam _line = new Registry.LineParam();
+                                _line.Source = StateHovered.GetMagnetPoint(CenterLocation);
+                                _line.Destination = _AvailablePoints[myindex].Location; 
+                                Pen _pen = new Pen(Color.Red, 3);
+                                _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                _line.LineColor = _pen;
+                                Utils.DrawLine(drawingBoard, _line, true);
                                 Registry.MouseStatus = Registry.MouseCondition.Default;
                                 StateHovered = null;
                             }
                             break;
                         case Registry.MouseCondition.ConnectZero:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (Registry.MouseStatus)
+                    {
+                        case Registry.MouseCondition.Selected:
+                            if (StateHovered == this)
+                            {
+                                Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
+                                StateHovered = null;
+                                Registry.MouseStatus = Registry.MouseCondition.Default;
+                            }
                             break;
                         default:
                             break;
@@ -318,6 +400,41 @@ namespace AutomataGUI
         }
         #endregion
 
+        private string GetNearestPointIndex(Point pt)
+        {
+            double MinDist = 99999;
+            string MinDistKey = "-1";
+            double distance;
+            foreach (KeyValuePair<string,MagnetPoint> pont in _AvailablePoints)
+            {
+                Point index = pont.Value.Location;
+                distance = Math.Sqrt(Math.Pow(index.X - pt.X, 2) + Math.Pow(index.Y - pt.Y, 2));
+                if (distance < MinDist)
+                {
+                    MinDist = distance;
+                    MinDistKey = pont.Key;
+                }
+            }
+            return MinDistKey;
+        }
+
+        private Point GetMagnetPoint(Point pt)
+        {
+            double MinDist = 99999;
+            Point MinDistKey = new Point();
+            double distance;
+            foreach (KeyValuePair<string, MagnetPoint> pont in _AvailablePoints)
+            {
+                Point index = pont.Value.Location;
+                distance = Math.Sqrt(Math.Pow(index.X - pt.X, 2) + Math.Pow(index.Y - pt.Y, 2));
+                if (distance < MinDist)
+                {
+                    MinDist = distance;
+                    MinDistKey = pont.Value.Location;
+                }
+            }
+            return MinDistKey;
+        }
 
     }
 }

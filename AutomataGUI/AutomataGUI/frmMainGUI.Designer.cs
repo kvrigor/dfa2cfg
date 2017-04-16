@@ -36,12 +36,13 @@
             this.ts_btnDeleteState = new System.Windows.Forms.ToolStripButton();
             this.ts_btnConnect1 = new System.Windows.Forms.ToolStripButton();
             this.ts_btnConnect0 = new System.Windows.Forms.ToolStripButton();
+            this.tsbtnTest = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblMouseStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblStateCount = new System.Windows.Forms.ToolStripStatusLabel();
-            this.DiagramArea = new System.Windows.Forms.PictureBox();
-            this.tsbtnTest = new System.Windows.Forms.ToolStripButton();
             this.lblMousePos = new System.Windows.Forms.ToolStripStatusLabel();
+            this.DiagramArea = new System.Windows.Forms.PictureBox();
+            this.treeView1 = new System.Windows.Forms.TreeView();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -120,6 +121,16 @@
             this.ts_btnConnect0.Text = "Connect 0";
             this.ts_btnConnect0.Click += new System.EventHandler(this.ts_btnConnect0_Click);
             // 
+            // tsbtnTest
+            // 
+            this.tsbtnTest.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbtnTest.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnTest.Image")));
+            this.tsbtnTest.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbtnTest.Name = "tsbtnTest";
+            this.tsbtnTest.Size = new System.Drawing.Size(24, 24);
+            this.tsbtnTest.Text = "toolStripButton1";
+            this.tsbtnTest.Click += new System.EventHandler(this.tsbtnTest_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -146,27 +157,6 @@
             this.lblStateCount.Size = new System.Drawing.Size(17, 20);
             this.lblStateCount.Text = "0";
             // 
-            // DiagramArea
-            // 
-            this.DiagramArea.BackColor = System.Drawing.Color.White;
-            this.DiagramArea.Location = new System.Drawing.Point(0, 58);
-            this.DiagramArea.Name = "DiagramArea";
-            this.DiagramArea.Size = new System.Drawing.Size(696, 359);
-            this.DiagramArea.TabIndex = 0;
-            this.DiagramArea.TabStop = false;
-            this.DiagramArea.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DiagramArea_MouseClick);
-            this.DiagramArea.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DiagramArea_MouseMove);
-            // 
-            // tsbtnTest
-            // 
-            this.tsbtnTest.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbtnTest.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnTest.Image")));
-            this.tsbtnTest.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbtnTest.Name = "tsbtnTest";
-            this.tsbtnTest.Size = new System.Drawing.Size(24, 24);
-            this.tsbtnTest.Text = "toolStripButton1";
-            this.tsbtnTest.Click += new System.EventHandler(this.tsbtnTest_Click);
-            // 
             // lblMousePos
             // 
             this.lblMousePos.AutoSize = false;
@@ -174,11 +164,30 @@
             this.lblMousePos.Size = new System.Drawing.Size(70, 20);
             this.lblMousePos.Text = "0,0";
             // 
+            // DiagramArea
+            // 
+            this.DiagramArea.BackColor = System.Drawing.Color.White;
+            this.DiagramArea.Location = new System.Drawing.Point(0, 58);
+            this.DiagramArea.Name = "DiagramArea";
+            this.DiagramArea.Size = new System.Drawing.Size(465, 359);
+            this.DiagramArea.TabIndex = 0;
+            this.DiagramArea.TabStop = false;
+            this.DiagramArea.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DiagramArea_MouseClick);
+            this.DiagramArea.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DiagramArea_MouseMove);
+            // 
+            // treeView1
+            // 
+            this.treeView1.Location = new System.Drawing.Point(471, 58);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(225, 359);
+            this.treeView1.TabIndex = 4;
+            // 
             // frmMainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(696, 445);
+            this.Controls.Add(this.treeView1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.DiagramArea);
@@ -187,7 +196,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(714, 492);
             this.Name = "frmMainGUI";
-            this.Text = "Form1";
+            this.Text = "AutomataGUI";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -214,6 +223,7 @@
         private System.Windows.Forms.PictureBox DiagramArea;
         private System.Windows.Forms.ToolStripButton tsbtnTest;
         private System.Windows.Forms.ToolStripStatusLabel lblMousePos;
+        private System.Windows.Forms.TreeView treeView1;
     }
 }
 
