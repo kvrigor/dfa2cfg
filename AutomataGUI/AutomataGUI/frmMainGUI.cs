@@ -18,6 +18,7 @@ namespace AutomataGUI
         private Rectangle _addNewState = new Rectangle();
         private bool _newStateSet = false;
 
+        private int cnt = 0;
         private const int _stateMaxCount = 5;
 
         private Timer _ticker = new Timer();
@@ -64,7 +65,8 @@ namespace AutomataGUI
                         break;
                     case Registry.MouseCondition.AddState:
                         Point pointedAt = e.Location;
-                        string name = State.StateCollection.Count.ToString();
+                        cnt++;
+                        string name = cnt.ToString();
                         State.StateCollection.Add(name, new State(name, pointedAt, DiagramArea));
                         DiagramArea.MouseMove += State.StateCollection[name].MouseHovered;
                         DiagramArea.MouseDown += State.StateCollection[name].MouseDowned;

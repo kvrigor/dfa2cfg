@@ -15,8 +15,6 @@ namespace AutomataGUI
         private PictureBox drawingBoard;
 
         private Point m_CenterLocation;
-        private State m_TargetOne;
-        private State m_TargetZero;
         private DateTime timepressed;
 
         //For MoveState
@@ -24,8 +22,9 @@ namespace AutomataGUI
         private bool _blnMoveSet = false;
 
         //Connect
-        private Point _oldConn1s;
-        private Point _oldConn1d;
+        private State m_TargetOne;
+        private State m_TargetZero;
+        private List<State> _commingIN;
         
         private static State StateHovered;
         public static Dictionary<string, State> StateCollection = new Dictionary<string, State>();
@@ -93,6 +92,7 @@ namespace AutomataGUI
             ImageLocation = new Point(centerPoint.X - radius, centerPoint.Y - radius);
             CenterLocation = centerPoint;
             drawingBoard = source;
+            _commingIN = new List<State>();
         }
 
         public void DrawIn(PictureBox panelArea)
@@ -231,14 +231,30 @@ namespace AutomataGUI
                                 //erase
                                 Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.White, Pens.White, true);
                                 Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.LightBlue, Pens.Black, false);
-                                string myindex = GetNearestPointIndex(m_TargetOne.CenterLocation);
-                                Registry.LineParam _line = new Registry.LineParam();
-                                _line.Source = _AvailablePoints[myindex].Location; 
-                                _line.Destination = m_TargetOne.GetMagnetPoint(CenterLocation);
-                                Pen _pen = new Pen(Color.White, 3);
-                                _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
-                                _line.LineColor = _pen;
-                                Utils.DrawLine(drawingBoard, _line, true);
+
+                                if (m_TargetOne != null)
+                                {
+                                    string myindex = GetNearestPointIndex(m_TargetOne.CenterLocation);
+                                    Registry.LineParam _line = new Registry.LineParam();
+                                    _line.Source = _AvailablePoints[myindex].Location;
+                                    _line.Destination = m_TargetOne.GetMagnetPoint(CenterLocation);
+                                    Pen _pen = new Pen(Color.White, 3);
+                                    _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                    _line.LineColor = _pen;
+                                    Utils.DrawLine(drawingBoard, _line, true);
+                                }
+
+                                foreach (State item in _commingIN)
+                                {
+                                    string myindex = GetNearestPointIndex(item.CenterLocation);
+                                    Registry.LineParam _line = new Registry.LineParam();
+                                    _line.Source = item.GetMagnetPoint(CenterLocation);
+                                    _line.Destination = _AvailablePoints[myindex].Location;
+                                    Pen _pen = new Pen(Color.White, 3);
+                                    _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                    _line.LineColor = _pen;
+                                    Utils.DrawLine(drawingBoard, _line, true);
+                                }
                                 break;
                             default:
                                 break;
@@ -278,6 +294,18 @@ namespace AutomataGUI
                                 Registry.LineParam _line = new Registry.LineParam();
                                 _line.Source = _AvailablePoints[myindex].Location;
                                 _line.Destination = m_TargetOne.GetMagnetPoint(CenterLocation);
+                                Pen _pen = new Pen(Color.Red, 3);
+                                _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                _line.LineColor = _pen;
+                                Utils.DrawLine(drawingBoard, _line, true);
+                            }
+
+                            foreach (State item in _commingIN)
+                            {
+                                string myindex = GetNearestPointIndex(item.CenterLocation);
+                                Registry.LineParam _line = new Registry.LineParam();
+                                _line.Source = item.GetMagnetPoint(CenterLocation);
+                                _line.Destination = _AvailablePoints[myindex].Location; 
                                 Pen _pen = new Pen(Color.Red, 3);
                                 _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                 _line.LineColor = _pen;
@@ -324,6 +352,7 @@ namespace AutomataGUI
                             else if (StateHovered != this)
                             {
                                 StateHovered.m_TargetOne = this;
+                                _commingIN.Add(StateHovered);
                                 string myindex = GetNearestPointIndex(StateHovered.CenterLocation);
                                 Registry.LineParam _line = new Registry.LineParam();
                                 _line.Source = StateHovered.GetMagnetPoint(CenterLocation);
