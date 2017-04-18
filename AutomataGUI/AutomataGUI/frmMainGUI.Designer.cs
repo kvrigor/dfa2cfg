@@ -56,14 +56,15 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(696, 28);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(567, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // toolStrip1
@@ -75,9 +76,9 @@
             this.ts_btnConnect1,
             this.ts_btnConnect0,
             this.tsbtnTest});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 28);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(696, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(567, 27);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -138,9 +139,10 @@
             this.lblMouseStatus,
             this.lblStateCount,
             this.lblMousePos});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 420);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 396);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(696, 25);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(567, 25);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -154,7 +156,7 @@
             // lblStateCount
             // 
             this.lblStateCount.Name = "lblStateCount";
-            this.lblStateCount.Size = new System.Drawing.Size(17, 20);
+            this.lblStateCount.Size = new System.Drawing.Size(13, 20);
             this.lblStateCount.Text = "0";
             // 
             // lblMousePos
@@ -166,10 +168,14 @@
             // 
             // DiagramArea
             // 
+            this.DiagramArea.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.DiagramArea.BackColor = System.Drawing.Color.White;
-            this.DiagramArea.Location = new System.Drawing.Point(0, 58);
+            this.DiagramArea.Location = new System.Drawing.Point(0, 51);
+            this.DiagramArea.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.DiagramArea.Name = "DiagramArea";
-            this.DiagramArea.Size = new System.Drawing.Size(465, 359);
+            this.DiagramArea.Size = new System.Drawing.Size(393, 345);
             this.DiagramArea.TabIndex = 0;
             this.DiagramArea.TabStop = false;
             this.DiagramArea.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DiagramArea_MouseClick);
@@ -177,16 +183,18 @@
             // 
             // treeView1
             // 
-            this.treeView1.Location = new System.Drawing.Point(471, 58);
+            this.treeView1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.treeView1.Location = new System.Drawing.Point(397, 51);
+            this.treeView1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(225, 359);
+            this.treeView1.Size = new System.Drawing.Size(170, 345);
             this.treeView1.TabIndex = 4;
             // 
             // frmMainGUI
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(696, 445);
+            this.ClientSize = new System.Drawing.Size(567, 421);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
@@ -194,7 +202,9 @@
             this.Controls.Add(this.menuStrip1);
             this.DoubleBuffered = true;
             this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(714, 492);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MaximumSize = new System.Drawing.Size(583, 459);
+            this.MinimumSize = new System.Drawing.Size(583, 459);
             this.Name = "frmMainGUI";
             this.Text = "AutomataGUI";
             this.menuStrip1.ResumeLayout(false);

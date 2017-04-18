@@ -71,20 +71,26 @@ namespace AutomataGUI
             if (save)
                 Registry.FixedImage = (Image)whereToDraw.Image.Clone();
         }
-        public static void DrawLineAndCircle(PictureBox whereToDraw, Registry.CircleParam circleInfo, Registry.LineParam lineInfo, bool save)
+        public static void DrawLineAndCircle(PictureBox whereToDraw, Registry.CircleParam[] circles, Registry.LineParam[] lines, bool save)
         {
             whereToDraw.Image = (Image)Registry.FixedImage.Clone();
 
-            Size circleSize = new Size(2 * circleInfo.Radius, 2 * circleInfo.Radius);
             Image currentImage = (Image)whereToDraw.Image.Clone();
-            Graphics myCircle = Graphics.FromImage(currentImage);
-            myCircle.FillEllipse(circleInfo.FillColor, new Rectangle(circleInfo.ImageLocation, circleSize));
-            myCircle.DrawEllipse(circleInfo.OutlineColor, new Rectangle(circleInfo.ImageLocation, circleSize));
-            myCircle.Dispose();
+            foreach (Registry.CircleParam circle in circles)
+            {
+                Size circleSize = new Size(2 * circle.Radius, 2 * circle.Radius);
+                Graphics myCircle = Graphics.FromImage(currentImage);
+                myCircle.FillEllipse(circle.FillColor, new Rectangle(circle.ImageLocation, circleSize));
+                myCircle.DrawEllipse(circle.OutlineColor, new Rectangle(circle.ImageLocation, circleSize));
+                myCircle.Dispose();
+            }
             
-            Graphics myLine = Graphics.FromImage(currentImage);
-            myLine.DrawLine(lineInfo.LineColor, lineInfo.Source, lineInfo.Destination);
-            myLine.Dispose();
+            foreach (Registry.LineParam line in lines)
+            {
+                Graphics myLine = Graphics.FromImage(currentImage);
+                myLine.DrawLine(line.LineColor, line.Source, line.Destination);
+                myLine.Dispose();
+            }
 
             whereToDraw.Image = (Image)currentImage.Clone();
             if (save)
