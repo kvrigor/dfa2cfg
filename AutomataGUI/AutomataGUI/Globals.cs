@@ -71,6 +71,24 @@ namespace AutomataGUI
             if (save)
                 Registry.FixedImage = (Image)whereToDraw.Image.Clone();
         }
+        public static void DrawArc(PictureBox whereToDraw, Registry.LineParam arcInfo, bool save)
+        {
+            whereToDraw.Image = (Image)Registry.FixedImage.Clone();
+
+            Image currentImage = (Image)whereToDraw.Image.Clone();
+            Graphics myArc = Graphics.FromImage(currentImage);
+            Point[] pts = new Point[4];
+            pts[0] = arcInfo.Source;
+            pts[1] = new Point(arcInfo.Source.X, arcInfo.Source.Y - 25);
+            pts[2] = new Point(arcInfo.Destination.X, arcInfo.Destination.Y - 25);
+            pts[3] = arcInfo.Destination;
+            myArc.DrawCurve(arcInfo.LineColor, pts, 1.2F);
+            myArc.Dispose();
+
+            whereToDraw.Image = (Image)currentImage.Clone();
+            if (save)
+                Registry.FixedImage = (Image)whereToDraw.Image.Clone();
+        }
         public static void DrawLineAndCircle(PictureBox whereToDraw, Registry.CircleParam[] circles, Registry.LineParam[] lines, bool save)
         {
             whereToDraw.Image = (Image)Registry.FixedImage.Clone();

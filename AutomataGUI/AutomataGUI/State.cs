@@ -457,6 +457,21 @@ namespace AutomataGUI
                                 Registry.MouseStatus = Registry.MouseCondition.Default;
                                 StateHovered = null;
                             }
+                            else if (StateHovered == this)
+                            {
+                                StateHovered.m_TargetOne = this;
+                                _incomingStates.Add(StateHovered);
+
+                                Registry.LineParam arc = new Registry.LineParam();
+                                Pen thePen = new Pen(Color.Red, 5);
+                                thePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                arc.Source = _AvailablePoints["2"].Location;
+                                arc.Destination = _AvailablePoints["8"].Location;
+                                arc.LineColor = thePen;
+                                Utils.DrawArc(drawingBoard, arc, true);
+                                Registry.MouseStatus = Registry.MouseCondition.Default;
+                                StateHovered = null;
+                            }
                             break;
                         case Registry.MouseCondition.ConnectZero:
                             if (State.StateHovered == null)
