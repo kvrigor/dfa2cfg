@@ -179,22 +179,48 @@ namespace AutomataGUI
                         
                         if (DoTargetOne)
                         {
-                            string source = GetNearestPointIndex(m_TargetOne.CenterLocation);
-                            myLines[i].Source = _AvailablePoints[source].Location;
-                            myLines[i].Destination = m_TargetOne.GetMagnetPoint(_moveState.Location);
-                            Pen thePen = new Pen(Color.Red, 5);
-                            thePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
-                            myLines[i].LineColor = thePen;
+                            if (m_TargetOne == this)
+                            {
+                                myLines[i] = new Registry.LineParam();
+                                Pen _pen = new Pen(Color.White, 5);
+                                _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                myLines[i].Source = _AvailablePoints["2"].Location;
+                                myLines[i].Destination = _AvailablePoints["8"].Location;
+                                myLines[i].LineColor = _pen;
+                                Utils.DrawArc(drawingBoard, myLines[i], true, false);
+                            }
+                            else
+                            {
+                                string source = GetNearestPointIndex(m_TargetOne.CenterLocation);
+                                myLines[i].Source = _AvailablePoints[source].Location;
+                                myLines[i].Destination = m_TargetOne.GetMagnetPoint(_moveState.Location);
+                                Pen thePen = new Pen(Color.Red, 5);
+                                thePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                myLines[i].LineColor = thePen;
+                            }
                             i++;
                         }
                         if (DoTargetZero)
                         {
-                            string source = GetNearestPointIndex(m_TargetZero.CenterLocation);
-                            myLines[i].Source = _AvailablePoints[source].Location;
-                            myLines[i].Destination = m_TargetZero.GetMagnetPoint(_moveState.Location);
-                            Pen thePen = new Pen(Color.Black, 5);
-                            thePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
-                            myLines[i].LineColor = thePen;
+                            if (m_TargetZero == this)
+                            {
+                                myLines[i] = new Registry.LineParam();
+                                Pen _pen = new Pen(Color.Black, 5);
+                                _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                myLines[i].Source = _AvailablePoints["4"].Location;
+                                myLines[i].Destination = _AvailablePoints["6"].Location;
+                                myLines[i].LineColor = _pen;
+                                Utils.DrawArc(drawingBoard, myLines[i], false, false);
+                            }
+                            else
+                            {
+                                string source = GetNearestPointIndex(m_TargetZero.CenterLocation);
+                                myLines[i].Source = _AvailablePoints[source].Location;
+                                myLines[i].Destination = m_TargetZero.GetMagnetPoint(_moveState.Location);
+                                Pen thePen = new Pen(Color.Black, 5);
+                                thePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                myLines[i].LineColor = thePen;
+                            }
                             i++;
                         }
                         foreach (State incoming in _incomingStates)
@@ -300,26 +326,52 @@ namespace AutomataGUI
 
                                 if (m_TargetOne != null)
                                 {
-                                    string myindex = GetNearestPointIndex(m_TargetOne.CenterLocation);
-                                    Registry.LineParam _line = new Registry.LineParam();
-                                    _line.Source = _AvailablePoints[myindex].Location;
-                                    _line.Destination = m_TargetOne.GetMagnetPoint(CenterLocation);
-                                    Pen _pen = new Pen(Color.White, 5);
-                                    _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
-                                    _line.LineColor = _pen;
-                                    Utils.DrawLine(drawingBoard, _line, true);
+                                    if (m_TargetOne == this)
+                                    {
+                                        Registry.LineParam arc = new Registry.LineParam();
+                                        Pen thePen = new Pen(Color.White, 5);
+                                        thePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                        arc.Source = _AvailablePoints["2"].Location;
+                                        arc.Destination = _AvailablePoints["8"].Location;
+                                        arc.LineColor = thePen;
+                                        Utils.DrawArc(drawingBoard, arc, true, true);
+                                    }
+                                    else
+                                    {
+                                        string myindex = GetNearestPointIndex(m_TargetOne.CenterLocation);
+                                        Registry.LineParam _line = new Registry.LineParam();
+                                        _line.Source = _AvailablePoints[myindex].Location;
+                                        _line.Destination = m_TargetOne.GetMagnetPoint(CenterLocation);
+                                        Pen _pen = new Pen(Color.White, 5);
+                                        _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                        _line.LineColor = _pen;
+                                        Utils.DrawLine(drawingBoard, _line, true);
+                                    }
                                 }
 
                                 if (m_TargetZero != null)
                                 {
-                                    string myindex = GetNearestPointIndex(m_TargetZero.CenterLocation);
-                                    Registry.LineParam _line = new Registry.LineParam();
-                                    _line.Source = _AvailablePoints[myindex].Location;
-                                    _line.Destination = m_TargetZero.GetMagnetPoint(CenterLocation);
-                                    Pen _pen = new Pen(Color.White, 5);
-                                    _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
-                                    _line.LineColor = _pen;
-                                    Utils.DrawLine(drawingBoard, _line, true);
+                                    if (m_TargetZero == this)
+                                    {
+                                        Registry.LineParam arc = new Registry.LineParam();
+                                        Pen thePen = new Pen(Color.White, 5);
+                                        thePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                        arc.Source = _AvailablePoints["4"].Location;
+                                        arc.Destination = _AvailablePoints["6"].Location;
+                                        arc.LineColor = thePen;
+                                        Utils.DrawArc(drawingBoard, arc, false, true);
+                                    }
+                                    else
+                                    {
+                                        string myindex = GetNearestPointIndex(m_TargetZero.CenterLocation);
+                                        Registry.LineParam _line = new Registry.LineParam();
+                                        _line.Source = _AvailablePoints[myindex].Location;
+                                        _line.Destination = m_TargetZero.GetMagnetPoint(CenterLocation);
+                                        Pen _pen = new Pen(Color.White, 5);
+                                        _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                        _line.LineColor = _pen;
+                                        Utils.DrawLine(drawingBoard, _line, true);
+                                    }
                                 }
 
                                 foreach (State item in _incomingStates)
@@ -367,26 +419,52 @@ namespace AutomataGUI
 
                             if (m_TargetOne != null)
                             {
-                                string myindex = GetNearestPointIndex(m_TargetOne.CenterLocation);
-                                Registry.LineParam _line = new Registry.LineParam();
-                                _line.Source = _AvailablePoints[myindex].Location;
-                                _line.Destination = m_TargetOne.GetMagnetPoint(CenterLocation);
-                                Pen _pen = new Pen(Color.Red, 5);
-                                _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
-                                _line.LineColor = _pen;
-                                Utils.DrawLine(drawingBoard, _line, true);
+                                if (m_TargetOne == this)
+                                {
+                                    Registry.LineParam arc = new Registry.LineParam();
+                                    Pen thePen = new Pen(Color.Red, 5);
+                                    thePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                    arc.Source = _AvailablePoints["2"].Location;
+                                    arc.Destination = _AvailablePoints["8"].Location;
+                                    arc.LineColor = thePen;
+                                    Utils.DrawArc(drawingBoard, arc, true, true);
+                                }
+                                else
+                                {
+                                    string myindex = GetNearestPointIndex(m_TargetOne.CenterLocation);
+                                    Registry.LineParam _line = new Registry.LineParam();
+                                    _line.Source = _AvailablePoints[myindex].Location;
+                                    _line.Destination = m_TargetOne.GetMagnetPoint(CenterLocation);
+                                    Pen _pen = new Pen(Color.Red, 5);
+                                    _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                    _line.LineColor = _pen;
+                                    Utils.DrawLine(drawingBoard, _line, true);
+                                }
                             }
 
                             if (m_TargetZero != null)
                             {
-                                string myindex = GetNearestPointIndex(m_TargetZero.CenterLocation);
-                                Registry.LineParam _line = new Registry.LineParam();
-                                _line.Source = _AvailablePoints[myindex].Location;
-                                _line.Destination = m_TargetZero.GetMagnetPoint(CenterLocation);
-                                Pen _pen = new Pen(Color.Black, 5);
-                                _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
-                                _line.LineColor = _pen;
-                                Utils.DrawLine(drawingBoard, _line, true);
+                                if (m_TargetZero == this)
+                                {
+                                    Registry.LineParam arc = new Registry.LineParam();
+                                    Pen thePen = new Pen(Color.Black, 5);
+                                    thePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                    arc.Source = _AvailablePoints["4"].Location;
+                                    arc.Destination = _AvailablePoints["6"].Location;
+                                    arc.LineColor = thePen;
+                                    Utils.DrawArc(drawingBoard, arc, false, true);
+                                }
+                                else
+                                {
+                                    string myindex = GetNearestPointIndex(m_TargetZero.CenterLocation);
+                                    Registry.LineParam _line = new Registry.LineParam();
+                                    _line.Source = _AvailablePoints[myindex].Location;
+                                    _line.Destination = m_TargetZero.GetMagnetPoint(CenterLocation);
+                                    Pen _pen = new Pen(Color.Black, 5);
+                                    _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                    _line.LineColor = _pen;
+                                    Utils.DrawLine(drawingBoard, _line, true);
+                                }
                             }
 
                             foreach (State item in _incomingStates)
@@ -468,7 +546,7 @@ namespace AutomataGUI
                                 arc.Source = _AvailablePoints["2"].Location;
                                 arc.Destination = _AvailablePoints["8"].Location;
                                 arc.LineColor = thePen;
-                                Utils.DrawArc(drawingBoard, arc, true);
+                                Utils.DrawArc(drawingBoard, arc, true, true);
                                 Registry.MouseStatus = Registry.MouseCondition.Default;
                                 StateHovered = null;
                             }
@@ -490,6 +568,21 @@ namespace AutomataGUI
                                 _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                 _line.LineColor = _pen;
                                 Utils.DrawLine(drawingBoard, _line, true);
+                                Registry.MouseStatus = Registry.MouseCondition.Default;
+                                StateHovered = null;
+                            }
+                            else if (StateHovered == this)
+                            {
+                                StateHovered.m_TargetZero = this;
+                                _incomingStates.Add(StateHovered);
+
+                                Registry.LineParam arc = new Registry.LineParam();
+                                Pen thePen = new Pen(Color.Black, 5);
+                                thePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                                arc.Source = _AvailablePoints["4"].Location;
+                                arc.Destination = _AvailablePoints["6"].Location;
+                                arc.LineColor = thePen;
+                                Utils.DrawArc(drawingBoard, arc, false, true);
                                 Registry.MouseStatus = Registry.MouseCondition.Default;
                                 StateHovered = null;
                             }
