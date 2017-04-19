@@ -63,6 +63,16 @@ namespace AutomataGUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap imgAcceptState {
+            get {
+                object obj = ResourceManager.GetObject("imgAcceptState", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap imgAddState {
             get {
                 object obj = ResourceManager.GetObject("imgAddState", resourceCulture);
@@ -96,6 +106,16 @@ namespace AutomataGUI.Properties {
         internal static System.Drawing.Bitmap imgDeleteState {
             get {
                 object obj = ResourceManager.GetObject("imgDeleteState", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap imgProcess {
+            get {
+                object obj = ResourceManager.GetObject("imgProcess", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

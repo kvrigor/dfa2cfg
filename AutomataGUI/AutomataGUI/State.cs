@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AutomataGUI
@@ -19,10 +16,10 @@ namespace AutomataGUI
 
         //For MoveState
         private Rectangle _moveState = new Rectangle();
-
+        
         //Connect
-        private State m_TargetOne;
-        private State m_TargetZero;
+        public State m_TargetOne;
+        public State m_TargetZero;
         private List<State> _incomingStates;
         
         private static State StateHovered;
@@ -42,6 +39,7 @@ namespace AutomataGUI
         }
 
         private string StateName;
+        public string Name { get { return StateName; } }
 
         private struct MagnetPoint
         {
@@ -83,6 +81,9 @@ namespace AutomataGUI
                 }
             }
         }
+
+        private bool _isAccept;
+        public bool IsAccept { get { return _isAccept; } }
 
         public State(string _name, Point centerPoint, PictureBox source)
         {
@@ -500,20 +501,20 @@ namespace AutomataGUI
                 {
                     switch (Registry.MouseStatus)
                     {
-                        case Registry.MouseCondition.Selected:
+                        case Registry.MouseCondition.Accept:
+                            _isAccept = true;
+                            Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
+                            Utils.DrawCircle(drawingBoard, ImageLocation, radius - 5, Brushes.DarkBlue, Pens.Black, true);
+                            Registry.MouseStatus = Registry.MouseCondition.Default;
                             break;
                         case Registry.MouseCondition.Hovered:
                             Registry.MouseStatus = Registry.MouseCondition.Selected;
-                            break;
-                        case Registry.MouseCondition.AddState:
                             break;
                         case Registry.MouseCondition.DeleteState:
                             Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.White, Pens.White, true);
                             State.StateCollection[StateName].Dispose();
                             State.StateCollection.Remove(StateName);
                             Registry.MouseStatus = Registry.MouseCondition.Default;
-                            break;
-                        case Registry.MouseCondition.MoveState:
                             break;
                         case Registry.MouseCondition.ConnectOne:
                             if (State.StateHovered == null)

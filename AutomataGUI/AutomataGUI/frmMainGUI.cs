@@ -23,6 +23,7 @@ namespace AutomataGUI
 
         private Timer _ticker = new Timer();
 
+        private Codecs.Languages.Regular.DFA test;
 
         public frmMainGUI()
         {
@@ -32,6 +33,9 @@ namespace AutomataGUI
             _ticker.Interval = 100;
             _ticker.Tick += ticker_Ticked;
             _ticker.Start();
+
+            test = new Codecs.Languages.Regular.DFA();
+            Codecs.Languages.Regular.TransFunc xyz;
         }
 
         private void ts_btnAddState_Click(object sender, EventArgs e)
@@ -66,7 +70,7 @@ namespace AutomataGUI
                     case Registry.MouseCondition.AddState:
                         Point pointedAt = e.Location;
                         cnt++;
-                        string name = cnt.ToString();
+                        string name = "STATE" + cnt.ToString();
                         State.StateCollection.Add(name, new State(name, pointedAt, DiagramArea));
                         DiagramArea.MouseMove += State.StateCollection[name].MouseHovered;
                         DiagramArea.MouseDown += State.StateCollection[name].MouseDowned;
@@ -104,7 +108,19 @@ namespace AutomataGUI
 
         private void tsbtnTest_Click(object sender, EventArgs e)
         {
-            
+            Registry.MouseStatus = Registry.MouseCondition.Accept;
+        }
+
+        private void ts_btnProcess_Click(object sender, EventArgs e)
+        {
+            StatesViewer.Columns.Clear();
+            StatesViewer.Columns.Add("StateName", "State");
+            StatesViewer.Columns.Add("Input1", "1");
+            StatesViewer.Columns.Add("Input0", "0");
+            foreach (KeyValuePair<string,State> item in State.StateCollection)
+            {
+                StatesViewer.Rows.Add(item.Key, item.Value.m_TargetOne.Name, item.Value.m_TargetZero.Name);
+            }
         }
     }
 }

@@ -97,6 +97,18 @@
   <ItemGroup>
     <None Include="Resources\imgdeletestate.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\imgAcceptState.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DataStructures\Codecs\Codecs.vbproj">
+      <Project>{d04fd0fe-e856-4f7b-b53f-0c4cbaac0fda}</Project>
+      <Name>Codecs</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\imgProcess.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -24,7 +24,8 @@ namespace AutomataGUI
             MoveState,
             ConnectZero,
             ConnectOne,
-            Selected
+            Selected,
+            Accept
         }
 
         public struct CircleParam
