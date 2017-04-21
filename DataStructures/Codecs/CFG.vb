@@ -86,10 +86,10 @@ Namespace Languages.ContextFree
         ''' Initializes an empty CFG.
         ''' </summary>
         Public Sub New()
-            _variables = Nothing
-            _terminals = Nothing
-            _grammarRules = Nothing
-            _StartVariable = Nothing
+            _variables = New List(Of String)
+            _terminals = New List(Of String)
+            _grammarRules = New List(Of GrammarRule)
+            _StartVariable = String.Empty
             _Name = String.Empty
         End Sub
 
