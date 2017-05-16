@@ -102,11 +102,11 @@ Namespace Languages.Regular
         ''' Initializes an empty DFA.
         ''' </summary>
         Public Sub New()
-            _states = Nothing
-            _inputSymbols = Nothing
-            _transitions = Nothing
-            _StartState = Nothing
-            _acceptStates = Nothing
+            _states = New List(Of String)
+            _inputSymbols = New List(Of String)
+            _transitions = New List(Of TransFunc)
+            _StartState = String.Empty
+            _acceptStates = New List(Of String)
             _Name = String.Empty
         End Sub
 
