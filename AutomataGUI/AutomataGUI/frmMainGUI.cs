@@ -29,7 +29,7 @@ namespace AutomataGUI
         {
             InitializeComponent();
             DiagramArea.Image = new Bitmap(DiagramArea.Width, DiagramArea.Height);
-            Registry.FixedImage = (Image)DiagramArea.Image.Clone();
+            Utils.Registry.FixedImage = (Image)DiagramArea.Image.Clone();
             _ticker.Interval = 100;
             _ticker.Tick += ticker_Ticked;
             _ticker.Start();
@@ -43,15 +43,15 @@ namespace AutomataGUI
             if (State.StateCollection.Count >= _stateMaxCount)
                 MessageBox.Show("You already achieved the maximum number of states which is " + _stateMaxCount.ToString(), "Maximum number of states is achieved.");
             else
-                Registry.MouseStatus = Registry.MouseCondition.AddState;
+                Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.AddState;
         }
 
         private void DiagramArea_MouseMove(object sender, MouseEventArgs e)
         {
-            switch (Registry.MouseStatus)
+            switch (Utils.Registry.MouseStatus)
             {
-                case Registry.MouseCondition.AddState:
-                    Utils.DrawCircle(DiagramArea, new Point(e.Location.X - 25, e.Location.Y - 25), 25, Brushes.LightBlue, Pens.Black, false);
+                case Utils.Registry.MouseCondition.AddState:
+                    Utils.Utils.DrawCircle(DiagramArea, new Point(e.Location.X - 25, e.Location.Y - 25), 25, Brushes.LightBlue, Pens.Black, false);
                     break;
                 default:
                     break;
@@ -63,11 +63,11 @@ namespace AutomataGUI
         {
             if (e.Button == MouseButtons.Left)
             {
-                switch (Registry.MouseStatus)
+                switch (Utils.Registry.MouseStatus)
                 {
-                    case Registry.MouseCondition.Default:
+                    case Utils.Registry.MouseCondition.Default:
                         break;
-                    case Registry.MouseCondition.AddState:
+                    case Utils.Registry.MouseCondition.AddState:
                         Point pointedAt = e.Location;
                         cnt++;
                         string name = "STATE" + cnt.ToString();
@@ -77,7 +77,7 @@ namespace AutomataGUI
                         DiagramArea.MouseUp += State.StateCollection[name].MouseReleased;
                         DiagramArea.MouseClick += State.StateCollection[name].MouseClicked;
                         State.StateCollection[name].DrawIn(DiagramArea);
-                        Registry.MouseStatus = Registry.MouseCondition.Default;
+                        Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
                         _newStateSet = false;
                         break;
                     default:
@@ -88,27 +88,27 @@ namespace AutomataGUI
 
         private void ts_btnDeleteState_Click(object sender, EventArgs e)
         {
-            Registry.MouseStatus = Registry.MouseCondition.DeleteState;
+            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.DeleteState;
         }
 
         private void ts_btnConnect1_Click(object sender, EventArgs e)
         {
-            Registry.MouseStatus = Registry.MouseCondition.ConnectOne;
+            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.ConnectOne;
         }
 
         private void ts_btnConnect0_Click(object sender, EventArgs e)
         {
-            Registry.MouseStatus = Registry.MouseCondition.ConnectZero;
+            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.ConnectZero;
         }
 
         private void ticker_Ticked(object sender, EventArgs e)
         {
-            lblMouseStatus.Text = Registry.MouseStatus.ToString();
+            lblMouseStatus.Text = Utils.Registry.MouseStatus.ToString();
         }
 
         private void tsbtnTest_Click(object sender, EventArgs e)
         {
-            Registry.MouseStatus = Registry.MouseCondition.Accept;
+            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Accept;
         }
 
         private void ts_btnProcess_Click(object sender, EventArgs e)

@@ -97,7 +97,7 @@ namespace AutomataGUI
 
         public void DrawIn(PictureBox panelArea)
         {
-            Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
+            Utils.Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
         }
 
         public bool IsInRange(Point xy)
@@ -120,14 +120,14 @@ namespace AutomataGUI
         {
             var pointer = e as MouseEventArgs;
             var panelArea = sender as PictureBox;
-            switch (Registry.MouseStatus)
+            switch (Utils.Registry.MouseStatus)
             {
-                case Registry.MouseCondition.Default:
+                case Utils.Registry.MouseCondition.Default:
                     if (IsInRange(pointer.Location) && StateHovered != this)
                     {
-                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.Blue, Pens.Black, false);
+                        Utils.Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.Blue, Pens.Black, false);
                         StateHovered = this;
-                        Registry.MouseStatus = Registry.MouseCondition.Hovered;
+                        Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Hovered;
                     }
                     //else if (!IsInRange(pointer.Location) && StateHovered == this)
                     //{
@@ -135,15 +135,15 @@ namespace AutomataGUI
                     //    StateHovered = null;
                     //}
                     break;
-                case Registry.MouseCondition.Hovered:
+                case Utils.Registry.MouseCondition.Hovered:
                     if (!IsInRange(pointer.Location) && StateHovered == this)
                     {
-                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
+                        Utils.Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
                         StateHovered = null;
-                        Registry.MouseStatus = Registry.MouseCondition.Default;
+                        Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
                     }
                     break;
-                case Registry.MouseCondition.MoveState:
+                case Utils.Registry.MouseCondition.MoveState:
                     if (StateHovered == this)
                     {
                         _moveState.Location = new Point(e.Location.X - 25, e.Location.Y - 25);
@@ -163,7 +163,7 @@ namespace AutomataGUI
                         if (m_TargetZero != null)
                             DoTargetZero = true;
 
-                        Registry.CircleParam[] myCircle = new Registry.CircleParam[1];
+                        Utils.Registry.CircleParam[] myCircle = new Utils.Registry.CircleParam[1];
                         myCircle[0].ImageLocation = _moveState.Location;
                         myCircle[0].Radius = radius;
                         myCircle[0].FillColor = Brushes.LightBlue;
@@ -176,19 +176,19 @@ namespace AutomataGUI
                         lineCounts += _incomingStates.Count;
 
                         int i = 0;
-                        Registry.LineParam[] myLines = new Registry.LineParam[lineCounts];
+                        Utils.Registry.LineParam[] myLines = new Utils.Registry.LineParam[lineCounts];
                         
                         if (DoTargetOne)
                         {
                             if (m_TargetOne == this)
                             {
-                                myLines[i] = new Registry.LineParam();
+                                myLines[i] = new Utils.Registry.LineParam();
                                 Pen _pen = new Pen(Color.White, 5);
                                 _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                 myLines[i].Source = _AvailablePoints["2"].Location;
                                 myLines[i].Destination = _AvailablePoints["8"].Location;
                                 myLines[i].LineColor = _pen;
-                                Utils.DrawArc(drawingBoard, myLines[i], true, false);
+                                Utils.Utils.DrawArc(drawingBoard, myLines[i], true, false);
                             }
                             else
                             {
@@ -205,13 +205,13 @@ namespace AutomataGUI
                         {
                             if (m_TargetZero == this)
                             {
-                                myLines[i] = new Registry.LineParam();
+                                myLines[i] = new Utils.Registry.LineParam();
                                 Pen _pen = new Pen(Color.Black, 5);
                                 _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                 myLines[i].Source = _AvailablePoints["4"].Location;
                                 myLines[i].Destination = _AvailablePoints["6"].Location;
                                 myLines[i].LineColor = _pen;
-                                Utils.DrawArc(drawingBoard, myLines[i], false, false);
+                                Utils.Utils.DrawArc(drawingBoard, myLines[i], false, false);
                             }
                             else
                             {
@@ -239,22 +239,22 @@ namespace AutomataGUI
                             i++;
                         }
 
-                        Utils.DrawLineAndCircle(panelArea, myCircle, myLines, false);
+                        Utils.Utils.DrawLineAndCircle(panelArea, myCircle, myLines, false);
                     }
                     break;
-                case Registry.MouseCondition.DeleteState:
+                case Utils.Registry.MouseCondition.DeleteState:
                     if (IsInRange(pointer.Location))
-                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.Blue, Pens.Black, false);
+                        Utils.Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.Blue, Pens.Black, false);
                     else
-                        Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, false);
+                        Utils.Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, false);
                     break;
-                case Registry.MouseCondition.ConnectOne:
+                case Utils.Registry.MouseCondition.ConnectOne:
                     if (StateHovered == null)
                     {
                         if (IsInRange(pointer.Location))
-                            Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.Blue, Pens.Black, true);
+                            Utils.Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.Blue, Pens.Black, true);
                         else
-                            Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
+                            Utils.Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
                     }
                     else if (State.StateHovered == this)
                     {
@@ -265,23 +265,23 @@ namespace AutomataGUI
                         else
                         {
                             string source = GetNearestPointIndex(pointer.Location);
-                            Registry.LineParam _line = new Registry.LineParam();
+                            Utils.Registry.LineParam _line = new Utils.Registry.LineParam();
                             _line.Source = _AvailablePoints[source].Location;
                             _line.Destination = pointer.Location;
                             Pen _pen = new Pen(Color.Red, 5);
                             _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                             _line.LineColor = _pen;
-                            Utils.DrawLine(panelArea, _line, false);
+                            Utils.Utils.DrawLine(panelArea, _line, false);
                         }
                     }
                     break;
-                case Registry.MouseCondition.ConnectZero:
+                case Utils.Registry.MouseCondition.ConnectZero:
                     if (StateHovered == null)
                     {
                         if (IsInRange(pointer.Location))
-                            Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.Blue, Pens.Black, true);
+                            Utils.Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.Blue, Pens.Black, true);
                         else
-                            Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
+                            Utils.Utils.DrawCircle(panelArea, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
                     }
                     else if (State.StateHovered == this)
                     {
@@ -292,13 +292,13 @@ namespace AutomataGUI
                         else
                         {
                             string source = GetNearestPointIndex(pointer.Location);
-                            Registry.LineParam _line = new Registry.LineParam();
+                            Utils.Registry.LineParam _line = new Utils.Registry.LineParam();
                             _line.Source = _AvailablePoints[source].Location;
                             _line.Destination = pointer.Location;
                             Pen _pen = new Pen(Color.Black, 5);
                             _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                             _line.LineColor = _pen;
-                            Utils.DrawLine(panelArea, _line, false);
+                            Utils.Utils.DrawLine(panelArea, _line, false);
                         }
                     }
                     break;
@@ -315,38 +315,38 @@ namespace AutomataGUI
                 {
                     if (e.Button == MouseButtons.Left)
                     {
-                        switch (Registry.MouseStatus)
+                        switch (Utils.Registry.MouseStatus)
                         {
-                            case Registry.MouseCondition.Selected:
-                                Registry.MouseStatus = Registry.MouseCondition.MoveState;
+                            case Utils.Registry.MouseCondition.Selected:
+                                Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.MoveState;
                                 Cursor.Current = Cursors.SizeAll;
                                 timepressed = DateTime.Now;
                                 //erase
-                                Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.White, Pens.White, true);
-                                Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.LightBlue, Pens.Black, false);
+                                Utils.Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.White, Pens.White, true);
+                                Utils.Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.LightBlue, Pens.Black, false);
 
                                 if (m_TargetOne != null)
                                 {
                                     if (m_TargetOne == this)
                                     {
-                                        Registry.LineParam arc = new Registry.LineParam();
+                                        Utils.Registry.LineParam arc = new Utils.Registry.LineParam();
                                         Pen thePen = new Pen(Color.White, 5);
                                         thePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                         arc.Source = _AvailablePoints["2"].Location;
                                         arc.Destination = _AvailablePoints["8"].Location;
                                         arc.LineColor = thePen;
-                                        Utils.DrawArc(drawingBoard, arc, true, true);
+                                        Utils.Utils.DrawArc(drawingBoard, arc, true, true);
                                     }
                                     else
                                     {
                                         string myindex = GetNearestPointIndex(m_TargetOne.CenterLocation);
-                                        Registry.LineParam _line = new Registry.LineParam();
+                                        Utils.Registry.LineParam _line = new Utils.Registry.LineParam();
                                         _line.Source = _AvailablePoints[myindex].Location;
                                         _line.Destination = m_TargetOne.GetMagnetPoint(CenterLocation);
                                         Pen _pen = new Pen(Color.White, 5);
                                         _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                         _line.LineColor = _pen;
-                                        Utils.DrawLine(drawingBoard, _line, true);
+                                        Utils.Utils.DrawLine(drawingBoard, _line, true);
                                     }
                                 }
 
@@ -354,37 +354,37 @@ namespace AutomataGUI
                                 {
                                     if (m_TargetZero == this)
                                     {
-                                        Registry.LineParam arc = new Registry.LineParam();
+                                        Utils.Registry.LineParam arc = new Utils.Registry.LineParam();
                                         Pen thePen = new Pen(Color.White, 5);
                                         thePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                         arc.Source = _AvailablePoints["4"].Location;
                                         arc.Destination = _AvailablePoints["6"].Location;
                                         arc.LineColor = thePen;
-                                        Utils.DrawArc(drawingBoard, arc, false, true);
+                                        Utils.Utils.DrawArc(drawingBoard, arc, false, true);
                                     }
                                     else
                                     {
                                         string myindex = GetNearestPointIndex(m_TargetZero.CenterLocation);
-                                        Registry.LineParam _line = new Registry.LineParam();
+                                        Utils.Registry.LineParam _line = new Utils.Registry.LineParam();
                                         _line.Source = _AvailablePoints[myindex].Location;
                                         _line.Destination = m_TargetZero.GetMagnetPoint(CenterLocation);
                                         Pen _pen = new Pen(Color.White, 5);
                                         _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                         _line.LineColor = _pen;
-                                        Utils.DrawLine(drawingBoard, _line, true);
+                                        Utils.Utils.DrawLine(drawingBoard, _line, true);
                                     }
                                 }
 
                                 foreach (State item in _incomingStates)
                                 {
                                     string myindex = GetNearestPointIndex(item.CenterLocation);
-                                    Registry.LineParam _line = new Registry.LineParam();
+                                    Utils.Registry.LineParam _line = new Utils.Registry.LineParam();
                                     _line.Source = item.GetMagnetPoint(CenterLocation);
                                     _line.Destination = _AvailablePoints[myindex].Location;
                                     Pen _pen = new Pen(Color.White, 5);
                                     _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                     _line.LineColor = _pen;
-                                    Utils.DrawLine(drawingBoard, _line, true);
+                                    Utils.Utils.DrawLine(drawingBoard, _line, true);
                                 }
                                 break;
                             default:
@@ -403,18 +403,18 @@ namespace AutomataGUI
                 var panelArea = sender as Panel;
                 if (e.Button == MouseButtons.Left)
                 {
-                    switch (Registry.MouseStatus)
+                    switch (Utils.Registry.MouseStatus)
                     {
-                        case Registry.MouseCondition.MoveState:
+                        case Utils.Registry.MouseCondition.MoveState:
                             if ((DateTime.Now - timepressed).TotalMilliseconds < 200)
                             {
-                                Registry.MouseStatus = Registry.MouseCondition.Default;
+                                Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
                                 Cursor.Current = Cursors.Default;
                                 return;
                             }
                             ImageLocation = new Point(pointer.Location.X - radius, pointer.Location.Y - radius);
                             CenterLocation = pointer.Location;
-                            Registry.MouseStatus = Registry.MouseCondition.Default;
+                            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
                             Cursor.Current = Cursors.Default;
                             StateHovered = null;
 
@@ -422,24 +422,24 @@ namespace AutomataGUI
                             {
                                 if (m_TargetOne == this)
                                 {
-                                    Registry.LineParam arc = new Registry.LineParam();
+                                    Utils.Registry.LineParam arc = new Utils.Registry.LineParam();
                                     Pen thePen = new Pen(Color.Red, 5);
                                     thePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                     arc.Source = _AvailablePoints["2"].Location;
                                     arc.Destination = _AvailablePoints["8"].Location;
                                     arc.LineColor = thePen;
-                                    Utils.DrawArc(drawingBoard, arc, true, true);
+                                    Utils.Utils.DrawArc(drawingBoard, arc, true, true);
                                 }
                                 else
                                 {
                                     string myindex = GetNearestPointIndex(m_TargetOne.CenterLocation);
-                                    Registry.LineParam _line = new Registry.LineParam();
+                                    Utils.Registry.LineParam _line = new Utils.Registry.LineParam();
                                     _line.Source = _AvailablePoints[myindex].Location;
                                     _line.Destination = m_TargetOne.GetMagnetPoint(CenterLocation);
                                     Pen _pen = new Pen(Color.Red, 5);
                                     _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                     _line.LineColor = _pen;
-                                    Utils.DrawLine(drawingBoard, _line, true);
+                                    Utils.Utils.DrawLine(drawingBoard, _line, true);
                                 }
                             }
 
@@ -447,31 +447,31 @@ namespace AutomataGUI
                             {
                                 if (m_TargetZero == this)
                                 {
-                                    Registry.LineParam arc = new Registry.LineParam();
+                                    Utils.Registry.LineParam arc = new Utils.Registry.LineParam();
                                     Pen thePen = new Pen(Color.Black, 5);
                                     thePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                     arc.Source = _AvailablePoints["4"].Location;
                                     arc.Destination = _AvailablePoints["6"].Location;
                                     arc.LineColor = thePen;
-                                    Utils.DrawArc(drawingBoard, arc, false, true);
+                                    Utils.Utils.DrawArc(drawingBoard, arc, false, true);
                                 }
                                 else
                                 {
                                     string myindex = GetNearestPointIndex(m_TargetZero.CenterLocation);
-                                    Registry.LineParam _line = new Registry.LineParam();
+                                    Utils.Registry.LineParam _line = new Utils.Registry.LineParam();
                                     _line.Source = _AvailablePoints[myindex].Location;
                                     _line.Destination = m_TargetZero.GetMagnetPoint(CenterLocation);
                                     Pen _pen = new Pen(Color.Black, 5);
                                     _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                     _line.LineColor = _pen;
-                                    Utils.DrawLine(drawingBoard, _line, true);
+                                    Utils.Utils.DrawLine(drawingBoard, _line, true);
                                 }
                             }
 
                             foreach (State item in _incomingStates)
                             {
                                 string myindex = GetNearestPointIndex(item.CenterLocation);
-                                Registry.LineParam _line = new Registry.LineParam();
+                                Utils.Registry.LineParam _line = new Utils.Registry.LineParam();
                                 _line.Source = item.GetMagnetPoint(CenterLocation);
                                 _line.Destination = _AvailablePoints[myindex].Location;
                                 Pen _pen = null;
@@ -481,7 +481,7 @@ namespace AutomataGUI
                                     _pen = new Pen(Color.Black, 5);
                                 _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                 _line.LineColor = _pen;
-                                Utils.DrawLine(drawingBoard, _line, true);
+                                Utils.Utils.DrawLine(drawingBoard, _line, true);
                             }
                             break;
                         default:
@@ -499,24 +499,24 @@ namespace AutomataGUI
             {
                 if (IsInRange(pointer.Location))
                 {
-                    switch (Registry.MouseStatus)
+                    switch (Utils.Registry.MouseStatus)
                     {
-                        case Registry.MouseCondition.Accept:
+                        case Utils.Registry.MouseCondition.Accept:
                             _isAccept = true;
-                            Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
-                            Utils.DrawCircle(drawingBoard, ImageLocation, radius - 5, Brushes.DarkBlue, Pens.Black, true);
-                            Registry.MouseStatus = Registry.MouseCondition.Default;
+                            Utils.Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
+                            Utils.Utils.DrawCircle(drawingBoard, ImageLocation, radius - 5, Brushes.DarkBlue, Pens.Black, true);
+                            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
                             break;
-                        case Registry.MouseCondition.Hovered:
-                            Registry.MouseStatus = Registry.MouseCondition.Selected;
+                        case Utils.Registry.MouseCondition.Hovered:
+                            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Selected;
                             break;
-                        case Registry.MouseCondition.DeleteState:
-                            Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.White, Pens.White, true);
+                        case Utils.Registry.MouseCondition.DeleteState:
+                            Utils.Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.White, Pens.White, true);
                             State.StateCollection[StateName].Dispose();
                             State.StateCollection.Remove(StateName);
-                            Registry.MouseStatus = Registry.MouseCondition.Default;
+                            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
                             break;
-                        case Registry.MouseCondition.ConnectOne:
+                        case Utils.Registry.MouseCondition.ConnectOne:
                             if (State.StateHovered == null)
                             {
                                 State.StateHovered = this;
@@ -526,14 +526,14 @@ namespace AutomataGUI
                                 StateHovered.m_TargetOne = this;
                                 _incomingStates.Add(StateHovered);
                                 string myindex = GetNearestPointIndex(StateHovered.CenterLocation);
-                                Registry.LineParam _line = new Registry.LineParam();
+                                Utils.Registry.LineParam _line = new Utils.Registry.LineParam();
                                 _line.Source = StateHovered.GetMagnetPoint(CenterLocation);
                                 _line.Destination = _AvailablePoints[myindex].Location; 
                                 Pen _pen = new Pen(Color.Red, 5);
                                 _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                 _line.LineColor = _pen;
-                                Utils.DrawLine(drawingBoard, _line, true);
-                                Registry.MouseStatus = Registry.MouseCondition.Default;
+                                Utils.Utils.DrawLine(drawingBoard, _line, true);
+                                Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
                                 StateHovered = null;
                             }
                             else if (StateHovered == this)
@@ -541,18 +541,18 @@ namespace AutomataGUI
                                 StateHovered.m_TargetOne = this;
                                 _incomingStates.Add(StateHovered);
 
-                                Registry.LineParam arc = new Registry.LineParam();
+                                Utils.Registry.LineParam arc = new Utils.Registry.LineParam();
                                 Pen thePen = new Pen(Color.Red, 5);
                                 thePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                 arc.Source = _AvailablePoints["2"].Location;
                                 arc.Destination = _AvailablePoints["8"].Location;
                                 arc.LineColor = thePen;
-                                Utils.DrawArc(drawingBoard, arc, true, true);
-                                Registry.MouseStatus = Registry.MouseCondition.Default;
+                                Utils.Utils.DrawArc(drawingBoard, arc, true, true);
+                                Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
                                 StateHovered = null;
                             }
                             break;
-                        case Registry.MouseCondition.ConnectZero:
+                        case Utils.Registry.MouseCondition.ConnectZero:
                             if (State.StateHovered == null)
                             {
                                 State.StateHovered = this;
@@ -562,14 +562,14 @@ namespace AutomataGUI
                                 StateHovered.m_TargetZero = this;
                                 _incomingStates.Add(StateHovered);
                                 string myindex = GetNearestPointIndex(StateHovered.CenterLocation);
-                                Registry.LineParam _line = new Registry.LineParam();
+                                Utils.Registry.LineParam _line = new Utils.Registry.LineParam();
                                 _line.Source = StateHovered.GetMagnetPoint(CenterLocation);
                                 _line.Destination = _AvailablePoints[myindex].Location;
                                 Pen _pen = new Pen(Color.Black, 5);
                                 _pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                 _line.LineColor = _pen;
-                                Utils.DrawLine(drawingBoard, _line, true);
-                                Registry.MouseStatus = Registry.MouseCondition.Default;
+                                Utils.Utils.DrawLine(drawingBoard, _line, true);
+                                Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
                                 StateHovered = null;
                             }
                             else if (StateHovered == this)
@@ -577,14 +577,14 @@ namespace AutomataGUI
                                 StateHovered.m_TargetZero = this;
                                 _incomingStates.Add(StateHovered);
 
-                                Registry.LineParam arc = new Registry.LineParam();
+                                Utils.Registry.LineParam arc = new Utils.Registry.LineParam();
                                 Pen thePen = new Pen(Color.Black, 5);
                                 thePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                                 arc.Source = _AvailablePoints["4"].Location;
                                 arc.Destination = _AvailablePoints["6"].Location;
                                 arc.LineColor = thePen;
-                                Utils.DrawArc(drawingBoard, arc, false, true);
-                                Registry.MouseStatus = Registry.MouseCondition.Default;
+                                Utils.Utils.DrawArc(drawingBoard, arc, false, true);
+                                Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
                                 StateHovered = null;
                             }
                             break;
@@ -594,14 +594,14 @@ namespace AutomataGUI
                 }
                 else
                 {
-                    switch (Registry.MouseStatus)
+                    switch (Utils.Registry.MouseStatus)
                     {
-                        case Registry.MouseCondition.Selected:
+                        case Utils.Registry.MouseCondition.Selected:
                             if (StateHovered == this)
                             {
-                                Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
+                                Utils.Utils.DrawCircle(drawingBoard, ImageLocation, radius, Brushes.DarkBlue, Pens.Black, true);
                                 StateHovered = null;
-                                Registry.MouseStatus = Registry.MouseCondition.Default;
+                                Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
                             }
                             break;
                         default:
@@ -634,7 +634,7 @@ namespace AutomataGUI
                     lineCounts += _incomingStates.Count;
 
                     int i = 0;
-                    Registry.LineParam[] myLines = new Registry.LineParam[lineCounts];
+                    Utils.Registry.LineParam[] myLines = new Utils.Registry.LineParam[lineCounts];
 
                     if (m_TargetOne != null)
                     {
@@ -673,7 +673,7 @@ namespace AutomataGUI
                         if (incoming.m_TargetZero == this)
                             incoming.m_TargetZero = null;
                     }
-                    Utils.DrawLineAndCircle(drawingBoard, new Registry.CircleParam[0], myLines, true);
+                    Utils.Utils.DrawLineAndCircle(drawingBoard, new Utils.Registry.CircleParam[0], myLines, true);
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

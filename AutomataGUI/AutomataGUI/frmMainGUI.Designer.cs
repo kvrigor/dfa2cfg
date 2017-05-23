@@ -57,15 +57,15 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(711, 24);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(945, 28);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // toolStrip1
@@ -78,9 +78,9 @@
             this.ts_btnConnect0,
             this.ts_btnAcceptState,
             this.ts_btnProcess});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 28);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(711, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(945, 27);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -91,10 +91,10 @@
             this.lblMouseStatus,
             this.lblStateCount,
             this.lblMousePos});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 396);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 482);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(711, 25);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 13, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(945, 25);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -108,7 +108,7 @@
             // lblStateCount
             // 
             this.lblStateCount.Name = "lblStateCount";
-            this.lblStateCount.Size = new System.Drawing.Size(13, 20);
+            this.lblStateCount.Size = new System.Drawing.Size(17, 20);
             this.lblStateCount.Text = "0";
             // 
             // lblMousePos
@@ -121,9 +121,10 @@
             // StatesViewer
             // 
             this.StatesViewer.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.StatesViewer.Location = new System.Drawing.Point(398, 51);
+            this.StatesViewer.Location = new System.Drawing.Point(723, 63);
+            this.StatesViewer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.StatesViewer.Name = "StatesViewer";
-            this.StatesViewer.Size = new System.Drawing.Size(313, 345);
+            this.StatesViewer.Size = new System.Drawing.Size(225, 417);
             this.StatesViewer.TabIndex = 4;
             // 
             // ts_btnAddState
@@ -192,10 +193,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DiagramArea.BackColor = System.Drawing.Color.White;
-            this.DiagramArea.Location = new System.Drawing.Point(0, 51);
-            this.DiagramArea.Margin = new System.Windows.Forms.Padding(2);
+            this.DiagramArea.Location = new System.Drawing.Point(0, 63);
+            this.DiagramArea.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.DiagramArea.Name = "DiagramArea";
-            this.DiagramArea.Size = new System.Drawing.Size(537, 345);
+            this.DiagramArea.Size = new System.Drawing.Size(716, 417);
             this.DiagramArea.TabIndex = 0;
             this.DiagramArea.TabStop = false;
             this.DiagramArea.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DiagramArea_MouseClick);
@@ -203,9 +204,9 @@
             // 
             // frmMainGUI
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(711, 421);
+            this.ClientSize = new System.Drawing.Size(945, 507);
             this.Controls.Add(this.StatesViewer);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
@@ -213,9 +214,9 @@
             this.Controls.Add(this.menuStrip1);
             this.DoubleBuffered = true;
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2);
-            this.MaximumSize = new System.Drawing.Size(727, 459);
-            this.MinimumSize = new System.Drawing.Size(583, 459);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MaximumSize = new System.Drawing.Size(963, 554);
+            this.MinimumSize = new System.Drawing.Size(771, 554);
             this.Name = "frmMainGUI";
             this.Text = "AutomataGUI";
             this.menuStrip1.ResumeLayout(false);

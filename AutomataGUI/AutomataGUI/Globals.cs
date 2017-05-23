@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace AutomataGUI
+namespace AutomataGUI.Utils
 {
     public static class Registry
     {
@@ -21,11 +21,21 @@ namespace AutomataGUI
             Hovered,
             AddState,
             DeleteState,
+            StartState,
             MoveState,
             ConnectZero,
             ConnectOne,
             Selected,
             Accept
+        }
+
+        public static int Radius = 25;
+
+        public static class StateColors
+        {
+            public static Brush Default { get { return Brushes.Aqua; } }
+            public static Brush Hovered { get { return Brushes.AliceBlue; } }
+            public static Brush Delete { get { return Brushes.Red; } }
         }
 
         public struct CircleParam
@@ -114,6 +124,54 @@ namespace AutomataGUI
                 myLine.Dispose();
             }
 
+            whereToDraw.Image = (Image)currentImage.Clone();
+            if (save)
+                Registry.FixedImage = (Image)whereToDraw.Image.Clone();
+        }
+    }
+
+    public static class Drawing
+    {
+        public struct CircleParam
+        {
+            public int Radius;
+            public Point CenterLocation;
+            public Brush FillColor;
+            public Pen OutlineColor;
+
+           public Point ImageLocation { get { return new Point(CenterLocation.X - Radius, CenterLocation.Y - Radius); } }
+        }
+
+        public struct LineParam
+        {
+            public Point Source;
+            public Point Destination;
+            public Pen LineColor;
+        }
+
+        public static void DrawCircle(PictureBox whereToDraw, CircleParam circles, bool save)
+        {
+            whereToDraw.Image = (Image)Registry.FixedImage.Clone();
+
+            Size circleSize = new Size(2 * circles.Radius, 2 * circles.Radius);
+            Image currentImage = (Image)whereToDraw.Image.Clone();
+            Graphics g = Graphics.FromImage(currentImage);
+            g.FillEllipse(circles.FillColor, new Rectangle(circles.ImageLocation, circleSize));
+            g.DrawEllipse(circles.OutlineColor, new Rectangle(circles.ImageLocation, circleSize));
+            g.Dispose();
+            whereToDraw.Image = (Image)currentImage.Clone();
+            if (save)
+                Registry.FixedImage = (Image)whereToDraw.Image.Clone();
+        }
+
+        public static void DrawLine(PictureBox whereToDraw, LineParam lineInfo, bool save)
+        {
+            whereToDraw.Image = (Image)Registry.FixedImage.Clone();
+
+            Image currentImage = (Image)whereToDraw.Image.Clone();
+            Graphics myLine = Graphics.FromImage(currentImage);
+            myLine.DrawLine(lineInfo.LineColor, lineInfo.Source, lineInfo.Destination);
+            myLine.Dispose();
             whereToDraw.Image = (Image)currentImage.Clone();
             if (save)
                 Registry.FixedImage = (Image)whereToDraw.Image.Clone();
