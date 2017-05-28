@@ -46,6 +46,11 @@ namespace AutomataGUI
             Registry.MouseStatus = Registry.MouseCondition.Accept;
         }
 
+        private void btnC0_Click(object sender, EventArgs e)
+        {
+            Registry.MouseStatus = Registry.MouseCondition.ZeroStart;
+        }
+
         private void drawingBoard_MouseMove(object sender, MouseEventArgs e)
         {
             Utils.Drawing.CircleParam temp = new Drawing.CircleParam();
@@ -97,6 +102,5 @@ namespace AutomataGUI
                 Utils.Registry.FixedImage = (Image)drawingBoard.Image.Clone();
             }
         }
-
     }
 }

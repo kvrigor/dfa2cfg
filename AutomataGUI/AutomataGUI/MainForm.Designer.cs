@@ -34,8 +34,8 @@
             this.btnStartState = new System.Windows.Forms.ToolStripButton();
             this.btnAcceptState = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
+            this.btnC0 = new System.Windows.Forms.ToolStripButton();
+            this.btnC1 = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.listView1 = new System.Windows.Forms.ListView();
             this.drawingBoard = new System.Windows.Forms.PictureBox();
@@ -52,8 +52,8 @@
             this.btnStartState,
             this.btnAcceptState,
             this.toolStripSeparator1,
-            this.toolStripButton5,
-            this.toolStripButton6});
+            this.btnC0,
+            this.btnC1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(963, 47);
@@ -105,23 +105,24 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 47);
             // 
-            // toolStripButton5
+            // btnC0
             // 
-            this.toolStripButton5.Image = global::AutomataGUI.Properties.Resources.imgConnect0;
-            this.toolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton5.Name = "toolStripButton5";
-            this.toolStripButton5.Size = new System.Drawing.Size(79, 44);
-            this.toolStripButton5.Text = "Connect 0";
-            this.toolStripButton5.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnC0.Image = global::AutomataGUI.Properties.Resources.imgConnect0;
+            this.btnC0.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnC0.Name = "btnC0";
+            this.btnC0.Size = new System.Drawing.Size(79, 44);
+            this.btnC0.Text = "Connect 0";
+            this.btnC0.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnC0.Click += new System.EventHandler(this.btnC0_Click);
             // 
-            // toolStripButton6
+            // btnC1
             // 
-            this.toolStripButton6.Image = global::AutomataGUI.Properties.Resources.imgConnect1;
-            this.toolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton6.Name = "toolStripButton6";
-            this.toolStripButton6.Size = new System.Drawing.Size(79, 44);
-            this.toolStripButton6.Text = "Connect 1";
-            this.toolStripButton6.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnC1.Image = global::AutomataGUI.Properties.Resources.imgConnect1;
+            this.btnC1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnC1.Name = "btnC1";
+            this.btnC1.Size = new System.Drawing.Size(79, 44);
+            this.btnC1.Text = "Connect 1";
+            this.btnC1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             // 
             // statusStrip1
             // 
@@ -187,7 +188,7 @@
         private System.Windows.Forms.ToolStripButton btnStartState;
         private System.Windows.Forms.ToolStripButton btnAcceptState;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton toolStripButton5;
-        private System.Windows.Forms.ToolStripButton toolStripButton6;
+        private System.Windows.Forms.ToolStripButton btnC0;
+        private System.Windows.Forms.ToolStripButton btnC1;
     }
 }

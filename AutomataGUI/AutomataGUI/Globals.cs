@@ -25,6 +25,10 @@ namespace AutomataGUI.Utils
             MoveState,
             ConnectZero,
             ConnectOne,
+            ZeroStart,
+            ZeroEnd,
+            OneStart,
+            OneEnd,
             Selected,
             Accept
         }
@@ -159,6 +163,26 @@ namespace AutomataGUI.Utils
             g.FillEllipse(circles.FillColor, new Rectangle(circles.ImageLocation, circleSize));
             g.DrawEllipse(circles.OutlineColor, new Rectangle(circles.ImageLocation, circleSize));
             g.Dispose();
+
+            whereToDraw.Image = (Image)currentImage.Clone();
+            if (save)
+                Registry.FixedImage = (Image)whereToDraw.Image.Clone();
+        }
+
+        public static void DrawCircles(PictureBox whereToDraw, CircleParam[] circles, bool save)
+        {
+            whereToDraw.Image = (Image)Registry.FixedImage.Clone();
+            Image currentImage = (Image)whereToDraw.Image.Clone();
+
+            foreach (CircleParam item in circles)
+            {
+                Size circleSize = new Size(2 * item.Radius, 2 * item.Radius);
+                Graphics g = Graphics.FromImage(currentImage);
+                g.FillEllipse(item.FillColor, new Rectangle(item.ImageLocation, circleSize));
+                g.DrawEllipse(item.OutlineColor, new Rectangle(item.ImageLocation, circleSize));
+                g.Dispose();
+            }
+
             whereToDraw.Image = (Image)currentImage.Clone();
             if (save)
                 Registry.FixedImage = (Image)whereToDraw.Image.Clone();

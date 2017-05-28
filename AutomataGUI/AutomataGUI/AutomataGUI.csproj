@@ -67,6 +67,7 @@
     <Compile Include="State.cs" />
     <Compile Include="DFA_Wrapper.cs" />
     <Compile Include="State_Wrapper.cs" />
+    <Compile Include="Transition_Wrapper.cs" />
     <EmbeddedResource Include="frmMainGUI.resx">
       <DependentUpon>frmMainGUI.cs</DependentUpon>
     </EmbeddedResource>
