@@ -15,6 +15,7 @@ namespace AutomataGUI
     {
         private DFA_Wrapper src;
         private Cursor _tempCursor;
+     
 
         public MainForm()
         {
@@ -23,7 +24,6 @@ namespace AutomataGUI
             Utils.Registry.FixedImage = (Image)drawingBoard.Image.Clone();
 
             src = new DFA_Wrapper(drawingBoard);
-            
         }
 
         private void btnAddState_Click(object sender, EventArgs e)
@@ -100,6 +100,21 @@ namespace AutomataGUI
                 g.DrawImage(drawingBoard.Image, 0, 0);
                 drawingBoard.Image = test;
                 Utils.Registry.FixedImage = (Image)drawingBoard.Image.Clone();
+            }
+        }
+
+        private void toolstripButtons_CheckedChanged(object sender, EventArgs e)
+        {
+            if ((sender.GetType() == typeof(ToolStripButton)) && ((ToolStripButton)sender).Checked)
+            {      
+                foreach (ToolStripItem item in toolStrip1.Items)
+                {
+                    if ((item.GetType() == typeof(ToolStripButton)) && ((ToolStripButton)item).Name != ((ToolStripButton)sender).Name)
+                    {
+                        ((ToolStripButton)item).Checked = false;
+                    }
+                }
+                
             }
         }
     }
