@@ -15,7 +15,8 @@ namespace AutomataGUI
     {
         private DFA_Wrapper src;
         private Cursor _tempCursor;
-     
+        private Drawing.CircleParam _lastCircleLocation;
+        private Registry.MouseCondition _lastMouseCondition;
 
         public MainForm()
         {
@@ -53,6 +54,7 @@ namespace AutomataGUI
 
         private void drawingBoard_MouseMove(object sender, MouseEventArgs e)
         {
+
             Utils.Drawing.CircleParam temp = new Drawing.CircleParam();
             switch (Registry.MouseStatus)
             {
@@ -62,6 +64,7 @@ namespace AutomataGUI
                     temp.FillColor = Utils.Registry.StateColors.Hovered;
                     temp.OutlineColor = Pens.Black;
                     Utils.Drawing.DrawCircle(drawingBoard, temp, false);
+                    _lastCircleLocation = temp;
                     break;
                 case Registry.MouseCondition.DeleteState:
                     _tempCursor = Cursor.Current;
@@ -70,6 +73,7 @@ namespace AutomataGUI
                 default:
                     break;
             }
+            _lastMouseCondition = Registry.MouseStatus;
         }
 
         private void drawingBoard_MouseClick(object sender, MouseEventArgs e)
@@ -88,6 +92,7 @@ namespace AutomataGUI
                     default:
                         break;
                 }
+                _lastMouseCondition = Registry.MouseCondition.Default;
             }
         }
 
@@ -105,8 +110,13 @@ namespace AutomataGUI
 
         private void toolstripButtons_CheckedChanged(object sender, EventArgs e)
         {
+            if (_lastMouseCondition == Registry.MouseCondition.AddState)
+            {
+                Utils.Drawing.UnDrawCircle(drawingBoard, _lastCircleLocation);
+               _lastMouseCondition = Registry.MouseCondition.Default;
+            }
             if ((sender.GetType() == typeof(ToolStripButton)) && ((ToolStripButton)sender).Checked)
-            {      
+            {
                 foreach (ToolStripItem item in toolStrip1.Items)
                 {
                     if ((item.GetType() == typeof(ToolStripButton)) && ((ToolStripButton)item).Name != ((ToolStripButton)sender).Name)
@@ -114,7 +124,7 @@ namespace AutomataGUI
                         ((ToolStripButton)item).Checked = false;
                     }
                 }
-                
+
             }
         }
     }

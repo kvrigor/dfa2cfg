@@ -74,6 +74,7 @@ namespace AutomataGUI.Utils
             if (save)
                 Registry.FixedImage = (Image)whereToDraw.Image.Clone();
         }
+
         public static void DrawLine(PictureBox whereToDraw, Registry.LineParam lineInfo, bool save)
         {
             whereToDraw.Image = (Image)Registry.FixedImage.Clone();
@@ -167,6 +168,18 @@ namespace AutomataGUI.Utils
             whereToDraw.Image = (Image)currentImage.Clone();
             if (save)
                 Registry.FixedImage = (Image)whereToDraw.Image.Clone();
+        }
+
+        public static void UnDrawCircle(PictureBox whereToDraw, CircleParam circles)
+        {
+            whereToDraw.Image = (Image)Registry.FixedImage.Clone();
+            Size circleSize = new Size(0, 0);
+            Image currentImage = (Image)whereToDraw.Image.Clone();
+            Graphics g = Graphics.FromImage(currentImage);  
+            g.FillEllipse(circles.FillColor, new Rectangle(circles.ImageLocation, circleSize));
+            g.DrawEllipse(circles.OutlineColor, new Rectangle(circles.ImageLocation, circleSize));
+            g.Dispose();
+            whereToDraw.Image = (Image)currentImage.Clone();
         }
 
         public static void DrawCircles(PictureBox whereToDraw, CircleParam[] circles, bool save)
