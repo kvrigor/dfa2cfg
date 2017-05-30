@@ -17,7 +17,7 @@ namespace AutomataGUI
         private Cursor _tempCursor;
         private Drawing.CircleParam _lastCircleLocation;
         private Registry.MouseCondition _lastMouseCondition;
-
+         
         public MainForm()
         {
             InitializeComponent();
@@ -63,7 +63,7 @@ namespace AutomataGUI
                     temp.CenterLocation = e.Location;
                     temp.FillColor = Utils.Registry.StateColors.Hovered;
                     temp.OutlineColor = Pens.Black;
-                    Utils.Drawing.DrawCircle(drawingBoard, temp, false);
+                    Utils.Drawing.DrawCircle(drawingBoard, temp, false, Utils.Utils.MapToAlphabet(src.NumStates));
                     _lastCircleLocation = temp;
                     break;
                 case Registry.MouseCondition.DeleteState:
