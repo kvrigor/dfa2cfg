@@ -170,6 +170,7 @@
             this.drawingBoard.TabStop = false;
             this.drawingBoard.SizeChanged += new System.EventHandler(this.drawingBoard_SizeChanged);
             this.drawingBoard.MouseClick += new System.Windows.Forms.MouseEventHandler(this.drawingBoard_MouseClick);
+            this.drawingBoard.MouseLeave += new System.EventHandler(this.drawingBoard_MouseLeave);
             this.drawingBoard.MouseMove += new System.Windows.Forms.MouseEventHandler(this.drawingBoard_MouseMove);
             // 
             // MainForm

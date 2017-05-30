@@ -46,7 +46,7 @@ namespace AutomataGUI
         {
             Registry.MouseStatus = Registry.MouseCondition.Accept;
         }
-
+        
         private void btnC0_Click(object sender, EventArgs e)
         {
             Registry.MouseStatus = Registry.MouseCondition.ZeroStart;
@@ -59,7 +59,7 @@ namespace AutomataGUI
             switch (Registry.MouseStatus)
             {
                 case Registry.MouseCondition.AddState:
-                    temp.Radius = 25;
+                    temp.Radius = Utils.Registry.Radius;
                     temp.CenterLocation = e.Location;
                     temp.FillColor = Utils.Registry.StateColors.Hovered;
                     temp.OutlineColor = Pens.Black;
@@ -110,11 +110,6 @@ namespace AutomataGUI
 
         private void toolstripButtons_CheckedChanged(object sender, EventArgs e)
         {
-            if (_lastMouseCondition == Registry.MouseCondition.AddState)
-            {
-                Utils.Drawing.UnDrawCircle(drawingBoard, _lastCircleLocation);
-               _lastMouseCondition = Registry.MouseCondition.Default;
-            }
             if ((sender.GetType() == typeof(ToolStripButton)) && ((ToolStripButton)sender).Checked)
             {
                 foreach (ToolStripItem item in toolStrip1.Items)
@@ -124,7 +119,15 @@ namespace AutomataGUI
                         ((ToolStripButton)item).Checked = false;
                     }
                 }
+            }
+        }
 
+        private void drawingBoard_MouseLeave(object sender, EventArgs e)
+        {
+            if (_lastMouseCondition == Registry.MouseCondition.AddState)
+            {
+                Utils.Drawing.UnDrawCircle(drawingBoard, _lastCircleLocation);
+                _lastMouseCondition = Registry.MouseCondition.Default;
             }
         }
     }
