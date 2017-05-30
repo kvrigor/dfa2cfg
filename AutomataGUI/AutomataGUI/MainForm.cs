@@ -141,6 +141,8 @@ namespace AutomataGUI
                     if ((item.GetType() == typeof(ToolStripButton)) && ((ToolStripButton)item).Name != ((ToolStripButton)sender).Name)
                     {
                         ((ToolStripButton)item).Checked = false;
+                        if (((ToolStripButton)item).Name == btnAddState.Name)
+                            Utils.Drawing.UnDrawCircle(drawingBoard, _lastCircleLocation);
                     }
                 }
             }
@@ -152,6 +154,43 @@ namespace AutomataGUI
             {
                 Utils.Drawing.UnDrawCircle(drawingBoard, _lastCircleLocation);
                 _lastMouseCondition = Registry.MouseCondition.Default;
+            }
+        }
+
+        private void MainForm_KeyUp(object sender, KeyEventArgs e)
+        {
+           switch (e.KeyCode)
+            {
+                case Keys.A:
+                    //add new state
+                    Registry.MouseStatus = Registry.MouseCondition.AddState;
+                    btnAddState.Checked = true;
+                    break;
+                case Keys.S:
+                    //set start state
+                    Registry.MouseStatus = Registry.MouseCondition.StartState;
+                    btnStartState.Checked = true;
+                    break;
+                case Keys.D:
+                    //delete state
+                    Registry.MouseStatus = Registry.MouseCondition.DeleteState;
+                    btnDeleteState.Checked = true;
+                    break;
+                case Keys.F:
+                    //set accept state
+                    Registry.MouseStatus = Registry.MouseCondition.Accept;
+                    btnAcceptState.Checked = true;
+                    break;
+                case Keys.O:
+                    //connect 0
+                    Registry.MouseStatus = Registry.MouseCondition.ConnectZero;
+                    btnC0.Checked = true;
+                    break;
+                case Keys.I:
+                    //connect 1
+                    Registry.MouseStatus = Registry.MouseCondition.ConnectOne;
+                    btnC1.Checked = true;
+                    break;
             }
         }
     }
