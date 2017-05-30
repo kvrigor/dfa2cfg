@@ -70,6 +70,9 @@ namespace AutomataGUI
                     _tempCursor = Cursor.Current;
                     Cursor.Current = Cursors.Cross;
                     break;
+                case Registry.MouseCondition.StartState:
+                    Cursor.Current = Cursors.PanEast;
+                    break;
                 default:
                     break;
             }
@@ -78,21 +81,42 @@ namespace AutomataGUI
 
         private void drawingBoard_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            switch (Registry.MouseStatus)
             {
-                switch (Registry.MouseStatus)
-                {
-                    case Registry.MouseCondition.AddState:
+                case Registry.MouseCondition.AddState:
+                    if (e.Button == MouseButtons.Left)
                         src.AddState(e.Location);
+                    else
+                    {
+                        btnAddState.Checked = false;
+                        Utils.Drawing.UnDrawCircle(drawingBoard, _lastCircleLocation);
+                        _lastMouseCondition = Registry.MouseCondition.Default;
                         Registry.MouseStatus = Registry.MouseCondition.Default;
-                        break;
-                    case Registry.MouseCondition.DeleteState:
-                        Cursor.Current = _tempCursor;
-                        break;
-                    default:
-                        break;
-                }
-                _lastMouseCondition = Registry.MouseCondition.Default;
+                    }
+                    break;
+                case Registry.MouseCondition.DeleteState: 
+                    if (e.Button != MouseButtons.Left)
+                    {
+                        btnDeleteState.Checked = false;
+                        Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
+                    }
+                    break;
+                case Registry.MouseCondition.StartState:
+                    if (e.Button != MouseButtons.Left)
+                    {
+                        btnStartState.Checked = false;
+                        Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
+                    }
+                    break;
+                case Registry.MouseCondition.Accept:
+                    if (e.Button != MouseButtons.Left)
+                    {
+                        btnAcceptState.Checked = false;
+                        Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

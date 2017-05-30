@@ -76,8 +76,7 @@ namespace AutomataGUI
         {
             sender.Dispose(_drawingBoard);
             DrawRemove(sender, true);
-            RemoveState(sender);            
-            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
+            RemoveState(sender);                  
         }
 
         private void _lstState_StateSetStart(State_Wrapper sender, EventArgs e)
@@ -102,7 +101,6 @@ namespace AutomataGUI
             dummy.LineColor = testPen;
             Utils.Drawing.DrawLine(_drawingBoard, dummy, true);
             _dfa.StartState = sender.Name;
-            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
         }
 
         private void _lstStates_StateSetAccept(State_Wrapper sender, EventArgs e)
@@ -110,7 +108,6 @@ namespace AutomataGUI
             sender.IsAcceptState = true;
             _dfa.AddFinalStates(sender.Name);
             _lstState_StateHovered(sender, e);
-            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
         }
 
         private void _lstStatesZeroStart(State_Wrapper sender, MouseEventArgs e)
