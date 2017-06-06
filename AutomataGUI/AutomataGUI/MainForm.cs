@@ -51,6 +51,11 @@ namespace AutomataGUI
             Registry.MouseStatus = Registry.MouseCondition.ZeroStart;
         }
 
+        private void btnC1_Click(object sender, EventArgs e)
+        {
+            Registry.MouseStatus = Registry.MouseCondition.OneStart;
+        }
+
         private void drawingBoard_MouseMove(object sender, MouseEventArgs e)
         {
             Utils.Drawing.CircleParam temp = new Drawing.CircleParam();

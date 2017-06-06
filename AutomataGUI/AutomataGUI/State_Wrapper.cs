@@ -25,6 +25,8 @@ namespace AutomataGUI
         public StateEvents StateSetAccept;
         public StateEvents StateZeroStart;
         public StateEvents StateZeroEnd;
+        public StateEvents StateOneStart;
+        public StateEvents StateOneEnd;
 
 
         public string Name { get { return _name; } }
@@ -42,20 +44,17 @@ namespace AutomataGUI
             initializeConnectPoints();
         }
 
-        public void ShowConnectingPoint(PictureBox _myBoard)
+        public void ShowConnectingPoint(PictureBox _myBoard, Point mouse)
         {
-            Utils.Drawing.CircleParam[] dummy = new Utils.Drawing.CircleParam[_connpts_count];
+            Utils.Drawing.CircleParam[] dummy = new Utils.Drawing.CircleParam[1];
             int x = 0;
-            foreach (Point item in _connectpoints.Keys)
-            {
-                dummy[x] = new Utils.Drawing.CircleParam();
-                dummy[x].FillColor = Brushes.Red;
-                dummy[x].Radius = 3;
-                dummy[x].OutlineColor = Pens.Black;
-                dummy[x].CenterLocation = item;
-                x++;
-            }
-
+            Point nearestPT = GetPointIndex(mouse);
+            dummy[0] = new Utils.Drawing.CircleParam();
+            dummy[0].FillColor = Brushes.Red;
+            dummy[0].Radius = 3;
+            dummy[0].OutlineColor = Pens.Black;
+            dummy[0].CenterLocation = nearestPT;
+            
             Utils.Drawing.DrawCircles(_myBoard, dummy, false);
         }
 
@@ -77,8 +76,12 @@ namespace AutomataGUI
                     }
                 }
             }
-            _connectpoints[lowestKey] = false;
             return lowestKey;
+        }
+
+        public void SetPointIndexUsed(Point index, bool val)
+        {
+            _connectpoints[index] = val;
         }
 
         public void Dispose(PictureBox drawingBoard)
@@ -91,6 +94,18 @@ namespace AutomataGUI
         {
             if (IsInRange(e.Location))
             {
+                switch (Utils.Registry.MouseStatus)
+                {
+                    case Utils.Registry.MouseCondition.ZeroStart:
+                    case Utils.Registry.MouseCondition.ZeroEnd:
+                    case Utils.Registry.MouseCondition.OneStart:
+                    case Utils.Registry.MouseCondition.OneEnd:
+                        StateHovered?.Invoke(this, e);
+                        _ishovered = true;
+                        break;
+                    default:
+                        break;
+                }
                 if (!_ishovered)
                 {
                     StateHovered?.Invoke(this, e);
@@ -129,6 +144,12 @@ namespace AutomataGUI
                         break;
                     case Utils.Registry.MouseCondition.ZeroEnd:
                         StateZeroEnd?.Invoke(this, e);
+                        break;
+                    case Utils.Registry.MouseCondition.OneStart:
+                        StateOneStart?.Invoke(this, e);
+                        break;
+                    case Utils.Registry.MouseCondition.OneEnd:
+                        StateOneEnd?.Invoke(this, e);
                         break;
                     default:
                         break;

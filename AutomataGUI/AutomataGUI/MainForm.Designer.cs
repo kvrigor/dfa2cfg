@@ -123,6 +123,7 @@
             this.btnC1.Size = new System.Drawing.Size(79, 44);
             this.btnC1.Text = "Connect 1";
             this.btnC1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnC1.Click += new System.EventHandler(this.btnC1_Click);
             // 
             // statusStrip1
             // 
