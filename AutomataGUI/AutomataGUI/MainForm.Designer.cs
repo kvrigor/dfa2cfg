@@ -135,6 +135,8 @@
             this.btnC1.Text = "Connect 1";
             this.btnC1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnC1.CheckedChanged += new System.EventHandler(this.toolstripButtons_CheckedChanged);
+            this.btnC1.Click += new System.EventHandler(this.btnC1_Click);
+
             // 
             // statusStrip1
             // 

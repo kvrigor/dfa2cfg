@@ -16,9 +16,11 @@ namespace AutomataGUI
         private PictureBox _drawingBoard;
         private MagnetPoint _ZeroSource;
         private MagnetPoint _ZeroTarget;
+        private MagnetPoint _OneSource;
+        private MagnetPoint _OneTarget;
 
         private List<State_Wrapper> _lstStates;
-        private List<TransFunc> _lstTransFunc;
+        private List<Transition_Wrapper> _lstTransFunc;
 
         private struct MagnetPoint
         {
@@ -29,6 +31,28 @@ namespace AutomataGUI
                 State = null;
                 indexPoint = new Point(0, 0);
             }
+            public bool IsNull { get { return (State == null); } }
+        }
+
+        private struct Transition_Wrapper
+        {
+            public TransFunc TransitionFunction;
+            public MagnetPoint SourceIndex;
+            public MagnetPoint DestinationIndex;
+            public Transition_Wrapper(TransFunc x, MagnetPoint src, MagnetPoint dst)
+            {
+                TransitionFunction = x;
+                SourceIndex = src;
+                DestinationIndex = dst;
+            }
+            public void NullIt()
+            {
+                TransitionFunction = null;
+                SourceIndex.NullIt();
+                DestinationIndex.NullIt();
+            }
+            public bool IsNull
+            { get { return (TransitionFunction == null) && SourceIndex.IsNull && DestinationIndex.IsNull; } }
         }
 
         public DFA_Wrapper(PictureBox drawingBoard)
@@ -36,7 +60,7 @@ namespace AutomataGUI
             _dfa = new DFA();
             _name_counter = 0;
             _lstStates = new List<State_Wrapper>();
-            _lstTransFunc = new List<TransFunc>();
+            _lstTransFunc = new List<Transition_Wrapper>();
             _drawingBoard = drawingBoard;
         }
 
@@ -52,17 +76,20 @@ namespace AutomataGUI
             _state.StateSetAccept += _lstStates_StateSetAccept;
             _state.StateZeroStart += _lstStatesZeroStart;
             _state.StateZeroEnd += _lstStatesZeroEnd;
-            Draw(_state, Utils.Registry.StateColors.Default, true);      
+            _state.StateOneStart += _lstStatesOneStart;
+            _state.StateOneEnd += _lstStatesOneEnd;
+            Draw(_state, Utils.Registry.StateColors.Default, true);
             AddState(_state);
         }
 
-        private void _lstState_StateHovered(State_Wrapper sender, EventArgs e)
+        private void _lstState_StateHovered(State_Wrapper sender, MouseEventArgs e)
         {
             Draw(sender, Utils.Registry.StateColors.Hovered, true);
             if (sender.IsAcceptState)
                 DrawAccept(sender, Utils.Registry.StateColors.Hovered, true);
-            if (Utils.Registry.MouseStatus == Utils.Registry.MouseCondition.ZeroStart || Utils.Registry.MouseStatus == Utils.Registry.MouseCondition.ZeroEnd)
-                sender.ShowConnectingPoint(_drawingBoard);
+            if (Utils.Registry.MouseStatus == Utils.Registry.MouseCondition.ZeroStart || Utils.Registry.MouseStatus == Utils.Registry.MouseCondition.ZeroEnd ||
+                Utils.Registry.MouseStatus == Utils.Registry.MouseCondition.OneStart || Utils.Registry.MouseStatus == Utils.Registry.MouseCondition.OneEnd)
+                sender.ShowConnectingPoint(_drawingBoard, e.Location);
         }
 
         private void _lstState_StateLeaveHovered(State_Wrapper sender, EventArgs e)
@@ -103,7 +130,7 @@ namespace AutomataGUI
             _dfa.StartState = sender.Name;
         }
 
-        private void _lstStates_StateSetAccept(State_Wrapper sender, EventArgs e)
+        private void _lstStates_StateSetAccept(State_Wrapper sender, MouseEventArgs e)
         {
             sender.IsAcceptState = true;
             _dfa.AddFinalStates(sender.Name);
@@ -114,22 +141,46 @@ namespace AutomataGUI
         {
             _ZeroSource.State = sender;
             _ZeroSource.indexPoint = _ZeroSource.State.GetPointIndex(e.Location);
-            TransFunc dummy = DeleteTransitions(_ZeroSource.State, "0");
-            if (dummy != null)
+            Transition_Wrapper dummy = DeleteTransitions(_ZeroSource.State, "0");
+            if (!dummy.IsNull)
             {
-
+                DrawLine(dummy.SourceIndex, dummy.DestinationIndex, "0", false, true);
             }
             Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.ZeroEnd;
         }
 
-        private void _lstStatesZeroEnd(State_Wrapper sender, EventArgs e)
+        private void _lstStatesZeroEnd(State_Wrapper sender, MouseEventArgs e)
         {
             _ZeroTarget.State = sender;
-            DrawLine(_ZeroSource.State, _ZeroTarget.State, true);
-            AddTransitions(_ZeroSource.State, _ZeroTarget.State, "0");
+            _ZeroTarget.indexPoint = e.Location;
+            DrawLine(_ZeroSource, _ZeroTarget, "0", true, true);
+            AddTransitions(_ZeroSource, _ZeroTarget, "0");
             Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
             _ZeroSource.NullIt();
             _ZeroTarget.NullIt();
+        }
+
+        private void _lstStatesOneStart(State_Wrapper sender, MouseEventArgs e)
+        {
+            _OneSource.State = sender;
+            _OneSource.indexPoint = _OneSource.State.GetPointIndex(e.Location);
+            Transition_Wrapper dummy = DeleteTransitions(_OneSource.State, "1");
+            if (!dummy.IsNull)
+            {
+                DrawLine(dummy.SourceIndex, dummy.DestinationIndex, "1", false, true);
+            }
+            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.OneEnd;
+        }
+
+        private void _lstStatesOneEnd(State_Wrapper sender, MouseEventArgs e)
+        {
+            _OneTarget.State = sender;
+            _OneTarget.indexPoint = e.Location;
+            DrawLine(_OneSource, _OneTarget, "1", true, true);
+            AddTransitions(_OneSource, _OneTarget, "1");
+            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
+            _OneSource.NullIt();
+            _OneTarget.NullIt();
         }
 
         private void AddState(State_Wrapper dfa_state)
@@ -162,26 +213,30 @@ namespace AutomataGUI
             }
         }
 
-        private void AddTransitions(State_Wrapper prev, State_Wrapper next, string input)
+        private void AddTransitions(MagnetPoint prev, MagnetPoint next, string input)
         {
-            TransFunc currTrans = _lstTransFunc.Find(x => x.PrevState == prev.Name && x.Input == input);
-            if (currTrans != null)
+            Transition_Wrapper currTrans = _lstTransFunc.Find(x => x.TransitionFunction.PrevState == prev.State.Name && x.TransitionFunction.Input == input);
+            if (!currTrans.IsNull)
                 throw new Exception("something not deleted");
-            _lstTransFunc.Add(new TransFunc(prev.Name, input, next.Name));
+            _lstTransFunc.Add(new Transition_Wrapper(new TransFunc(prev.State.Name, input, next.State.Name), prev, next));
 
-            _dfa.Transitions = _lstTransFunc.ToArray();
+            TransFunc[] dummy = new TransFunc[_lstTransFunc.Count];
+            for (int i = 0; i < _lstTransFunc.Count; i++)
+                dummy[i] = _lstTransFunc[i].TransitionFunction;
+
+            _dfa.Transitions = dummy;
         }
 
-        private TransFunc DeleteTransitions(State_Wrapper prev, string input)
+        private Transition_Wrapper DeleteTransitions(State_Wrapper prev, string input)
         {
-            TransFunc currTrans = _lstTransFunc.Find(x => x.PrevState == prev.Name && x.Input == input);
-            if (currTrans != null)
+            Transition_Wrapper currTrans = _lstTransFunc.Find(x => x.TransitionFunction.PrevState == prev.Name && x.TransitionFunction.Input == input);
+            if (!currTrans.IsNull)
             {
                 _lstTransFunc.Remove(currTrans);
                 return currTrans;
             }
             else
-                return null;
+                return new Transition_Wrapper(null, new MagnetPoint(), new MagnetPoint());
         }
 
         private State_Wrapper GetState(string name)
@@ -222,15 +277,26 @@ namespace AutomataGUI
             Utils.Drawing.DrawCircle(_drawingBoard, dummy, fix);    
         }
 
-        private void DrawLine(State_Wrapper source, State_Wrapper desti, bool fix)
+        private void DrawLine(MagnetPoint source, MagnetPoint desti, string input, bool create, bool fix)
         {
-            Point ptSrc = source.GetPointIndex(desti.CenterLocation);
-            Point ptDst = desti.GetPointIndex(source.CenterLocation);
+            Point ptSrc = source.indexPoint;
+            source.State.SetPointIndexUsed(ptSrc, create);
+            Point ptDst = desti.indexPoint;
+            desti.State.SetPointIndexUsed(ptDst, create);
 
             Utils.Drawing.LineParam dummy = new Utils.Drawing.LineParam();
             dummy.Source = ptSrc;
             dummy.Destination = ptDst;
-            Pen testPen = new Pen(Color.Black, 4);
+            Pen testPen;
+            if (create)
+            {
+                if (input == "0")
+                    testPen = new Pen(Color.Black, 4);
+                else
+                    testPen = new Pen(Color.Blue, 4);
+            }
+            else
+                testPen = new Pen(Color.White, 4);
             testPen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
             dummy.LineColor = testPen;
             Utils.Drawing.DrawLine(_drawingBoard, dummy, true);
