@@ -144,7 +144,10 @@ namespace AutomataGUI
             Transition_Wrapper dummy = DeleteTransitions(_ZeroSource.State, "0");
             if (!dummy.IsNull)
             {
-                DrawLine(dummy.SourceIndex, dummy.DestinationIndex, "0", false, true);
+                if (dummy.SourceIndex.State == dummy.DestinationIndex.State)
+                    DrawArcToSelf(dummy.SourceIndex, false, true, true);
+                else
+                    DrawLine(dummy.SourceIndex, dummy.DestinationIndex, "0", false, true);
             }
             Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.ZeroEnd;
         }
@@ -152,8 +155,15 @@ namespace AutomataGUI
         private void _lstStatesZeroEnd(State_Wrapper sender, MouseEventArgs e)
         {
             _ZeroTarget.State = sender;
-            _ZeroTarget.indexPoint = e.Location;
-            DrawLine(_ZeroSource, _ZeroTarget, "0", true, true);
+            _ZeroTarget.indexPoint = _ZeroTarget.State.GetPointIndex(e.Location);
+            if (_ZeroSource.State == _ZeroTarget.State)
+            {
+                DrawArcToSelf(_ZeroSource, true, true, true);
+            }
+            else
+            {
+                DrawLine(_ZeroSource, _ZeroTarget, "0", true, true);
+            }
             AddTransitions(_ZeroSource, _ZeroTarget, "0");
             Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
             _ZeroSource.NullIt();
@@ -167,7 +177,10 @@ namespace AutomataGUI
             Transition_Wrapper dummy = DeleteTransitions(_OneSource.State, "1");
             if (!dummy.IsNull)
             {
-                DrawLine(dummy.SourceIndex, dummy.DestinationIndex, "1", false, true);
+                if (dummy.SourceIndex.State == dummy.DestinationIndex.State)
+                    DrawArcToSelf(dummy.SourceIndex, false, false, true);
+                else
+                    DrawLine(dummy.SourceIndex, dummy.DestinationIndex, "1", false, true);
             }
             Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.OneEnd;
         }
@@ -175,8 +188,11 @@ namespace AutomataGUI
         private void _lstStatesOneEnd(State_Wrapper sender, MouseEventArgs e)
         {
             _OneTarget.State = sender;
-            _OneTarget.indexPoint = e.Location;
-            DrawLine(_OneSource, _OneTarget, "1", true, true);
+            _OneTarget.indexPoint = _OneTarget.State.GetPointIndex(e.Location);
+            if (_OneSource.State == _OneTarget.State)
+                DrawArcToSelf(_OneSource, true, false, true);
+            else
+                DrawLine(_OneSource, _OneTarget, "1", true, true);
             AddTransitions(_OneSource, _OneTarget, "1");
             Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
             _OneSource.NullIt();
@@ -299,7 +315,42 @@ namespace AutomataGUI
                 testPen = new Pen(Color.White, 4);
             testPen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
             dummy.LineColor = testPen;
-            Utils.Drawing.DrawLine(_drawingBoard, dummy, true);
+            Utils.Drawing.DrawLine(_drawingBoard, dummy, fix);
+        }
+
+        private void DrawArcToSelf(MagnetPoint source, bool create, bool iszro, bool fix)
+        {
+
+            Utils.Drawing.LineParam dummy = new Utils.Drawing.LineParam();
+            Pen testPen;
+            if (create)
+            {
+                if (iszro)
+                    testPen = new Pen(Color.Black, 4);
+                else
+                    testPen = new Pen(Color.Blue, 4);
+            }
+            else
+                testPen = new Pen(Color.White, 4);
+
+            Point reference = source.State.CenterLocation;
+            if (iszro)
+            {
+                Point left = new Point(reference.X - 5, reference.Y - 20);
+                Point right = new Point(reference.X + 5, reference.Y - 20);
+                dummy.Source = source.State.GetPointIndex(left);
+                dummy.Destination = source.State.GetPointIndex(right);
+            }
+            else
+            {
+                Point left = new Point(reference.X - 5, reference.Y + 20);
+                Point right = new Point(reference.X + 5, reference.Y + 20);
+                dummy.Source = source.State.GetPointIndex(left);
+                dummy.Destination = source.State.GetPointIndex(right);
+            }
+            testPen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+            dummy.LineColor = testPen;
+            Utils.Drawing.DrawArc(_drawingBoard, dummy, iszro, fix);
         }
     }
 }
