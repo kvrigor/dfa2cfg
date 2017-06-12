@@ -155,7 +155,7 @@ namespace AutomataGUI
             _ZeroTarget.indexPoint = e.Location;
             DrawLine(_ZeroSource, _ZeroTarget, "0", true, true);
             AddTransitions(_ZeroSource, _ZeroTarget, "0");
-            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
+            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.ZeroStart;
             _ZeroSource.NullIt();
             _ZeroTarget.NullIt();
         }
@@ -178,7 +178,7 @@ namespace AutomataGUI
             _OneTarget.indexPoint = e.Location;
             DrawLine(_OneSource, _OneTarget, "1", true, true);
             AddTransitions(_OneSource, _OneTarget, "1");
-            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
+            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.OneStart;
             _OneSource.NullIt();
             _OneTarget.NullIt();
         }
