@@ -221,5 +221,26 @@ namespace AutomataGUI.Utils
             if (save)
                 Registry.FixedImage = (Image)whereToDraw.Image.Clone();
         }
+        public static void DrawArc(PictureBox whereToDraw, LineParam arcInfo, bool istop, bool save)
+        {
+            whereToDraw.Image = (Image)Registry.FixedImage.Clone();
+
+            int tension = 25;
+            if (istop)
+                tension = -25;
+            Image currentImage = (Image)whereToDraw.Image.Clone();
+            Graphics myArc = Graphics.FromImage(currentImage);
+            Point[] pts = new Point[4];
+            pts[0] = arcInfo.Source;
+            pts[1] = new Point(arcInfo.Source.X, arcInfo.Source.Y + tension);
+            pts[2] = new Point(arcInfo.Destination.X, arcInfo.Destination.Y + tension);
+            pts[3] = arcInfo.Destination;
+            myArc.DrawCurve(arcInfo.LineColor, pts, 1.2F);
+            myArc.Dispose();
+
+            whereToDraw.Image = (Image)currentImage.Clone();
+            if (save)
+                Registry.FixedImage = (Image)whereToDraw.Image.Clone();
+        }
     }
 }
