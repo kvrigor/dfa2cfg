@@ -60,6 +60,8 @@ namespace AutomataGUI.Utils
 
     public static class Utils
     {
+        public static string MapToAlphabet(int input) { return ((char)(65 + input)).ToString(); }
+
         public static void DrawCircle(PictureBox whereToDraw, Point imageLocation, int radius, Brush fillColor, Pen outlineColor, bool save)
         {
             whereToDraw.Image = (Image)Registry.FixedImage.Clone();
@@ -74,6 +76,7 @@ namespace AutomataGUI.Utils
             if (save)
                 Registry.FixedImage = (Image)whereToDraw.Image.Clone();
         }
+
         public static void DrawLine(PictureBox whereToDraw, Registry.LineParam lineInfo, bool save)
         {
             whereToDraw.Image = (Image)Registry.FixedImage.Clone();
@@ -86,6 +89,7 @@ namespace AutomataGUI.Utils
             if (save)
                 Registry.FixedImage = (Image)whereToDraw.Image.Clone();
         }
+
         public static void DrawArc(PictureBox whereToDraw, Registry.LineParam arcInfo, bool istop, bool save)
         {
             whereToDraw.Image = (Image)Registry.FixedImage.Clone();
@@ -107,6 +111,7 @@ namespace AutomataGUI.Utils
             if (save)
                 Registry.FixedImage = (Image)whereToDraw.Image.Clone();
         }
+
         public static void DrawLineAndCircle(PictureBox whereToDraw, Registry.CircleParam[] circles, Registry.LineParam[] lines, bool save)
         {
             whereToDraw.Image = (Image)Registry.FixedImage.Clone();
@@ -143,7 +148,7 @@ namespace AutomataGUI.Utils
             public Brush FillColor;
             public Pen OutlineColor;
 
-           public Point ImageLocation { get { return new Point(CenterLocation.X - Radius, CenterLocation.Y - Radius); } }
+            public Point ImageLocation { get { return new Point(CenterLocation.X - Radius, CenterLocation.Y - Radius); } }
         }
 
         public struct LineParam
@@ -153,20 +158,36 @@ namespace AutomataGUI.Utils
             public Pen LineColor;
         }
 
-        public static void DrawCircle(PictureBox whereToDraw, CircleParam circles, bool save)
+        public static void DrawCircle(PictureBox whereToDraw, CircleParam circles, bool save, string label = "")
         {
             whereToDraw.Image = (Image)Registry.FixedImage.Clone();
 
             Size circleSize = new Size(2 * circles.Radius, 2 * circles.Radius);
             Image currentImage = (Image)whereToDraw.Image.Clone();
             Graphics g = Graphics.FromImage(currentImage);
-            g.FillEllipse(circles.FillColor, new Rectangle(circles.ImageLocation, circleSize));
+            Rectangle boundRect = new Rectangle(circles.ImageLocation, circleSize);
+          
+            g.FillEllipse(circles.FillColor, boundRect);
             g.DrawEllipse(circles.OutlineColor, new Rectangle(circles.ImageLocation, circleSize));
+            if (!String.IsNullOrEmpty(label))
+                g.DrawString(label, new Font("Arial", 22), new SolidBrush(Color.Black), boundRect, new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center});
             g.Dispose();
 
             whereToDraw.Image = (Image)currentImage.Clone();
             if (save)
                 Registry.FixedImage = (Image)whereToDraw.Image.Clone();
+        }
+
+        public static void UnDrawCircle(PictureBox whereToDraw, CircleParam circles)
+        {
+            whereToDraw.Image = (Image)Registry.FixedImage.Clone();
+            Size circleSize = new Size(0, 0);
+            Image currentImage = (Image)whereToDraw.Image.Clone();
+            Graphics g = Graphics.FromImage(currentImage);  
+            g.FillEllipse(circles.FillColor, new Rectangle(circles.ImageLocation, circleSize));
+            g.DrawEllipse(circles.OutlineColor, new Rectangle(circles.ImageLocation, circleSize));
+            g.Dispose();
+            whereToDraw.Image = (Image)currentImage.Clone();
         }
 
         public static void DrawCircles(PictureBox whereToDraw, CircleParam[] circles, bool save)

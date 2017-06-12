@@ -15,7 +15,9 @@ namespace AutomataGUI
     {
         private DFA_Wrapper src;
         private Cursor _tempCursor;
-
+        private Drawing.CircleParam _lastCircleLocation;
+        private Registry.MouseCondition _lastMouseCondition;
+         
         public MainForm()
         {
             InitializeComponent();
@@ -23,7 +25,6 @@ namespace AutomataGUI
             Utils.Registry.FixedImage = (Image)drawingBoard.Image.Clone();
 
             src = new DFA_Wrapper(drawingBoard);
-            
         }
 
         private void btnAddState_Click(object sender, EventArgs e)
@@ -45,7 +46,7 @@ namespace AutomataGUI
         {
             Registry.MouseStatus = Registry.MouseCondition.Accept;
         }
-
+        
         private void btnC0_Click(object sender, EventArgs e)
         {
             Registry.MouseStatus = Registry.MouseCondition.ZeroStart;
@@ -58,41 +59,69 @@ namespace AutomataGUI
 
         private void drawingBoard_MouseMove(object sender, MouseEventArgs e)
         {
+
             Utils.Drawing.CircleParam temp = new Drawing.CircleParam();
             switch (Registry.MouseStatus)
             {
                 case Registry.MouseCondition.AddState:
-                    temp.Radius = 25;
+                    temp.Radius = Utils.Registry.Radius;
                     temp.CenterLocation = e.Location;
                     temp.FillColor = Utils.Registry.StateColors.Hovered;
                     temp.OutlineColor = Pens.Black;
-                    Utils.Drawing.DrawCircle(drawingBoard, temp, false);
+                    Utils.Drawing.DrawCircle(drawingBoard, temp, false, Utils.Utils.MapToAlphabet(src.NumStates));
+                    _lastCircleLocation = temp;
                     break;
                 case Registry.MouseCondition.DeleteState:
                     _tempCursor = Cursor.Current;
                     Cursor.Current = Cursors.Cross;
                     break;
+                case Registry.MouseCondition.StartState:
+                    Cursor.Current = Cursors.PanEast;
+                    break;
                 default:
                     break;
             }
+            _lastMouseCondition = Registry.MouseStatus;
         }
 
         private void drawingBoard_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            switch (Registry.MouseStatus)
             {
-                switch (Registry.MouseStatus)
-                {
-                    case Registry.MouseCondition.AddState:
+                case Registry.MouseCondition.AddState:
+                    if (e.Button == MouseButtons.Left)
                         src.AddState(e.Location);
+                    else
+                    {
+                        btnAddState.Checked = false;
+                        Utils.Drawing.UnDrawCircle(drawingBoard, _lastCircleLocation);
+                        _lastMouseCondition = Registry.MouseCondition.Default;
                         Registry.MouseStatus = Registry.MouseCondition.Default;
-                        break;
-                    case Registry.MouseCondition.DeleteState:
-                        Cursor.Current = _tempCursor;
-                        break;
-                    default:
-                        break;
-                }
+                    }
+                    break;
+                case Registry.MouseCondition.DeleteState: 
+                    if (e.Button != MouseButtons.Left)
+                    {
+                        btnDeleteState.Checked = false;
+                        Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
+                    }
+                    break;
+                case Registry.MouseCondition.StartState:
+                    if (e.Button != MouseButtons.Left)
+                    {
+                        btnStartState.Checked = false;
+                        Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
+                    }
+                    break;
+                case Registry.MouseCondition.Accept:
+                    if (e.Button != MouseButtons.Left)
+                    {
+                        btnAcceptState.Checked = false;
+                        Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -105,6 +134,68 @@ namespace AutomataGUI
                 g.DrawImage(drawingBoard.Image, 0, 0);
                 drawingBoard.Image = test;
                 Utils.Registry.FixedImage = (Image)drawingBoard.Image.Clone();
+            }
+        }
+
+        private void toolstripButtons_CheckedChanged(object sender, EventArgs e)
+        {
+            if ((sender.GetType() == typeof(ToolStripButton)) && ((ToolStripButton)sender).Checked)
+            {
+                foreach (ToolStripItem item in toolStrip1.Items)
+                {
+                    if ((item.GetType() == typeof(ToolStripButton)) && ((ToolStripButton)item).Name != ((ToolStripButton)sender).Name)
+                    {
+                        ((ToolStripButton)item).Checked = false;
+                        if (((ToolStripButton)item).Name == btnAddState.Name)
+                            Utils.Drawing.UnDrawCircle(drawingBoard, _lastCircleLocation);
+                    }
+                }
+            }
+        }
+
+        private void drawingBoard_MouseLeave(object sender, EventArgs e)
+        {
+            if (_lastMouseCondition == Registry.MouseCondition.AddState)
+            {
+                Utils.Drawing.UnDrawCircle(drawingBoard, _lastCircleLocation);
+                _lastMouseCondition = Registry.MouseCondition.Default;
+            }
+        }
+
+        private void MainForm_KeyUp(object sender, KeyEventArgs e)
+        {
+           switch (e.KeyCode)
+            {
+                case Keys.A:
+                    //add new state
+                    Registry.MouseStatus = Registry.MouseCondition.AddState;
+                    btnAddState.Checked = true;
+                    break;
+                case Keys.S:
+                    //set start state
+                    Registry.MouseStatus = Registry.MouseCondition.StartState;
+                    btnStartState.Checked = true;
+                    break;
+                case Keys.D:
+                    //delete state
+                    Registry.MouseStatus = Registry.MouseCondition.DeleteState;
+                    btnDeleteState.Checked = true;
+                    break;
+                case Keys.F:
+                    //set accept state
+                    Registry.MouseStatus = Registry.MouseCondition.Accept;
+                    btnAcceptState.Checked = true;
+                    break;
+                case Keys.O:
+                    //connect 0
+                    Registry.MouseStatus = Registry.MouseCondition.ConnectZero;
+                    btnC0.Checked = true;
+                    break;
+                case Keys.I:
+                    //connect 1
+                    Registry.MouseStatus = Registry.MouseCondition.ConnectOne;
+                    btnC1.Checked = true;
+                    break;
             }
         }
     }

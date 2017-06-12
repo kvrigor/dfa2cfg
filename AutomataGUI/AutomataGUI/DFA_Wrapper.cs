@@ -55,7 +55,6 @@ namespace AutomataGUI
             { get { return (TransitionFunction == null) && SourceIndex.IsNull && DestinationIndex.IsNull; } }
         }
 
-
         public DFA_Wrapper(PictureBox drawingBoard)
         {
             _dfa = new DFA();
@@ -65,10 +64,11 @@ namespace AutomataGUI
             _drawingBoard = drawingBoard;
         }
 
+        public int NumStates { get { return _name_counter; } }
+
         public void AddState(Point center)
         {
-            _name_counter++;
-            State_Wrapper _state = new State_Wrapper(_drawingBoard, "State" + _name_counter.ToString(), center);
+            State_Wrapper _state = new State_Wrapper(_drawingBoard, Utils.Utils.MapToAlphabet(_name_counter++), center);
             _state.StateHovered += _lstState_StateHovered;
             _state.StateLeaveHovered += _lstState_StateLeaveHovered;
             _state.StateDeleted += _lstState_StateDeleted;
@@ -79,7 +79,6 @@ namespace AutomataGUI
             _state.StateOneStart += _lstStatesOneStart;
             _state.StateOneEnd += _lstStatesOneEnd;
             Draw(_state, Utils.Registry.StateColors.Default, true);
-
             AddState(_state);
         }
 
@@ -104,8 +103,7 @@ namespace AutomataGUI
         {
             sender.Dispose(_drawingBoard);
             DrawRemove(sender, true);
-            RemoveState(sender);            
-            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
+            RemoveState(sender);                  
         }
 
         private void _lstState_StateSetStart(State_Wrapper sender, EventArgs e)
@@ -130,7 +128,6 @@ namespace AutomataGUI
             dummy.LineColor = testPen;
             Utils.Drawing.DrawLine(_drawingBoard, dummy, true);
             _dfa.StartState = sender.Name;
-            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
         }
 
         private void _lstStates_StateSetAccept(State_Wrapper sender, MouseEventArgs e)
@@ -138,7 +135,6 @@ namespace AutomataGUI
             sender.IsAcceptState = true;
             _dfa.AddFinalStates(sender.Name);
             _lstState_StateHovered(sender, e);
-            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.Default;
         }
 
         private void _lstStatesZeroStart(State_Wrapper sender, MouseEventArgs e)
@@ -230,6 +226,7 @@ namespace AutomataGUI
 
             _dfa.Transitions = dummy;
         }
+
         private Transition_Wrapper DeleteTransitions(State_Wrapper prev, string input)
         {
             Transition_Wrapper currTrans = _lstTransFunc.Find(x => x.TransitionFunction.PrevState == prev.Name && x.TransitionFunction.Input == input);
@@ -257,7 +254,7 @@ namespace AutomataGUI
             dummy.FillColor = _fillcolor;
             dummy.OutlineColor = Pens.Black;
             dummy.Radius = Utils.Registry.Radius;
-            Utils.Drawing.DrawCircle(_drawingBoard, dummy, fix);
+            Utils.Drawing.DrawCircle(_drawingBoard, dummy, fix, _state.Name);
         }
 
         private void DrawAccept(State_Wrapper _state, Brush _fillcolor, bool fix)
@@ -267,7 +264,7 @@ namespace AutomataGUI
             dummy.FillColor = _fillcolor;
             dummy.OutlineColor = Pens.Black;
             dummy.Radius = Utils.Registry.Radius - 5;
-            Utils.Drawing.DrawCircle(_drawingBoard, dummy, fix);
+            Utils.Drawing.DrawCircle(_drawingBoard, dummy, fix, _state.Name);
         }
 
         private void DrawRemove(State_Wrapper _state, bool fix)
@@ -277,7 +274,7 @@ namespace AutomataGUI
             dummy.FillColor = Brushes.White;
             dummy.OutlineColor = Pens.White;
             dummy.Radius = Utils.Registry.Radius;
-            Utils.Drawing.DrawCircle(_drawingBoard, dummy, fix);
+            Utils.Drawing.DrawCircle(_drawingBoard, dummy, fix);    
         }
 
         private void DrawLine(MagnetPoint source, MagnetPoint desti, string input, bool create, bool fix)
