@@ -61,82 +61,32 @@ namespace AutomataGUI.Utils
     public static class Utils
     {
         public static string MapToAlphabet(int input) { return ((char)(65 + input)).ToString(); }
+        
+        //public static void DrawLineAndCircle(PictureBox whereToDraw, Registry.CircleParam[] circles, Registry.LineParam[] lines, bool save)
+        //{
+        //    whereToDraw.Image = (Image)Registry.FixedImage.Clone();
 
-        public static void DrawCircle(PictureBox whereToDraw, Point imageLocation, int radius, Brush fillColor, Pen outlineColor, bool save)
-        {
-            whereToDraw.Image = (Image)Registry.FixedImage.Clone();
-
-            Size circleSize = new Size(2 * radius, 2 * radius);
-            Image currentImage = (Image)whereToDraw.Image.Clone();
-            Graphics g = Graphics.FromImage(currentImage);
-            g.FillEllipse(fillColor, new Rectangle(imageLocation, circleSize));
-            g.DrawEllipse(outlineColor, new Rectangle(imageLocation, circleSize));
-            g.Dispose();
-            whereToDraw.Image = (Image)currentImage.Clone();
-            if (save)
-                Registry.FixedImage = (Image)whereToDraw.Image.Clone();
-        }
-
-        public static void DrawLine(PictureBox whereToDraw, Registry.LineParam lineInfo, bool save)
-        {
-            whereToDraw.Image = (Image)Registry.FixedImage.Clone();
-
-            Image currentImage = (Image)whereToDraw.Image.Clone();
-            Graphics myLine = Graphics.FromImage(currentImage);
-            myLine.DrawLine(lineInfo.LineColor, lineInfo.Source, lineInfo.Destination);
-            myLine.Dispose();
-            whereToDraw.Image = (Image)currentImage.Clone();
-            if (save)
-                Registry.FixedImage = (Image)whereToDraw.Image.Clone();
-        }
-
-        public static void DrawArc(PictureBox whereToDraw, Registry.LineParam arcInfo, bool istop, bool save)
-        {
-            whereToDraw.Image = (Image)Registry.FixedImage.Clone();
-
-            int tension = 25;
-            if (istop)
-                tension = -25;
-            Image currentImage = (Image)whereToDraw.Image.Clone();
-            Graphics myArc = Graphics.FromImage(currentImage);
-            Point[] pts = new Point[4];
-            pts[0] = arcInfo.Source;
-            pts[1] = new Point(arcInfo.Source.X, arcInfo.Source.Y + tension);
-            pts[2] = new Point(arcInfo.Destination.X, arcInfo.Destination.Y + tension);
-            pts[3] = arcInfo.Destination;
-            myArc.DrawCurve(arcInfo.LineColor, pts, 1.2F);
-            myArc.Dispose();
-
-            whereToDraw.Image = (Image)currentImage.Clone();
-            if (save)
-                Registry.FixedImage = (Image)whereToDraw.Image.Clone();
-        }
-
-        public static void DrawLineAndCircle(PictureBox whereToDraw, Registry.CircleParam[] circles, Registry.LineParam[] lines, bool save)
-        {
-            whereToDraw.Image = (Image)Registry.FixedImage.Clone();
-
-            Image currentImage = (Image)whereToDraw.Image.Clone();
-            foreach (Registry.CircleParam circle in circles)
-            {
-                Size circleSize = new Size(2 * circle.Radius, 2 * circle.Radius);
-                Graphics myCircle = Graphics.FromImage(currentImage);
-                myCircle.FillEllipse(circle.FillColor, new Rectangle(circle.ImageLocation, circleSize));
-                myCircle.DrawEllipse(circle.OutlineColor, new Rectangle(circle.ImageLocation, circleSize));
-                myCircle.Dispose();
-            }
+        //    Image currentImage = (Image)whereToDraw.Image.Clone();
+        //    foreach (Registry.CircleParam circle in circles)
+        //    {
+        //        Size circleSize = new Size(2 * circle.Radius, 2 * circle.Radius);
+        //        Graphics myCircle = Graphics.FromImage(currentImage);
+        //        myCircle.FillEllipse(circle.FillColor, new Rectangle(circle.ImageLocation, circleSize));
+        //        myCircle.DrawEllipse(circle.OutlineColor, new Rectangle(circle.ImageLocation, circleSize));
+        //        myCircle.Dispose();
+        //    }
             
-            foreach (Registry.LineParam line in lines)
-            {
-                Graphics myLine = Graphics.FromImage(currentImage);
-                myLine.DrawLine(line.LineColor, line.Source, line.Destination);
-                myLine.Dispose();
-            }
+        //    foreach (Registry.LineParam line in lines)
+        //    {
+        //        Graphics myLine = Graphics.FromImage(currentImage);
+        //        myLine.DrawLine(line.LineColor, line.Source, line.Destination);
+        //        myLine.Dispose();
+        //    }
 
-            whereToDraw.Image = (Image)currentImage.Clone();
-            if (save)
-                Registry.FixedImage = (Image)whereToDraw.Image.Clone();
-        }
+        //    whereToDraw.Image = (Image)currentImage.Clone();
+        //    if (save)
+        //        Registry.FixedImage = (Image)whereToDraw.Image.Clone();
+        //}
     }
 
     public static class Drawing
