@@ -248,6 +248,17 @@ namespace AutomataGUI
                 anItem = new ListViewItem(info);
                 lstvwDFATable.Items.Add(anItem);
             }
+
+            try
+            {
+                Codecs.Languages.ContextFree.CFG test = Codecs.Utils.DFAExtensions.ToCFG(src.DFAObject);
+                richTextBox1.Text = test.ToString();
+                lstvwDFATable.BackColor = Color.LightGreen;
+            }
+            catch (Exception)
+            {
+                lstvwDFATable.BackColor = Color.MistyRose;
+            }
         }
     }
 }
