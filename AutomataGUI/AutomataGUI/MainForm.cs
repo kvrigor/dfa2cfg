@@ -14,7 +14,6 @@ namespace AutomataGUI
     public partial class MainForm : Form
     {
         private DFA_Wrapper src;
-        private Cursor _tempCursor;
         private Drawing.CircleParam _lastCircleLocation;
         private Registry.MouseCondition _lastMouseCondition;
          
@@ -25,6 +24,7 @@ namespace AutomataGUI
             Utils.Registry.FixedImage = (Image)drawingBoard.Image.Clone();
 
             src = new DFA_Wrapper(drawingBoard);
+            src.DFAIsEdited += UpdateDFATable;
         }
 
         private void btnAddState_Click(object sender, EventArgs e)
@@ -208,6 +208,45 @@ namespace AutomataGUI
                     Registry.MouseStatus = Registry.MouseCondition.OneStart;
                     btnC1.Checked = true;
                     break;
+            }
+        }
+
+        private void UpdateDFATable()
+        {
+            lstvwDFATable.Items.Clear();
+
+            int count = src.DFAObject.States.Length;
+            for (int i = 0; i < count; i++)
+            {
+                string[] info = new string[5];
+                ListViewItem anItem;
+
+                string get0;
+                string get1;
+                try
+                {
+                    get0 = src.DFAObject.Transitions.Where(x => x.PrevState == src.DFAObject.States[i] && x.Input == "0").First().NextState;
+                }
+                catch (Exception)
+                {
+                    get0 = "";
+                }
+                try
+                {
+                    get1 = src.DFAObject.Transitions.Where(x => x.PrevState == src.DFAObject.States[i] && x.Input == "1").First().NextState;
+                }
+                catch (Exception)
+                {
+                    get1 = "";
+                }
+
+                info[0] = (src.DFAObject.StartState == src.DFAObject.States[i]).ToString(); // isstart
+                info[1] = src.DFAObject.States[i]; // statename
+                info[2] = get0; // 0 trans
+                info[3] = get1; // 1 trans
+                info[4] = (src.DFAObject.AcceptStates.ToList().Contains(src.DFAObject.States[i])).ToString(); // isaccept
+                anItem = new ListViewItem(info);
+                lstvwDFATable.Items.Add(anItem);
             }
         }
     }

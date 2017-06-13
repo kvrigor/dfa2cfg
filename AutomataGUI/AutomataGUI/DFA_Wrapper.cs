@@ -22,6 +22,9 @@ namespace AutomataGUI
         private List<State_Wrapper> _lstStates;
         private List<Transition_Wrapper> _lstTransFunc;
 
+        public delegate void DFAChangedEvents();
+        public DFAChangedEvents DFAIsEdited;
+
         private struct MagnetPoint
         {
             public State_Wrapper State;
@@ -65,6 +68,8 @@ namespace AutomataGUI
         }
 
         public int NumStates { get { return _name_counter; } }
+
+        public DFA DFAObject { get { return _dfa; } }
 
         public void AddState(Point center)
         {
@@ -128,6 +133,7 @@ namespace AutomataGUI
             dummy.LineColor = testPen;
             Utils.Drawing.DrawLine(_drawingBoard, dummy, true);
             _dfa.StartState = sender.Name;
+            DFAIsEdited?.Invoke();
         }
 
         private void _lstStates_StateSetAccept(State_Wrapper sender, MouseEventArgs e)
@@ -135,6 +141,7 @@ namespace AutomataGUI
             sender.IsAcceptState = true;
             _dfa.AddFinalStates(sender.Name);
             _lstState_StateHovered(sender, e);
+            DFAIsEdited?.Invoke();
         }
 
         private void _lstStatesZeroStart(State_Wrapper sender, MouseEventArgs e)
@@ -206,6 +213,7 @@ namespace AutomataGUI
             for (int i = 0; i < _lstStates.Count; i++)
                 _state[i] = _lstStates[i].Name;
             _dfa.States = _state;
+            DFAIsEdited?.Invoke();
         }
 
         private void RemoveState(State_Wrapper dfa_state)
@@ -227,6 +235,7 @@ namespace AutomataGUI
                     }
                 _dfa.AcceptStates = accept_state;
             }
+            DFAIsEdited?.Invoke();
         }
 
         private void AddTransitions(MagnetPoint prev, MagnetPoint next, string input)
@@ -241,6 +250,7 @@ namespace AutomataGUI
                 dummy[i] = _lstTransFunc[i].TransitionFunction;
 
             _dfa.Transitions = dummy;
+            DFAIsEdited?.Invoke();
         }
 
         private Transition_Wrapper DeleteTransitions(State_Wrapper prev, string input)
