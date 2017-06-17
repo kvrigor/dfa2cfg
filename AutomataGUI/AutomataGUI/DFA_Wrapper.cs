@@ -9,7 +9,7 @@ using Codecs.Languages.Regular;
 
 namespace AutomataGUI
 {
-    public class DFA_Wrapper
+    public class DFA_Wrapper : IDisposable
     {
         private DFA _dfa;
         private int _name_counter;
@@ -138,9 +138,20 @@ namespace AutomataGUI
 
         private void _lstStates_StateSetAccept(State_Wrapper sender, MouseEventArgs e)
         {
-            sender.IsAcceptState = true;
-            _dfa.AddFinalStates(sender.Name);
-            _lstState_StateHovered(sender, e);
+            if (sender.IsAcceptState)
+            {
+                sender.IsAcceptState = false;
+                List<string> lstAccept = _dfa.AcceptStates.ToList();
+                lstAccept.Remove(sender.Name);
+                _dfa.AcceptStates = lstAccept.ToArray();
+                _lstState_StateHovered(sender, e);
+            }
+            else
+            {
+                sender.IsAcceptState = true;
+                _dfa.AddFinalStates(sender.Name);
+                _lstState_StateHovered(sender, e);
+            }
             DFAIsEdited?.Invoke();
         }
 
@@ -362,5 +373,57 @@ namespace AutomataGUI
             dummy.LineColor = testPen;
             Utils.Drawing.DrawArc(_drawingBoard, dummy, iszro, fix);
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                    foreach (State_Wrapper item in _lstStates)
+                    {
+                        item.StateHovered -= _lstState_StateHovered;
+                        item.StateLeaveHovered -= _lstState_StateLeaveHovered;
+                        item.StateDeleted -= _lstState_StateDeleted;
+                        item.StateSetStart -= _lstState_StateSetStart;
+                        item.StateSetAccept -= _lstStates_StateSetAccept;
+                        item.StateZeroStart -= _lstStatesZeroStart;
+                        item.StateZeroEnd -= _lstStatesZeroEnd;
+                        item.StateOneStart -= _lstStatesOneStart;
+                        item.StateOneEnd -= _lstStatesOneEnd;
+                    }
+
+                    _lstStates.Clear();
+                    _lstTransFunc.Clear();
+
+                    _dfa = null;
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~DFA_Wrapper() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }
