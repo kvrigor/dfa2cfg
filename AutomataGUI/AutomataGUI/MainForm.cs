@@ -25,6 +25,7 @@ namespace AutomataGUI
 
             src = new DFA_Wrapper(drawingBoard);
             src.DFAIsEdited += UpdateDFATable;
+            src.stateclicked += UpdateStateClicked;
         }
 
         private void btnAddState_Click(object sender, EventArgs e)
@@ -67,11 +68,14 @@ namespace AutomataGUI
             src.Dispose();
             src = new DFA_Wrapper(drawingBoard);
             src.DFAIsEdited += UpdateDFATable;
+            src.stateclicked += UpdateStateClicked;
 
             //drawingBoard.Image.Dispose();
             //drawingBoard.Image = _DefaultImage;
             Utils.Drawing.DrawRectangle(drawingBoard, drawingBoard.Size);
             Registry.FixedImage = (Image)drawingBoard.Image.Clone();
+
+            stateclickedLabel.Text = "";
 
             UpdateDFATable();
         }
@@ -275,6 +279,12 @@ namespace AutomataGUI
                     btnUndo_Click(sender, e);
                     break;
             }
+        }
+
+        private void UpdateStateClicked()
+        {
+            if (Registry.LastClickedState != null)
+                stateclickedLabel.Text = "State " + Registry.LastClickedState.Name;
         }
 
         private void UpdateDFATable()

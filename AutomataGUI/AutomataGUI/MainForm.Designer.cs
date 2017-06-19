@@ -37,6 +37,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnC0 = new System.Windows.Forms.ToolStripButton();
             this.btnC1 = new System.Windows.Forms.ToolStripButton();
+            this.btnUndo = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnClear = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -50,7 +51,7 @@
             this.drawingBoard = new System.Windows.Forms.PictureBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.btnUndo = new System.Windows.Forms.ToolStripButton();
+            this.stateclickedLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drawingBoard)).BeginInit();
@@ -76,7 +77,7 @@
             this.btnClear});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(724, 42);
+            this.toolStrip1.Size = new System.Drawing.Size(965, 47);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -86,7 +87,7 @@
             this.btnAddState.Image = global::AutomataGUI.Properties.Resources.imgAddState;
             this.btnAddState.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAddState.Name = "btnAddState";
-            this.btnAddState.Size = new System.Drawing.Size(62, 39);
+            this.btnAddState.Size = new System.Drawing.Size(79, 44);
             this.btnAddState.Text = "Add State";
             this.btnAddState.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnAddState.ToolTipText = "Keyboard shortcut: A";
@@ -99,7 +100,7 @@
             this.btnDeleteState.Image = global::AutomataGUI.Properties.Resources.imgDeleteState;
             this.btnDeleteState.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnDeleteState.Name = "btnDeleteState";
-            this.btnDeleteState.Size = new System.Drawing.Size(73, 39);
+            this.btnDeleteState.Size = new System.Drawing.Size(95, 44);
             this.btnDeleteState.Text = "Delete State";
             this.btnDeleteState.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnDeleteState.ToolTipText = "Keyboard shortcut: D";
@@ -112,7 +113,7 @@
             this.btnStartState.Image = global::AutomataGUI.Properties.Resources.imgStartState;
             this.btnStartState.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnStartState.Name = "btnStartState";
-            this.btnStartState.Size = new System.Drawing.Size(64, 39);
+            this.btnStartState.Size = new System.Drawing.Size(82, 44);
             this.btnStartState.Text = "Start State";
             this.btnStartState.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnStartState.ToolTipText = "Keyboard shortcut: S";
@@ -125,7 +126,7 @@
             this.btnAcceptState.Image = global::AutomataGUI.Properties.Resources.imgAcceptState;
             this.btnAcceptState.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAcceptState.Name = "btnAcceptState";
-            this.btnAcceptState.Size = new System.Drawing.Size(77, 39);
+            this.btnAcceptState.Size = new System.Drawing.Size(97, 44);
             this.btnAcceptState.Text = "Accept State";
             this.btnAcceptState.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnAcceptState.ToolTipText = "Keyboard shortcut: F";
@@ -135,7 +136,7 @@
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 42);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 47);
             // 
             // btnC0
             // 
@@ -143,7 +144,7 @@
             this.btnC0.Image = global::AutomataGUI.Properties.Resources.imgConnect0;
             this.btnC0.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnC0.Name = "btnC0";
-            this.btnC0.Size = new System.Drawing.Size(65, 39);
+            this.btnC0.Size = new System.Drawing.Size(79, 44);
             this.btnC0.Text = "Connect 0";
             this.btnC0.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnC0.ToolTipText = "Keyboard shortcut: O";
@@ -156,17 +157,26 @@
             this.btnC1.Image = global::AutomataGUI.Properties.Resources.imgConnect1;
             this.btnC1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnC1.Name = "btnC1";
-            this.btnC1.Size = new System.Drawing.Size(65, 39);
+            this.btnC1.Size = new System.Drawing.Size(79, 44);
             this.btnC1.Text = "Connect 1";
             this.btnC1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnC1.ToolTipText = "Keyboard shortcut: I";
             this.btnC1.CheckedChanged += new System.EventHandler(this.toolstripButtons_CheckedChanged);
             this.btnC1.Click += new System.EventHandler(this.btnC1_Click);
             // 
+            // btnUndo
+            // 
+            this.btnUndo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnUndo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnUndo.Name = "btnUndo";
+            this.btnUndo.Size = new System.Drawing.Size(56, 44);
+            this.btnUndo.Text = "UNDO";
+            this.btnUndo.Click += new System.EventHandler(this.btnUndo_Click);
+            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 42);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 47);
             // 
             // btnClear
             // 
@@ -174,7 +184,7 @@
             this.btnClear.Image = ((System.Drawing.Image)(resources.GetObject("btnClear.Image")));
             this.btnClear.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(38, 39);
+            this.btnClear.Size = new System.Drawing.Size(47, 44);
             this.btnClear.Text = "Clear";
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
@@ -182,18 +192,19 @@
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.statusLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 327);
+            this.statusLabel,
+            this.stateclickedLabel});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 406);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(724, 22);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 13, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(965, 24);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // statusLabel
             // 
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(0, 17);
+            this.statusLabel.Size = new System.Drawing.Size(0, 19);
             // 
             // lstvwDFATable
             // 
@@ -207,9 +218,9 @@
             this.lstvwDFATable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstvwDFATable.FullRowSelect = true;
             this.lstvwDFATable.Location = new System.Drawing.Point(0, 0);
-            this.lstvwDFATable.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lstvwDFATable.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.lstvwDFATable.Name = "lstvwDFATable";
-            this.lstvwDFATable.Size = new System.Drawing.Size(300, 141);
+            this.lstvwDFATable.Size = new System.Drawing.Size(400, 177);
             this.lstvwDFATable.TabIndex = 3;
             this.lstvwDFATable.UseCompatibleStateImageBehavior = false;
             this.lstvwDFATable.View = System.Windows.Forms.View.Details;
@@ -246,10 +257,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.drawingBoard.BackColor = System.Drawing.Color.White;
-            this.drawingBoard.Location = new System.Drawing.Point(0, 41);
-            this.drawingBoard.Margin = new System.Windows.Forms.Padding(2);
+            this.drawingBoard.Location = new System.Drawing.Point(0, 50);
+            this.drawingBoard.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.drawingBoard.Name = "drawingBoard";
-            this.drawingBoard.Size = new System.Drawing.Size(419, 280);
+            this.drawingBoard.Size = new System.Drawing.Size(559, 345);
             this.drawingBoard.TabIndex = 0;
             this.drawingBoard.TabStop = false;
             this.drawingBoard.SizeChanged += new System.EventHandler(this.drawingBoard_SizeChanged);
@@ -261,16 +272,17 @@
             // 
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox1.Location = new System.Drawing.Point(0, 0);
+            this.richTextBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(300, 141);
+            this.richTextBox1.Size = new System.Drawing.Size(400, 178);
             this.richTextBox1.TabIndex = 4;
             this.richTextBox1.Text = "";
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.splitContainer1.Location = new System.Drawing.Point(424, 42);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2);
+            this.splitContainer1.Location = new System.Drawing.Point(565, 47);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -281,33 +293,27 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.richTextBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(300, 285);
-            this.splitContainer1.SplitterDistance = 141;
-            this.splitContainer1.SplitterWidth = 3;
+            this.splitContainer1.Size = new System.Drawing.Size(400, 359);
+            this.splitContainer1.SplitterDistance = 177;
             this.splitContainer1.TabIndex = 5;
             // 
-            // btnUndo
+            // stateclickedLabel
             // 
-            this.btnUndo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnUndo.Image = ((System.Drawing.Image)(resources.GetObject("btnUndo.Image")));
-            this.btnUndo.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnUndo.Name = "btnUndo";
-            this.btnUndo.Size = new System.Drawing.Size(45, 39);
-            this.btnUndo.Text = "UNDO";
-            this.btnUndo.Click += new System.EventHandler(this.btnUndo_Click);
+            this.stateclickedLabel.Name = "stateclickedLabel";
+            this.stateclickedLabel.Size = new System.Drawing.Size(0, 19);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(724, 349);
+            this.ClientSize = new System.Drawing.Size(965, 430);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.drawingBoard);
             this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(2);
-            this.MinimumSize = new System.Drawing.Size(740, 382);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MinimumSize = new System.Drawing.Size(981, 459);
             this.Name = "MainForm";
             this.Text = "DFA2CFG";
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyUp);
@@ -349,5 +355,6 @@
         private System.Windows.Forms.ToolStripButton btnClear;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
         private System.Windows.Forms.ToolStripButton btnUndo;
+        private System.Windows.Forms.ToolStripStatusLabel stateclickedLabel;
     }
 }

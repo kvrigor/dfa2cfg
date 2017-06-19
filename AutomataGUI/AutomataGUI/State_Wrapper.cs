@@ -27,6 +27,7 @@ namespace AutomataGUI
         public StateEvents StateZeroEnd;
         public StateEvents StateOneStart;
         public StateEvents StateOneEnd;
+        public StateEvents StateClicked;
 
 
         public string Name { get { return _name; } }
@@ -128,6 +129,8 @@ namespace AutomataGUI
                 return;
             if (e.Button == MouseButtons.Left)
             {
+                StateClicked?.Invoke(this, e);
+
                 switch (Utils.Registry.MouseStatus)
                 {
                     case Utils.Registry.MouseCondition.DeleteState:

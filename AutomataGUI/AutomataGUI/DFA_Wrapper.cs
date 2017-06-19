@@ -25,6 +25,7 @@ namespace AutomataGUI
 
         public delegate void DFAChangedEvents();
         public DFAChangedEvents DFAIsEdited;
+        public DFAChangedEvents stateclicked;
 
         private struct MagnetPoint
         {
@@ -93,8 +94,17 @@ namespace AutomataGUI
             _state.StateZeroEnd += _lstStatesZeroEnd;
             _state.StateOneStart += _lstStatesOneStart;
             _state.StateOneEnd += _lstStatesOneEnd;
+            _state.StateClicked += triggerupdate;
             Draw(_state, Utils.Registry.StateColors.Default, true);
             AddState(_state);
+            Utils.Registry.LastClickedState = _state;
+            stateclicked?.Invoke();
+        }
+
+        private void triggerupdate(State_Wrapper sender, MouseEventArgs e)
+        {
+            Utils.Registry.LastClickedState = sender;
+            stateclicked?.Invoke();
         }
 
         public void RemoveLastTransition()
@@ -430,6 +440,7 @@ namespace AutomataGUI
                         item.StateZeroEnd -= _lstStatesZeroEnd;
                         item.StateOneStart -= _lstStatesOneStart;
                         item.StateOneEnd -= _lstStatesOneEnd;
+                        item.StateClicked -= triggerupdate;
                     }
 
                     _lstStates.Clear();

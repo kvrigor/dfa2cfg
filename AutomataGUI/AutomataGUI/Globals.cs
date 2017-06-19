@@ -12,9 +12,11 @@ namespace AutomataGUI.Utils
     public static class Registry
     {
         public static MouseCondition MouseStatus { get; set; }
-        
+
         public static Image FixedImage { get; set; }
-        
+
+        public static State_Wrapper LastClickedState { get; set; }
+                
         public enum MouseCondition
         {
             Default,
