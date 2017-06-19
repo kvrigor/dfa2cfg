@@ -23,6 +23,11 @@ Namespace Utils
                     Else
                         rules(trans.PrevState).AddSubstitutions(trans.Input & trans.NextState)
                     End If
+                    If dfaObj.AcceptStates.ToList.Contains(trans.PrevState) Then
+                        If Not rules(trans.PrevState).Substitutions.ToList.Contains("ε") Then
+                            rules(trans.PrevState).AddSubstitutions("ε")
+                        End If
+                    End If
                 Next
                 Return New CFG(dfaObj.States, dfaObj.InputSymbols, rules.Values.ToArray(), dfaObj.StartState, Name)
             Else
