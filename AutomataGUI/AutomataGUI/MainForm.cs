@@ -52,6 +52,11 @@ namespace AutomataGUI
             Registry.MouseStatus = Registry.MouseCondition.ZeroStart;
         }
 
+        private void btnUndo_Click(object sender, EventArgs e)
+        {
+            src.RemoveLastTransition();
+        }
+
         private void btnC1_Click(object sender, EventArgs e)
         {
             Registry.MouseStatus = Registry.MouseCondition.OneStart;
@@ -263,6 +268,11 @@ namespace AutomataGUI
                     //connect 1
                     Registry.MouseStatus = Registry.MouseCondition.OneStart;
                     btnC1.Checked = true;
+                    break;
+                case Keys.Back:
+                    //undo last connection
+                    Registry.MouseStatus = Registry.MouseCondition.Default;
+                    btnUndo_Click(sender, e);
                     break;
             }
         }
