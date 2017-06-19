@@ -94,6 +94,7 @@ namespace AutomataGUI
             _state.StateZeroEnd += _lstStatesZeroEnd;
             _state.StateOneStart += _lstStatesOneStart;
             _state.StateOneEnd += _lstStatesOneEnd;
+            _state.OnRepaint += _lstState_OnRePaint;
             _state.StateClicked += triggerupdate;
             Draw(_state, Utils.Registry.StateColors.Default, true);
             AddState(_state);
@@ -116,7 +117,14 @@ namespace AutomataGUI
                     Utils.Drawing.DrawLine(_drawingBoard, lti.LastTransitionLocation, true);
                 else if (lti.LastTransitionType == "Arc")
                     Utils.Drawing.DrawArc(_drawingBoard, lti.LastTransitionLocation, lti.IsLastArcZero, true);
+                RepaintAllStates();
             }
+        }
+
+        private void RepaintAllStates()
+        {
+            foreach (State_Wrapper state in _lstStates)
+                state.RePaint();
         }
 
         private void _lstState_StateHovered(State_Wrapper sender, MouseEventArgs e)
@@ -127,6 +135,13 @@ namespace AutomataGUI
             if (Utils.Registry.MouseStatus == Utils.Registry.MouseCondition.ZeroStart || Utils.Registry.MouseStatus == Utils.Registry.MouseCondition.ZeroEnd ||
                 Utils.Registry.MouseStatus == Utils.Registry.MouseCondition.OneStart || Utils.Registry.MouseStatus == Utils.Registry.MouseCondition.OneEnd)
                 sender.ShowConnectingPoint(_drawingBoard, e.Location);
+        }
+
+        private void _lstState_OnRePaint(State_Wrapper sender, MouseEventArgs e)
+        {
+            Draw(sender, Utils.Registry.StateColors.Default, true);
+            if (sender.IsAcceptState)
+                DrawAccept(sender, Utils.Registry.StateColors.Default, true);
         }
 
         private void _lstState_StateLeaveHovered(State_Wrapper sender, EventArgs e)
@@ -366,15 +381,20 @@ namespace AutomataGUI
             }
             else
                 testPen = new Pen(Color.White, 4);
+
             testPen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
             dummy.LineColor = testPen;
             Utils.Drawing.DrawLine(_drawingBoard, dummy, fix);
-        
-            LastTransitionInfo lti = new LastTransitionInfo();
-            lti.LastTransitionType = "Line";
-            lti.LastTransitionLocation = dummy;
-            lti.LastTransitionLocation.LineColor.Color = Color.White;
-            _lastTransitionHistory.Push(lti);
+            if (!create)
+                RepaintAllStates();
+            else
+            {
+                LastTransitionInfo lti = new LastTransitionInfo();
+                lti.LastTransitionType = "Line";
+                lti.LastTransitionLocation = dummy;
+                lti.LastTransitionLocation.LineColor.Color = Color.White;
+                _lastTransitionHistory.Push(lti);
+            }
         }
 
         private void DrawArcToSelf(MagnetPoint source, bool create, bool iszro, bool fix)
@@ -410,13 +430,17 @@ namespace AutomataGUI
             testPen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
             dummy.LineColor = testPen;
             Utils.Drawing.DrawArc(_drawingBoard, dummy, iszro, fix);
-
-            LastTransitionInfo lti = new LastTransitionInfo();
-            lti.LastTransitionType = "Arc";
-            lti.LastTransitionLocation = dummy;
-            lti.LastTransitionLocation.LineColor.Color = Color.White;
-            lti.IsLastArcZero = iszro;
-            _lastTransitionHistory.Push(lti);
+            if (!create)
+                RepaintAllStates();
+            else
+            {
+                LastTransitionInfo lti = new LastTransitionInfo();
+                lti.LastTransitionType = "Arc";
+                lti.LastTransitionLocation = dummy;
+                lti.LastTransitionLocation.LineColor.Color = Color.White;
+                lti.IsLastArcZero = iszro;
+                _lastTransitionHistory.Push(lti);
+            }
         }
 
         #region IDisposable Support
@@ -440,6 +464,7 @@ namespace AutomataGUI
                         item.StateZeroEnd -= _lstStatesZeroEnd;
                         item.StateOneStart -= _lstStatesOneStart;
                         item.StateOneEnd -= _lstStatesOneEnd;
+                        item.OnRepaint -= _lstState_OnRePaint;
                         item.StateClicked -= triggerupdate;
                     }
 

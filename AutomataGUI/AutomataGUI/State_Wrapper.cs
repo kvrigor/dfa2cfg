@@ -28,7 +28,7 @@ namespace AutomataGUI
         public StateEvents StateOneStart;
         public StateEvents StateOneEnd;
         public StateEvents StateClicked;
-
+        public StateEvents OnRepaint;
 
         public string Name { get { return _name; } }
         public bool IsAcceptState { get { return _isaccept; } set { _isaccept = value; } }
@@ -89,6 +89,11 @@ namespace AutomataGUI
         {
             drawingBoard.MouseMove -= drawingBoard_MouseMove;
             drawingBoard.MouseClick -= drawingBoard_MouseClicked;
+        }
+
+        public void RePaint()
+        {
+            OnRepaint?.Invoke(this, new MouseEventArgs(MouseButtons.Right, 1, 1, 1, 1));
         }
 
         private void drawingBoard_MouseMove(object sender, MouseEventArgs e)
