@@ -172,11 +172,12 @@
             this.columnHeader2,
             this.columnHeader3,
             this.columnHeader5});
+            this.lstvwDFATable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstvwDFATable.FullRowSelect = true;
-            this.lstvwDFATable.Location = new System.Drawing.Point(3, 3);
+            this.lstvwDFATable.Location = new System.Drawing.Point(0, 0);
             this.lstvwDFATable.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lstvwDFATable.Name = "lstvwDFATable";
-            this.lstvwDFATable.Size = new System.Drawing.Size(397, 175);
+            this.lstvwDFATable.Size = new System.Drawing.Size(400, 180);
             this.lstvwDFATable.TabIndex = 3;
             this.lstvwDFATable.UseCompatibleStateImageBehavior = false;
             this.lstvwDFATable.View = System.Windows.Forms.View.Details;
@@ -226,9 +227,10 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(3, 3);
+            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBox1.Location = new System.Drawing.Point(0, 0);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(397, 171);
+            this.richTextBox1.Size = new System.Drawing.Size(400, 177);
             this.richTextBox1.TabIndex = 4;
             this.richTextBox1.Text = "";
             // 

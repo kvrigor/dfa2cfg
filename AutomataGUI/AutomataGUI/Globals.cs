@@ -192,5 +192,18 @@ namespace AutomataGUI.Utils
             if (save)
                 Registry.FixedImage = (Image)whereToDraw.Image.Clone();
         }
+
+        public static void DrawRectangle(PictureBox whereToDraw, Size sss)
+        {
+            whereToDraw.Image = (Image)Registry.FixedImage.Clone();
+
+            Image currentImage = (Image)whereToDraw.Image.Clone();
+            Graphics g = Graphics.FromImage(currentImage);
+            g.FillRectangle(Brushes.White, new Rectangle(new Point(0, 0), sss));
+            g.Dispose();
+
+            whereToDraw.Image = (Image)currentImage.Clone();
+            Registry.FixedImage = (Image)whereToDraw.Image.Clone();
+        }
     }
 }

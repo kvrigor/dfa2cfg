@@ -16,13 +16,11 @@ namespace AutomataGUI
         private DFA_Wrapper src;
         private Drawing.CircleParam _lastCircleLocation;
         private Registry.MouseCondition _lastMouseCondition;
-        private Image _DefaultImage;
          
         public MainForm()
         {
             InitializeComponent();
             drawingBoard.Image = new Bitmap(drawingBoard.Width, drawingBoard.Height);
-            _DefaultImage = (Image)drawingBoard.Image.Clone();
             Utils.Registry.FixedImage = (Image)drawingBoard.Image.Clone();
 
             src = new DFA_Wrapper(drawingBoard);
@@ -65,8 +63,9 @@ namespace AutomataGUI
             src = new DFA_Wrapper(drawingBoard);
             src.DFAIsEdited += UpdateDFATable;
 
-            drawingBoard.Image.Dispose();
-            drawingBoard.Image = _DefaultImage;
+            //drawingBoard.Image.Dispose();
+            //drawingBoard.Image = _DefaultImage;
+            Utils.Drawing.DrawRectangle(drawingBoard, drawingBoard.Size);
             Registry.FixedImage = (Image)drawingBoard.Image.Clone();
 
             UpdateDFATable();
