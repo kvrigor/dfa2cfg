@@ -209,7 +209,7 @@ Namespace Languages.ContextFree
 
 #Region "Object helper functions"
         Public Overrides Function ToString() As String
-            Return $"CFG Name: {_Name}" & vbCrLf &
+            Return $"Equivalent CFG" & vbCrLf &
                $"    V = {{{String.Join(", ", Variables)}}}" & vbCrLf &
                $"    Σ = {{{String.Join(", ", Terminals)}}}" & vbCrLf &
                $"    S = {_StartVariable}" & vbCrLf &
