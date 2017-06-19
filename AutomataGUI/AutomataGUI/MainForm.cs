@@ -112,8 +112,24 @@ namespace AutomataGUI
         {
             if (e.Button == MouseButtons.Left)
             {
-                if (Registry.MouseStatus == Registry.MouseCondition.AddState)
-                    src.AddState(e.Location);
+                switch (Registry.MouseStatus)
+                {
+                    case Registry.MouseCondition.AddState:
+                        src.AddState(e.Location);
+                        break;
+                    case Registry.MouseCondition.ZeroStart:
+                        statusLabel.Text = "Set destination state for transition 0";
+                        break;
+                    case Registry.MouseCondition.ZeroEnd:
+                        statusLabel.Text = "Set source state for transition 0";
+                        break;
+                    case Registry.MouseCondition.OneStart:
+                        statusLabel.Text = "Set destination state for transition 1";
+                        break;
+                    case Registry.MouseCondition.OneEnd:
+                        statusLabel.Text = "Set source state for transition 1";
+                        break;
+                }
             }
             else
             {
@@ -145,6 +161,7 @@ namespace AutomataGUI
                 }
                 _lastMouseCondition = Registry.MouseCondition.Default;
                 Registry.MouseStatus = Registry.MouseCondition.Default;
+                statusLabel.Text = "DFA diagram is incomplete";
             }
                 
         }
@@ -167,14 +184,39 @@ namespace AutomataGUI
             {
                 foreach (ToolStripItem item in toolStrip1.Items)
                 {
-                    if ((item.GetType() == typeof(ToolStripButton)) && ((ToolStripButton)item).Name != ((ToolStripButton)sender).Name)
+                    if (item.GetType() == typeof(ToolStripButton))
                     {
-                        ((ToolStripButton)item).Checked = false;
-                        //if (((ToolStripButton)item).Name == btnAddState.Name)
-                        //    Utils.Drawing.UnDrawCircle(drawingBoard, _lastCircleLocation);
-
-                        if (_lastMouseCondition == Registry.MouseCondition.AddState)
-                            Utils.Drawing.UnDrawCircle(drawingBoard, _lastCircleLocation);
+                        if (((ToolStripButton)item).Name != ((ToolStripButton)sender).Name)
+                        {
+                            ((ToolStripButton)item).Checked = false;
+                            if (_lastMouseCondition == Registry.MouseCondition.AddState)
+                                Utils.Drawing.UnDrawCircle(drawingBoard, _lastCircleLocation);
+                        }
+                        else
+                        {
+                            switch (((ToolStripButton)item).Name)
+                            {
+                                case "btnAddState":
+                                    statusLabel.Text = "Add a new state on the drawing pane";
+                                    break;
+                                case "btnDeleteState":
+                                    statusLabel.Text = "Select state to be deleted";
+                                    break;
+                                case "btnStartState":
+                                    statusLabel.Text = "Select which state to become the start state";
+                                    break;
+                                case "btnAcceptState":
+                                    statusLabel.Text = "Select which state/s to become the accept state/s";
+                                    break;
+                                case "btnC0":
+                                    statusLabel.Text = "Set source state for transition 0";
+                                    break;
+                                case "btnC1":
+                                    statusLabel.Text = "Set source state for transition 1";
+                                    break;
+                            }
+                            
+                        }
                     }
                 }
             }
