@@ -65,19 +65,17 @@ namespace AutomataGUI
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            src.Dispose();
-            src = new DFA_Wrapper(drawingBoard);
-            src.DFAIsEdited += UpdateDFATable;
-            src.stateclicked += UpdateStateClicked;
-
-            //drawingBoard.Image.Dispose();
-            //drawingBoard.Image = _DefaultImage;
-            Utils.Drawing.DrawRectangle(drawingBoard, drawingBoard.Size);
-            Registry.FixedImage = (Image)drawingBoard.Image.Clone();
-
-            stateclickedLabel.Text = "";
-
-            UpdateDFATable();
+            if (MessageBox.Show("Are you sure you want to clear the drawing pane?", "DFA2CFG", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                src.Dispose();
+                src = new DFA_Wrapper(drawingBoard);
+                src.DFAIsEdited += UpdateDFATable;
+                src.stateclicked += UpdateStateClicked;
+                Utils.Drawing.DrawRectangle(drawingBoard, drawingBoard.Size);
+                Registry.FixedImage = (Image)drawingBoard.Image.Clone();
+                stateclickedLabel.Text = "";
+                UpdateDFATable();
+            }
         }
 
         private void drawingBoard_MouseMove(object sender, MouseEventArgs e)
@@ -275,8 +273,12 @@ namespace AutomataGUI
                     break;
                 case Keys.Back:
                     //undo last connection
-                    Registry.MouseStatus = Registry.MouseCondition.Default;
                     btnUndo_Click(sender, e);
+                    break;
+                case Keys.Escape:
+                    //clear drawing pane
+                    Registry.MouseStatus = Registry.MouseCondition.Default;
+                    btnClear_Click(sender, e);
                     break;
             }
         }
