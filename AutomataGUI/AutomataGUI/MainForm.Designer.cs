@@ -40,6 +40,7 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnClear = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.lstvwDFATable = new System.Windows.Forms.ListView();
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -49,7 +50,7 @@
             this.drawingBoard = new System.Windows.Forms.PictureBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.btnUndo = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.drawingBoard)).BeginInit();
@@ -70,6 +71,7 @@
             this.toolStripSeparator1,
             this.btnC0,
             this.btnC1,
+            this.btnUndo,
             this.toolStripSeparator2,
             this.btnClear});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -188,6 +190,11 @@
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
+            // statusLabel
+            // 
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(0, 17);
+            // 
             // lstvwDFATable
             // 
             this.lstvwDFATable.BackColor = System.Drawing.SystemColors.Window;
@@ -202,7 +209,7 @@
             this.lstvwDFATable.Location = new System.Drawing.Point(0, 0);
             this.lstvwDFATable.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lstvwDFATable.Name = "lstvwDFATable";
-            this.lstvwDFATable.Size = new System.Drawing.Size(400, 180);
+            this.lstvwDFATable.Size = new System.Drawing.Size(300, 141);
             this.lstvwDFATable.TabIndex = 3;
             this.lstvwDFATable.UseCompatibleStateImageBehavior = false;
             this.lstvwDFATable.View = System.Windows.Forms.View.Details;
@@ -255,7 +262,7 @@
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox1.Location = new System.Drawing.Point(0, 0);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(400, 177);
+            this.richTextBox1.Size = new System.Drawing.Size(300, 141);
             this.richTextBox1.TabIndex = 4;
             this.richTextBox1.Text = "";
             // 
@@ -279,10 +286,15 @@
             this.splitContainer1.SplitterWidth = 3;
             this.splitContainer1.TabIndex = 5;
             // 
-            // statusLabel
+            // btnUndo
             // 
-            this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(0, 17);
+            this.btnUndo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnUndo.Image = ((System.Drawing.Image)(resources.GetObject("btnUndo.Image")));
+            this.btnUndo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnUndo.Name = "btnUndo";
+            this.btnUndo.Size = new System.Drawing.Size(45, 39);
+            this.btnUndo.Text = "UNDO";
+            this.btnUndo.Click += new System.EventHandler(this.btnUndo_Click);
             // 
             // MainForm
             // 
@@ -336,5 +348,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton btnClear;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
+        private System.Windows.Forms.ToolStripButton btnUndo;
     }
 }
