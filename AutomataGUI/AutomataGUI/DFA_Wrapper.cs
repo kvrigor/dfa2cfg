@@ -61,6 +61,7 @@ namespace AutomataGUI
         public DFA_Wrapper(PictureBox drawingBoard)
         {
             _dfa = new DFA();
+            _dfa.InputSymbols = new string[] { "0", "1" };
             _name_counter = 0;
             _lstStates = new List<State_Wrapper>();
             _lstTransFunc = new List<Transition_Wrapper>();
