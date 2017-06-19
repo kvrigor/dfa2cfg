@@ -16,7 +16,8 @@ namespace AutomataGUI
         private DFA_Wrapper src;
         private Drawing.CircleParam _lastCircleLocation;
         private Registry.MouseCondition _lastMouseCondition;
-         
+        private bool _clearWorkspace;
+
         public MainForm()
         {
             InitializeComponent();
@@ -26,6 +27,7 @@ namespace AutomataGUI
             src = new DFA_Wrapper(drawingBoard);
             src.DFAIsEdited += UpdateDFATable;
             src.stateclicked += UpdateStateClicked;
+            _clearWorkspace = false;
         }
 
         private void btnAddState_Click(object sender, EventArgs e)
@@ -72,9 +74,11 @@ namespace AutomataGUI
                 src.DFAIsEdited += UpdateDFATable;
                 src.stateclicked += UpdateStateClicked;
                 Utils.Drawing.DrawRectangle(drawingBoard, drawingBoard.Size);
-                Registry.FixedImage = (Image)drawingBoard.Image.Clone();
-                stateclickedLabel.Text = "";
+                Registry.FixedImage = (Image)drawingBoard.Image.Clone();    
+                _clearWorkspace = true;
                 UpdateDFATable();
+                _clearWorkspace = false;
+                drawingBoard_MouseClick(sender, new MouseEventArgs(MouseButtons.Right, 1, 1, 1, 1));
             }
         }
 
@@ -103,10 +107,20 @@ namespace AutomataGUI
                     Cursor.Current = Cursors.PanWest;
                     break;
                 case Registry.MouseCondition.ZeroStart:
-                case Registry.MouseCondition.ZeroEnd:
+                    Cursor.Current = Cursors.Cross;
+                    statusLabel.Text = "Set source state for transition 0";
+                    break;
                 case Registry.MouseCondition.OneStart:
+                    Cursor.Current = Cursors.Cross;
+                    statusLabel.Text = "Set source state for transition 1";      
+                    break;
+                case Registry.MouseCondition.ZeroEnd:
+                    Cursor.Current = Cursors.Cross;
+                    statusLabel.Text = "Selected source state is " + Registry.LastClickedState.Name + "; Set destination state for transition 0";
+                    break;
                 case Registry.MouseCondition.OneEnd:
                     Cursor.Current = Cursors.Cross;
+                    statusLabel.Text = "Selected source state is " + Registry.LastClickedState.Name + "; Set destination state for transition 0";     
                     break;
                 default:
                     break;
@@ -122,18 +136,6 @@ namespace AutomataGUI
                 {
                     case Registry.MouseCondition.AddState:
                         src.AddState(e.Location);
-                        break;
-                    case Registry.MouseCondition.ZeroStart:
-                        statusLabel.Text = "Set destination state for transition 0";
-                        break;
-                    case Registry.MouseCondition.ZeroEnd:
-                        statusLabel.Text = "Set source state for transition 0";
-                        break;
-                    case Registry.MouseCondition.OneStart:
-                        statusLabel.Text = "Set destination state for transition 1";
-                        break;
-                    case Registry.MouseCondition.OneEnd:
-                        statusLabel.Text = "Set source state for transition 1";
                         break;
                 }
             }
@@ -165,9 +167,14 @@ namespace AutomataGUI
                     default:
                         break;
                 }
+                if (lstvwDFATable.BackColor == Color.MistyRose)
+                    statusLabel.Text = "DFA diagram is incomplete";
+                else if (lstvwDFATable.BackColor == Color.LightGreen)
+                    statusLabel.Text = "DFA to CFG conversion successful";
+                else
+                    statusLabel.Text = "";
                 _lastMouseCondition = Registry.MouseCondition.Default;
-                Registry.MouseStatus = Registry.MouseCondition.Default;
-                statusLabel.Text = "DFA diagram is incomplete";
+                Registry.MouseStatus = Registry.MouseCondition.Default;           
             }
                 
         }
@@ -285,8 +292,8 @@ namespace AutomataGUI
 
         private void UpdateStateClicked()
         {
-            if (Registry.LastClickedState != null)
-                stateclickedLabel.Text = "State " + Registry.LastClickedState.Name;
+            //if (Registry.LastClickedState != null)
+            //    stateclickedLabel.Text = Registry.LastClickedState.Name;
         }
 
         private void UpdateDFATable()
@@ -335,7 +342,11 @@ namespace AutomataGUI
             }
             catch (Exception)
             {
-                lstvwDFATable.BackColor = Color.MistyRose;
+                if (!_clearWorkspace)
+                    lstvwDFATable.BackColor = Color.MistyRose;
+                else
+                    lstvwDFATable.BackColor = Color.White;
+                richTextBox1.Clear();
             }
         }
     }
