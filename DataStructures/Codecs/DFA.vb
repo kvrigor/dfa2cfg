@@ -164,14 +164,13 @@ Namespace Languages.Regular
                 End If
                 If _inputSymbols.Count = 0 Then Return False
                 For Each state In _states
-                    'TODO: Add code to check that each state maps exactly once to every input symbol
                     Dim maxcount As Integer = _inputSymbols.Count
                     For Each _transFunc As TransFunc In _transitions
                         If _transFunc.PrevState = state Then
                             maxcount = maxcount - 1
                         End If
                     Next
-                    If maxcount <> 0 Then Return False
+                    If _states.Count > 1 AndAlso maxcount <> 0 Then Return False
                 Next
                 Return True
             End Get
