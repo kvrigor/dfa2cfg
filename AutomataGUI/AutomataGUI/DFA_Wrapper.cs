@@ -19,7 +19,7 @@ namespace AutomataGUI
         private MagnetPoint _OneSource;
         private MagnetPoint _OneTarget;
         private Stack<LastTransitionInfo> _lastTransitionHistory;
-
+        private Stack<TransitionInfo> _lastTransitionHistory2;
         private List<State_Wrapper> _lstStates;
         private List<Transition_Wrapper> _lstTransFunc;
 
@@ -41,9 +41,27 @@ namespace AutomataGUI
 
         private struct LastTransitionInfo
         {
-            public string LastTransitionType;
-            public Utils.Drawing.LineParam LastTransitionLocation;
-            public bool IsLastArcZero;
+            private Utils.Drawing.LineParam _location;
+            public string ConnectionType;            
+            public bool IsTransition0;
+            public Utils.Drawing.LineParam Location
+            {
+                get
+                {
+                    _location.LineColor.Color = Color.White;
+                    return _location;
+                }
+                set { _location = value; }
+            }
+        }
+
+        private struct TransitionInfo
+        {
+            public MagnetPoint SourceState;
+            public MagnetPoint TargetState;
+            public string ConnectionType;
+            public bool IsTransition0;
+            public Utils.Drawing.LineParam Location;
         }
 
         private struct Transition_Wrapper
@@ -76,6 +94,7 @@ namespace AutomataGUI
             _lstTransFunc = new List<Transition_Wrapper>();
             _drawingBoard = drawingBoard;
             _lastTransitionHistory = new Stack<LastTransitionInfo>();
+            _lastTransitionHistory2 = new Stack<TransitionInfo>();
         }
 
         public int NumStates { get { return _name_counter; } }
@@ -110,13 +129,19 @@ namespace AutomataGUI
 
         public void RemoveLastTransition()
         {
-            if (_lastTransitionHistory.Count > 0)
+            if (_lastTransitionHistory2.Count > 0)
             {
-                LastTransitionInfo lti = _lastTransitionHistory.Pop();
-                if (lti.LastTransitionType == "Line")
-                    Utils.Drawing.DrawLine(_drawingBoard, lti.LastTransitionLocation, true);
-                else if (lti.LastTransitionType == "Arc")
-                    Utils.Drawing.DrawArc(_drawingBoard, lti.LastTransitionLocation, lti.IsLastArcZero, true);
+                //LastTransitionInfo lti = _lastTransitionHistory.Pop();
+                //if (lti.ConnectionType == "Line")
+                //    Utils.Drawing.DrawLine(_drawingBoard, lti.Location, true);
+                //else if (lti.ConnectionType == "Arc")
+                //    Utils.Drawing.DrawArc(_drawingBoard, lti.Location, lti.IsTransition0, true);
+                //RepaintAllStates();
+                TransitionInfo ti = _lastTransitionHistory2.Pop();
+                if (ti.ConnectionType == "Line")
+                    DrawLine(ti.SourceState, ti.TargetState, ti.IsTransition0?"0":"1", false, true);
+                else if (ti.ConnectionType == "Arc")
+                    DrawArcToSelf(ti.SourceState, false, ti.IsTransition0, true);
                 RepaintAllStates();
             }
         }
@@ -221,15 +246,20 @@ namespace AutomataGUI
         {
             _ZeroTarget.State = sender;
             _ZeroTarget.indexPoint = _ZeroTarget.State.GetPointIndex(e.Location);
+           
             if (_ZeroSource.State == _ZeroTarget.State)
             {
                 DrawArcToSelf(_ZeroSource, true, true, true);
-            }
+                _lastTransitionHistory2.Push(new TransitionInfo() { ConnectionType = "Arc", SourceState = _ZeroSource, IsTransition0 = true });
+            }               
             else
             {
                 DrawLine(_ZeroSource, _ZeroTarget, "0", true, true);
+                _lastTransitionHistory2.Push(new TransitionInfo() { ConnectionType = "Line", SourceState = _ZeroSource, TargetState = _ZeroTarget, IsTransition0 = true });
             }
+                
             AddTransitions(_ZeroSource, _ZeroTarget, "0");
+
             Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.ZeroStart;
             _ZeroSource.NullIt();
             _ZeroTarget.NullIt();
@@ -255,9 +285,16 @@ namespace AutomataGUI
             _OneTarget.State = sender;
             _OneTarget.indexPoint = _OneTarget.State.GetPointIndex(e.Location);
             if (_OneSource.State == _OneTarget.State)
+            {
                 DrawArcToSelf(_OneSource, true, false, true);
+                _lastTransitionHistory2.Push(new TransitionInfo() { ConnectionType = "Arc", SourceState = _OneSource, IsTransition0 = false });
+            }              
             else
+            {
                 DrawLine(_OneSource, _OneTarget, "1", true, true);
+                _lastTransitionHistory2.Push(new TransitionInfo() { ConnectionType = "Line", SourceState = _OneSource, TargetState = _OneTarget, IsTransition0 = false });
+            }
+               
             AddTransitions(_OneSource, _OneTarget, "1");
             Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.OneStart;
             _OneSource.NullIt();
@@ -385,18 +422,15 @@ namespace AutomataGUI
             testPen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
             dummy.LineColor = testPen;
             Utils.Drawing.DrawLine(_drawingBoard, dummy, fix);
-            if (!create)
-                RepaintAllStates();
-            else
-            {
-                LastTransitionInfo lti = new LastTransitionInfo();
-                lti.LastTransitionType = "Line";
-                lti.LastTransitionLocation = dummy;
-                lti.LastTransitionLocation.LineColor.Color = Color.White;
-                _lastTransitionHistory.Push(lti);
-            }
+            //if (!create)
+            //    RepaintAllStates();
+            //else
+            //{
+            //    if (saveLastTransition)
+            //        _lastTransitionHistory.Push(new LastTransitionInfo() { ConnectionType = "Line", Location = dummy });
+            //}           
         }
-
+        
         private void DrawArcToSelf(MagnetPoint source, bool create, bool iszro, bool fix)
         {
 
@@ -430,17 +464,13 @@ namespace AutomataGUI
             testPen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
             dummy.LineColor = testPen;
             Utils.Drawing.DrawArc(_drawingBoard, dummy, iszro, fix);
-            if (!create)
-                RepaintAllStates();
-            else
-            {
-                LastTransitionInfo lti = new LastTransitionInfo();
-                lti.LastTransitionType = "Arc";
-                lti.LastTransitionLocation = dummy;
-                lti.LastTransitionLocation.LineColor.Color = Color.White;
-                lti.IsLastArcZero = iszro;
-                _lastTransitionHistory.Push(lti);
-            }
+            //if (!create)
+            //    RepaintAllStates();
+            //else
+            //{
+            //    if (saveLastTransition)
+            //        _lastTransitionHistory.Push(new LastTransitionInfo() { ConnectionType = "Arc", Location = dummy, IsTransition0 = iszro });
+            //}          
         }
 
         #region IDisposable Support
