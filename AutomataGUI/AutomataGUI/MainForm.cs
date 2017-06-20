@@ -15,8 +15,10 @@ namespace AutomataGUI
     {
         private DFA_Wrapper src;
         private Drawing.CircleParam _lastCircleLocation;
+        Utils.Drawing.LineParam _lastGuideLine;
         private Registry.MouseCondition _lastMouseCondition;
         private bool _clearWorkspace;
+        private Point? _zeroStart, zeroEnd, _oneStart, _oneEnd;
 
         public MainForm()
         {
@@ -85,10 +87,11 @@ namespace AutomataGUI
         private void drawingBoard_MouseMove(object sender, MouseEventArgs e)
         {
 
-            Utils.Drawing.CircleParam temp = new Drawing.CircleParam();
+       
             switch (Registry.MouseStatus)
             {
                 case Registry.MouseCondition.AddState:
+                    Utils.Drawing.CircleParam temp = new Drawing.CircleParam();
                     temp.Radius = Utils.Registry.Radius;
                     temp.CenterLocation = e.Location;
                     temp.FillColor = Utils.Registry.StateColors.Hovered;
@@ -108,7 +111,7 @@ namespace AutomataGUI
                     break;
                 case Registry.MouseCondition.ZeroStart:
                     Cursor.Current = Cursors.Cross;
-                    statusLabel.Text = "Set source state for transition 0";
+                    statusLabel.Text = "Set source state for transition 0";            
                     break;
                 case Registry.MouseCondition.OneStart:
                     Cursor.Current = Cursors.Cross;
@@ -117,10 +120,12 @@ namespace AutomataGUI
                 case Registry.MouseCondition.ZeroEnd:
                     Cursor.Current = Cursors.Cross;
                     statusLabel.Text = "Selected source state is " + Registry.LastClickedState.Name + "; set destination state for transition 0";
+                    DrawGuideLine(e, true);
                     break;
                 case Registry.MouseCondition.OneEnd:
                     Cursor.Current = Cursors.Cross;
-                    statusLabel.Text = "Selected source state is " + Registry.LastClickedState.Name + "; set destination state for transition 1";     
+                    statusLabel.Text = "Selected source state is " + Registry.LastClickedState.Name + "; set destination state for transition 1";
+                    DrawGuideLine(e, false);
                     break;
                 default:
                     break;
@@ -136,6 +141,20 @@ namespace AutomataGUI
                 {
                     case Registry.MouseCondition.AddState:
                         src.AddState(e.Location);
+                        break;
+                    case Registry.MouseCondition.ZeroStart:
+                        _zeroStart = e.Location;
+                        break;
+                    case Registry.MouseCondition.OneStart:
+                        _oneStart = e.Location;
+                        break;
+                    case Registry.MouseCondition.ZeroEnd:
+                        _zeroStart = null;
+                        break;
+                    case Registry.MouseCondition.OneEnd:
+                        _oneStart = null;
+                        break;
+                    default:
                         break;
                 }
             }
@@ -157,11 +176,17 @@ namespace AutomataGUI
                          btnAcceptState.Checked = false;
                         break;
                     case Registry.MouseCondition.ZeroStart:
+                        btnC0.Checked = false;
+                        break;
                     case Registry.MouseCondition.ZeroEnd:
+                        Utils.Drawing.UnDrawLine(drawingBoard, _lastGuideLine);
                         btnC0.Checked = false;
                         break;
                     case Registry.MouseCondition.OneStart:
+                        btnC1.Checked = false;
+                        break;
                     case Registry.MouseCondition.OneEnd:
+                        Utils.Drawing.UnDrawLine(drawingBoard, _lastGuideLine);
                         btnC1.Checked = false;
                         break;
                     default:
@@ -174,7 +199,9 @@ namespace AutomataGUI
                 else
                     statusLabel.Text = "";
                 _lastMouseCondition = Registry.MouseCondition.Default;
-                Registry.MouseStatus = Registry.MouseCondition.Default;           
+                Registry.MouseStatus = Registry.MouseCondition.Default;
+                _zeroStart = null;
+                _oneStart = null;
             }
                 
         }
@@ -204,6 +231,8 @@ namespace AutomataGUI
                             ((ToolStripButton)item).Checked = false;
                             if (_lastMouseCondition == Registry.MouseCondition.AddState)
                                 Utils.Drawing.UnDrawCircle(drawingBoard, _lastCircleLocation);
+                            else if ((_lastMouseCondition == Registry.MouseCondition.ZeroEnd) || (_lastMouseCondition == Registry.MouseCondition.OneEnd))
+                                Utils.Drawing.UnDrawLine(drawingBoard, _lastGuideLine);
                         }
                         else
                         {
@@ -240,6 +269,11 @@ namespace AutomataGUI
             if (_lastMouseCondition == Registry.MouseCondition.AddState)
             {
                 Utils.Drawing.UnDrawCircle(drawingBoard, _lastCircleLocation);
+                _lastMouseCondition = Registry.MouseCondition.Default;
+            }
+            else if ((_lastMouseCondition == Registry.MouseCondition.ZeroEnd) || (_lastMouseCondition == Registry.MouseCondition.OneEnd))
+            {
+                Utils.Drawing.UnDrawLine(drawingBoard, _lastGuideLine);
                 _lastMouseCondition = Registry.MouseCondition.Default;
             }
         }
@@ -348,6 +382,32 @@ namespace AutomataGUI
                     lstvwDFATable.BackColor = Color.White;
                 richTextBox1.Clear();
             }
+        }
+
+        private void DrawGuideLine(MouseEventArgs e, bool isTransZero)
+        {
+            if (isTransZero && _zeroStart != null)
+            {
+                Utils.Drawing.LineParam guideLine = new Utils.Drawing.LineParam();
+                guideLine.Source = (Point)_zeroStart;
+                Pen testPen = new Pen(Color.Black, 4);
+                testPen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                guideLine.Destination = e.Location;
+                guideLine.LineColor = testPen;
+                Utils.Drawing.DrawLine(drawingBoard, guideLine, false);
+                _lastGuideLine = guideLine;
+            }
+            else if (!isTransZero && _oneStart != null)
+            {
+                Utils.Drawing.LineParam guideLine = new Utils.Drawing.LineParam();
+                guideLine.Source = (Point)_oneStart;
+                Pen testPen = new Pen(Color.Blue, 4);
+                testPen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                guideLine.Destination = e.Location;
+                guideLine.LineColor = testPen;
+                Utils.Drawing.DrawLine(drawingBoard, guideLine, false);
+                _lastGuideLine = guideLine;
+            }           
         }
     }
 }

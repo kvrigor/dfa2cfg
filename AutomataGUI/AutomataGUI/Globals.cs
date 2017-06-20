@@ -142,6 +142,17 @@ namespace AutomataGUI.Utils
             whereToDraw.Image = (Image)currentImage.Clone();
         }
 
+        public static void UnDrawLine(PictureBox whereToDraw, LineParam lineInfo)
+        {
+            whereToDraw.Image = (Image)Registry.FixedImage.Clone();
+
+            Image currentImage = (Image)whereToDraw.Image.Clone();
+            Graphics myLine = Graphics.FromImage(currentImage);
+            myLine.DrawLine(lineInfo.LineColor, lineInfo.Source, lineInfo.Source);
+            myLine.Dispose();
+            whereToDraw.Image = (Image)currentImage.Clone();
+        }
+
         public static void DrawCircles(PictureBox whereToDraw, CircleParam[] circles, bool save)
         {
             whereToDraw.Image = (Image)Registry.FixedImage.Clone();
