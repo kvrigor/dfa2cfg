@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AutomataGUI.Utils;
+using System.Diagnostics;
 
 namespace AutomataGUI
 {
@@ -18,11 +19,16 @@ namespace AutomataGUI
         Utils.Drawing.LineParam _lastGuideLine;
         private Registry.MouseCondition _lastMouseCondition;
         private bool _clearWorkspace;
-        private Point? _zeroStart, zeroEnd, _oneStart, _oneEnd;
+        private Point? _zeroStart, _oneStart;
 
         public MainForm()
         {
             InitializeComponent();
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            string version = fvi.FileMajorPart + "." + fvi.FileMinorPart;
+            this.Text = "DFA2CFG v" + version + " Beta";
+            
             drawingBoard.Image = new Bitmap(drawingBoard.Width, drawingBoard.Height);
             Utils.Registry.FixedImage = (Image)drawingBoard.Image.Clone();
 
