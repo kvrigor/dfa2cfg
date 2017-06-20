@@ -29,9 +29,16 @@
         private void InitializeComponent()
         {
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.btnAddState = new System.Windows.Forms.ToolStripButton();
+            this.btnDeleteState = new System.Windows.Forms.ToolStripButton();
+            this.btnStartState = new System.Windows.Forms.ToolStripButton();
+            this.btnAcceptState = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnC0 = new System.Windows.Forms.ToolStripButton();
+            this.btnC1 = new System.Windows.Forms.ToolStripButton();
             this.btnUndo = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnClear = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.stateclickedLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -43,13 +50,6 @@
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.btnAddState = new System.Windows.Forms.ToolStripButton();
-            this.btnDeleteState = new System.Windows.Forms.ToolStripButton();
-            this.btnStartState = new System.Windows.Forms.ToolStripButton();
-            this.btnAcceptState = new System.Windows.Forms.ToolStripButton();
-            this.btnC0 = new System.Windows.Forms.ToolStripButton();
-            this.btnC1 = new System.Windows.Forms.ToolStripButton();
-            this.btnClear = new System.Windows.Forms.ToolStripButton();
             this.drawingBoard = new System.Windows.Forms.PictureBox();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -80,10 +80,89 @@
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // btnAddState
+            // 
+            this.btnAddState.CheckOnClick = true;
+            this.btnAddState.Image = global::AutomataGUI.Properties.Resources.imgAddState;
+            this.btnAddState.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnAddState.Name = "btnAddState";
+            this.btnAddState.Size = new System.Drawing.Size(62, 39);
+            this.btnAddState.Text = "Add State";
+            this.btnAddState.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnAddState.ToolTipText = "Keyboard shortcut: A";
+            this.btnAddState.CheckedChanged += new System.EventHandler(this.toolstripButtons_CheckedChanged);
+            this.btnAddState.Click += new System.EventHandler(this.btnAddState_Click);
+            // 
+            // btnDeleteState
+            // 
+            this.btnDeleteState.CheckOnClick = true;
+            this.btnDeleteState.Image = global::AutomataGUI.Properties.Resources.imgDeleteState;
+            this.btnDeleteState.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDeleteState.Name = "btnDeleteState";
+            this.btnDeleteState.Size = new System.Drawing.Size(73, 39);
+            this.btnDeleteState.Text = "Delete State";
+            this.btnDeleteState.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnDeleteState.ToolTipText = "Keyboard shortcut: D";
+            this.btnDeleteState.CheckedChanged += new System.EventHandler(this.toolstripButtons_CheckedChanged);
+            this.btnDeleteState.Click += new System.EventHandler(this.btnDeleteState_Click);
+            // 
+            // btnStartState
+            // 
+            this.btnStartState.CheckOnClick = true;
+            this.btnStartState.Image = global::AutomataGUI.Properties.Resources.imgStartState;
+            this.btnStartState.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnStartState.Name = "btnStartState";
+            this.btnStartState.Size = new System.Drawing.Size(64, 39);
+            this.btnStartState.Text = "Start State";
+            this.btnStartState.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnStartState.ToolTipText = "Keyboard shortcut: S";
+            this.btnStartState.CheckedChanged += new System.EventHandler(this.toolstripButtons_CheckedChanged);
+            this.btnStartState.Click += new System.EventHandler(this.btnStartState_Click);
+            // 
+            // btnAcceptState
+            // 
+            this.btnAcceptState.CheckOnClick = true;
+            this.btnAcceptState.Image = global::AutomataGUI.Properties.Resources.imgAcceptState;
+            this.btnAcceptState.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnAcceptState.Name = "btnAcceptState";
+            this.btnAcceptState.Size = new System.Drawing.Size(77, 39);
+            this.btnAcceptState.Text = "Accept State";
+            this.btnAcceptState.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnAcceptState.ToolTipText = "Keyboard shortcut: F";
+            this.btnAcceptState.CheckedChanged += new System.EventHandler(this.toolstripButtons_CheckedChanged);
+            this.btnAcceptState.Click += new System.EventHandler(this.btnAcceptState_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 42);
+            // 
+            // btnC0
+            // 
+            this.btnC0.CheckOnClick = true;
+            this.btnC0.Image = global::AutomataGUI.Properties.Resources.imgConnect0;
+            this.btnC0.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnC0.Name = "btnC0";
+            this.btnC0.Size = new System.Drawing.Size(65, 39);
+            this.btnC0.Text = "Connect 0";
+            this.btnC0.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnC0.ToolTipText = "Keyboard shortcut: O";
+            this.btnC0.CheckedChanged += new System.EventHandler(this.toolstripButtons_CheckedChanged);
+            this.btnC0.Click += new System.EventHandler(this.btnC0_Click);
+            // 
+            // btnC1
+            // 
+            this.btnC1.CheckOnClick = true;
+            this.btnC1.ForeColor = System.Drawing.Color.Blue;
+            this.btnC1.Image = global::AutomataGUI.Properties.Resources.imgConnect1;
+            this.btnC1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnC1.Name = "btnC1";
+            this.btnC1.Size = new System.Drawing.Size(65, 39);
+            this.btnC1.Text = "Connect 1";
+            this.btnC1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnC1.ToolTipText = "Keyboard shortcut: I";
+            this.btnC1.CheckedChanged += new System.EventHandler(this.toolstripButtons_CheckedChanged);
+            this.btnC1.Click += new System.EventHandler(this.btnC1_Click);
             // 
             // btnUndo
             // 
@@ -100,6 +179,17 @@
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 42);
+            // 
+            // btnClear
+            // 
+            this.btnClear.Image = global::AutomataGUI.Properties.Resources.imgClear;
+            this.btnClear.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(38, 39);
+            this.btnClear.Text = "Clear";
+            this.btnClear.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnClear.ToolTipText = "Keyboard shortcut: Esc";
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
             // statusStrip1
             // 
@@ -182,7 +272,7 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Right;
             this.splitContainer1.Location = new System.Drawing.Point(424, 42);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -197,95 +287,6 @@
             this.splitContainer1.SplitterDistance = 140;
             this.splitContainer1.SplitterWidth = 3;
             this.splitContainer1.TabIndex = 5;
-            // 
-            // btnAddState
-            // 
-            this.btnAddState.CheckOnClick = true;
-            this.btnAddState.Image = global::AutomataGUI.Properties.Resources.imgAddState;
-            this.btnAddState.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnAddState.Name = "btnAddState";
-            this.btnAddState.Size = new System.Drawing.Size(62, 39);
-            this.btnAddState.Text = "Add State";
-            this.btnAddState.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnAddState.ToolTipText = "Keyboard shortcut: A";
-            this.btnAddState.CheckedChanged += new System.EventHandler(this.toolstripButtons_CheckedChanged);
-            this.btnAddState.Click += new System.EventHandler(this.btnAddState_Click);
-            // 
-            // btnDeleteState
-            // 
-            this.btnDeleteState.CheckOnClick = true;
-            this.btnDeleteState.Image = global::AutomataGUI.Properties.Resources.imgDeleteState;
-            this.btnDeleteState.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnDeleteState.Name = "btnDeleteState";
-            this.btnDeleteState.Size = new System.Drawing.Size(73, 39);
-            this.btnDeleteState.Text = "Delete State";
-            this.btnDeleteState.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnDeleteState.ToolTipText = "Keyboard shortcut: D";
-            this.btnDeleteState.CheckedChanged += new System.EventHandler(this.toolstripButtons_CheckedChanged);
-            this.btnDeleteState.Click += new System.EventHandler(this.btnDeleteState_Click);
-            // 
-            // btnStartState
-            // 
-            this.btnStartState.CheckOnClick = true;
-            this.btnStartState.Image = global::AutomataGUI.Properties.Resources.imgStartState;
-            this.btnStartState.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnStartState.Name = "btnStartState";
-            this.btnStartState.Size = new System.Drawing.Size(64, 39);
-            this.btnStartState.Text = "Start State";
-            this.btnStartState.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnStartState.ToolTipText = "Keyboard shortcut: S";
-            this.btnStartState.CheckedChanged += new System.EventHandler(this.toolstripButtons_CheckedChanged);
-            this.btnStartState.Click += new System.EventHandler(this.btnStartState_Click);
-            // 
-            // btnAcceptState
-            // 
-            this.btnAcceptState.CheckOnClick = true;
-            this.btnAcceptState.Image = global::AutomataGUI.Properties.Resources.imgAcceptState;
-            this.btnAcceptState.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnAcceptState.Name = "btnAcceptState";
-            this.btnAcceptState.Size = new System.Drawing.Size(77, 39);
-            this.btnAcceptState.Text = "Accept State";
-            this.btnAcceptState.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnAcceptState.ToolTipText = "Keyboard shortcut: F";
-            this.btnAcceptState.CheckedChanged += new System.EventHandler(this.toolstripButtons_CheckedChanged);
-            this.btnAcceptState.Click += new System.EventHandler(this.btnAcceptState_Click);
-            // 
-            // btnC0
-            // 
-            this.btnC0.CheckOnClick = true;
-            this.btnC0.Image = global::AutomataGUI.Properties.Resources.imgConnect0;
-            this.btnC0.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnC0.Name = "btnC0";
-            this.btnC0.Size = new System.Drawing.Size(65, 39);
-            this.btnC0.Text = "Connect 0";
-            this.btnC0.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnC0.ToolTipText = "Keyboard shortcut: O";
-            this.btnC0.CheckedChanged += new System.EventHandler(this.toolstripButtons_CheckedChanged);
-            this.btnC0.Click += new System.EventHandler(this.btnC0_Click);
-            // 
-            // btnC1
-            // 
-            this.btnC1.CheckOnClick = true;
-            this.btnC1.Image = global::AutomataGUI.Properties.Resources.imgConnect1;
-            this.btnC1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnC1.Name = "btnC1";
-            this.btnC1.Size = new System.Drawing.Size(65, 39);
-            this.btnC1.Text = "Connect 1";
-            this.btnC1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnC1.ToolTipText = "Keyboard shortcut: I";
-            this.btnC1.CheckedChanged += new System.EventHandler(this.toolstripButtons_CheckedChanged);
-            this.btnC1.Click += new System.EventHandler(this.btnC1_Click);
-            // 
-            // btnClear
-            // 
-            this.btnClear.Image = global::AutomataGUI.Properties.Resources.imgClear;
-            this.btnClear.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(38, 39);
-            this.btnClear.Text = "Clear";
-            this.btnClear.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnClear.ToolTipText = "Keyboard shortcut: Esc";
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
             // drawingBoard
             // 
@@ -314,7 +315,7 @@
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.drawingBoard);
             this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimumSize = new System.Drawing.Size(740, 380);
             this.Name = "MainForm";
             this.Text = "DFA2CFG";
