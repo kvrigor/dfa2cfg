@@ -127,12 +127,12 @@ namespace AutomataGUI
                     tw = DeleteTransitions(ti.SourceState.State, ti.IsTransition0 ? "0" : "1");
                 }
                   
-                RepaintAllStates();
+                RepaintAllObjects();
                 DFAIsEdited?.Invoke();
             }
         }
 
-        public void RemoveAssociatedTransitions(State_Wrapper state)
+        private void RemoveAssociatedTransitions(State_Wrapper state)
         {
             if (_lastTransitionHistory.Count > 0)
             {
@@ -169,15 +169,56 @@ namespace AutomataGUI
                     _lastTransitionHistory.Push(transitionsRetained.Pop());
                 if (removedTransitions)
                 {
-                    RepaintAllStates();
+                    RepaintAllObjects();
                     DFAIsEdited?.Invoke();
                 }
               
             }
         }
 
-        private void RepaintAllStates()
+        private void RemoveAssociatedTransition(State_Wrapper state, Transition_Wrapper trans, bool isTransition0)
         {
+            if (_lastTransitionHistory.Count > 0)
+            {
+                bool removedTransitions = false;
+                Stack<TransitionInfo> transitionsRetained = new Stack<TransitionInfo>();
+
+                while (_lastTransitionHistory.Count > 0)
+                {
+                    TransitionInfo ti = _lastTransitionHistory.Pop();
+                    if ((state.Name == ti.SourceState.State.Name) && (isTransition0 == ti.IsTransition0))
+                    {
+                        if (ti.ConnectionType == "Line")
+                            DrawLine(trans.SourceIndex, trans.DestinationIndex, ti.IsTransition0 ? "0" : "1", false, true);
+                        else if (ti.ConnectionType == "Arc")
+                            DrawArcToSelf(trans.SourceIndex, false, ti.IsTransition0, true);
+                        removedTransitions = true;
+                    }
+                    else
+                        transitionsRetained.Push(ti);
+                }
+                while (transitionsRetained.Count > 0)
+                    _lastTransitionHistory.Push(transitionsRetained.Pop());
+
+                if (removedTransitions)
+                {
+                    RepaintAllObjects();
+                    DFAIsEdited?.Invoke();
+                }
+
+            }
+        }
+
+        private void RepaintAllObjects()
+        {
+            List<TransitionInfo> allTransitions = _lastTransitionHistory.ToList();
+            foreach (TransitionInfo ti in allTransitions)
+            {
+                if (ti.ConnectionType == "Line")
+                    DrawLine(ti.SourceState, ti.TargetState, ti.IsTransition0 ? "0" : "1", true, true);
+                else if (ti.ConnectionType == "Arc")
+                    DrawArcToSelf(ti.SourceState, true, ti.IsTransition0, true);
+            }
             foreach (State_Wrapper state in _lstStates)
                 state.RePaint();
         }
@@ -264,13 +305,7 @@ namespace AutomataGUI
             _ZeroSource.indexPoint = _ZeroSource.State.GetPointIndex(e.Location);
             Transition_Wrapper dummy = DeleteTransitions(_ZeroSource.State, "0");
             if (!dummy.IsNull)
-            {
-                if (dummy.SourceIndex.State == dummy.DestinationIndex.State)
-                    DrawArcToSelf(dummy.SourceIndex, false, true, true);
-                else
-                    DrawLine(dummy.SourceIndex, dummy.DestinationIndex, "0", false, true);
-                DFAIsEdited?.Invoke();
-            }
+                RemoveAssociatedTransition(sender, dummy, true);
             Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.ZeroEnd;
         }
 
@@ -291,7 +326,7 @@ namespace AutomataGUI
             }
                 
             AddTransitions(_ZeroSource, _ZeroTarget, "0");
-
+            RepaintAllObjects();
             Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.ZeroStart;
             _ZeroSource.NullIt();
             _ZeroTarget.NullIt();
@@ -303,13 +338,7 @@ namespace AutomataGUI
             _OneSource.indexPoint = _OneSource.State.GetPointIndex(e.Location);
             Transition_Wrapper dummy = DeleteTransitions(_OneSource.State, "1");
             if (!dummy.IsNull)
-            {
-                if (dummy.SourceIndex.State == dummy.DestinationIndex.State)
-                    DrawArcToSelf(dummy.SourceIndex, false, false, true);
-                else
-                    DrawLine(dummy.SourceIndex, dummy.DestinationIndex, "1", false, true);
-                DFAIsEdited?.Invoke();
-            }
+                RemoveAssociatedTransition(sender, dummy, false);
             Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.OneEnd;
         }
 
@@ -329,6 +358,7 @@ namespace AutomataGUI
             }
                
             AddTransitions(_OneSource, _OneTarget, "1");
+            RepaintAllObjects();
             Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.OneStart;
             _OneSource.NullIt();
             _OneTarget.NullIt();
