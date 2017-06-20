@@ -21,6 +21,7 @@ namespace AutomataGUI
         private Stack<TransitionInfo> _lastTransitionHistory;
         private List<State_Wrapper> _lstStates;
         private List<Transition_Wrapper> _lstTransFunc;
+        private Utils.Drawing.LineParam _startStatePos;
 
         public delegate void DFAChangedEvents();
         public DFAChangedEvents DFAIsEdited;
@@ -44,7 +45,6 @@ namespace AutomataGUI
             public MagnetPoint TargetState;
             public string ConnectionType;
             public bool IsTransition0;
-            public Utils.Drawing.LineParam Location;
         }
 
         private struct Transition_Wrapper
@@ -101,6 +101,8 @@ namespace AutomataGUI
             AddState(_state);
             Utils.Registry.LastClickedState = _state;
             stateclicked?.Invoke();
+            if (_lstStates.Count == 1)
+                _lstState_StateSetStart(_state, new EventArgs());
         }
 
         private void triggerupdate(State_Wrapper sender, MouseEventArgs e)
@@ -211,6 +213,7 @@ namespace AutomataGUI
 
         private void RepaintAllObjects()
         {
+            //draw transitions
             List<TransitionInfo> allTransitions = _lastTransitionHistory.ToList();
             foreach (TransitionInfo ti in allTransitions)
             {
@@ -219,8 +222,17 @@ namespace AutomataGUI
                 else if (ti.ConnectionType == "Arc")
                     DrawArcToSelf(ti.SourceState, true, ti.IsTransition0, true);
             }
+            //draw states
+            bool hasStartState = false;
             foreach (State_Wrapper state in _lstStates)
+            {
                 state.RePaint();
+                hasStartState = hasStartState || state.IsStartState;
+            }
+                
+            //draw start state
+            if (hasStartState)
+                Utils.Drawing.DrawLine(_drawingBoard, _startStatePos, true);
         }
 
         private void _lstState_StateHovered(State_Wrapper sender, MouseEventArgs e)
@@ -249,6 +261,11 @@ namespace AutomataGUI
 
         private void _lstState_StateDeleted(State_Wrapper sender, EventArgs e)
         {
+            if (sender.IsStartState)
+            {
+                _startStatePos.LineColor.Color = Color.White;
+                Utils.Drawing.DrawLine(_drawingBoard, _startStatePos, true);
+            }
             RemoveAssociatedTransitions(sender);
             sender.Dispose(_drawingBoard);
             DrawRemove(sender, true);
@@ -276,7 +293,9 @@ namespace AutomataGUI
             testPen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
             dummy.LineColor = testPen;
             Utils.Drawing.DrawLine(_drawingBoard, dummy, true);
+            _startStatePos = dummy;
             _dfa.StartState = sender.Name;
+            sender.IsStartState = true;
             DFAIsEdited?.Invoke();
         }
 
@@ -327,7 +346,7 @@ namespace AutomataGUI
                 
             AddTransitions(_ZeroSource, _ZeroTarget, "0");
             RepaintAllObjects();
-            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.ZeroStart;
+            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.OneStart;
             _ZeroSource.NullIt();
             _ZeroTarget.NullIt();
         }
@@ -359,7 +378,7 @@ namespace AutomataGUI
                
             AddTransitions(_OneSource, _OneTarget, "1");
             RepaintAllObjects();
-            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.OneStart;
+            Utils.Registry.MouseStatus = Utils.Registry.MouseCondition.ZeroStart;
             _OneSource.NullIt();
             _OneTarget.NullIt();
         }
@@ -376,7 +395,9 @@ namespace AutomataGUI
 
         private void RemoveState(State_Wrapper dfa_state)
         {
-            _lstStates.Remove(dfa_state);
+            if (dfa_state.IsStartState)
+                _dfa.StartState = "";
+           _lstStates.Remove(dfa_state);
             string[] _state = new string[_lstStates.Count];
             for (int i = 0; i < _lstStates.Count; i++)
                 _state[i] = _lstStates[i].Name;

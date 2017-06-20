@@ -13,6 +13,7 @@ namespace AutomataGUI
         private string _name;
         private Point _centerLocation;
         private bool _ishovered;
+        private bool _isStart;
         private bool _isaccept;
         private Dictionary<Point, bool> _connectpoints;
         private const int _connpts_count = 16;
@@ -31,10 +32,12 @@ namespace AutomataGUI
         public StateEvents OnRepaint;
 
         public string Name { get { return _name; } }
+        public bool IsStartState { get { return _isStart; } set { _isStart = value; } }
         public bool IsAcceptState { get { return _isaccept; } set { _isaccept = value; } }
         public Point CenterLocation { get { return _centerLocation; } }
         public Point ImageLocation { get { return new Point(_centerLocation.X - Utils.Registry.Radius, _centerLocation.Y - Utils.Registry.Radius); } }
         public Point SetStartPoint { get { return new Point(_centerLocation.X - Utils.Registry.Radius, _centerLocation.Y); } }
+        
 
         public State_Wrapper(PictureBox drawingBoard, string name, Point center)
         {

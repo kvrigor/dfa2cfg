@@ -116,11 +116,11 @@ namespace AutomataGUI
                     break;
                 case Registry.MouseCondition.ZeroEnd:
                     Cursor.Current = Cursors.Cross;
-                    statusLabel.Text = "Selected source state is " + Registry.LastClickedState.Name + "; Set destination state for transition 0";
+                    statusLabel.Text = "Selected source state is " + Registry.LastClickedState.Name + "; set destination state for transition 0";
                     break;
                 case Registry.MouseCondition.OneEnd:
                     Cursor.Current = Cursors.Cross;
-                    statusLabel.Text = "Selected source state is " + Registry.LastClickedState.Name + "; Set destination state for transition 0";     
+                    statusLabel.Text = "Selected source state is " + Registry.LastClickedState.Name + "; set destination state for transition 1";     
                     break;
                 default:
                     break;
